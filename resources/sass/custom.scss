@@ -1,0 +1,36 @@
+@import "variables";
+
+.document-card {
+    border-radius: 30px;
+    box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2);
+    padding: 20px;
+    display: block;
+    background: $body-bg;
+
+    &__title {
+        word-break: break-all;
+        display: block;
+        text-align: center;
+    }
+
+    &__text {
+        text-align: right;
+        max-height: 200px;
+        overflow: auto;
+        background: white;
+        border-radius: 20px;
+    }
+
+    &__icon {
+        display: block;
+        margin: 20px auto;
+        text-align: center;
+        font-size: 100px;
+        color: $primary;
+    }
+
+    &__date {
+        display: block;
+        text-align: right;
+    }
+}
