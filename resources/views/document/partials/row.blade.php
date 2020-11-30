@@ -5,18 +5,29 @@
         </a>
     </td>
     <td class="align-middle">
-        <a href="{{ route('users.show', $document->user) }}">
+        <a href="
+        @if ($document->user->id == auth()->id())
+            {{ route('profile') }}
+        @else
+            {{ route('clients.show', $document->user) }}
+        @endif">
             {{ $document->user->username ?: __('N/A') }}
         </a>
     </td>
     <td class="align-middle">{{ $document->created_at->format(config('app.date_format')) }}</td>
     <td class="align-middle">
         <span class="badge badge-lg badge-{{ $document->present()->labelClass() }}">
-            {{ trans("app.status.{$document->status}") }}
+            {{ trans("document.status.{$document->status}") }}
         </span>
     </td>
+    <td class="align-middle">
+        <span class="{{$document->present()->sumClass()}}">{{$document->present()->sum()}}</span>
+    </td>
+    <td class="align-middle">
+        <span class="{{$document->present()->sumClass()}}">@money($document->vat)</span>
+    </td>
     <td class="text-center align-middle">
-        <div class="dropdown show d-inline-block">
+        {{--<div class="dropdown show d-inline-block">
             <a class="btn btn-icon"
                href="#" role="button" id="dropdownMenuLink"
                data-toggle="dropdown"
@@ -30,20 +41,28 @@
                     @lang('View Document')
                 </a>
             </div>
-        </div>
+        </div>--}}
 
-        @if($current_user->hasPermission('document.edit'))
-            <a href="{{--- route('documents.edit', $document) ---}}"
+
+        <a href="{{ route('documents.show', $document) }}"
+           class="btn btn-icon"
+            title="@lang('View Document')"
+            data-toggle="tooltip"
+            data-placement="top">
+            <i class="fas fa-eye mr-2"></i>
+        </a>
+        {{--@if($current_user->hasPermission('document.edit'))
+            <a href="--}}{{--- route('documents.edit', $document) ---}}{{--"
                class="btn btn-icon edit"
                title="@lang('Edit document')"
                data-toggle="tooltip" data-placement="top">
                 <i class="fas fa-edit"></i>
             </a>
-        @endif
+        @endif--}}
 
 
         @if($current_user->hasPermission('document.delete'))
-            <a href="{{--- route('documents.destroy', $document) ---}}"
+            <a href="{{ route('documents.destroy', $document) }}"
                class="btn btn-icon"
                title="@lang('Delete Document')"
                data-toggle="tooltip"

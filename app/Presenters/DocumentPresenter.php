@@ -31,4 +31,24 @@ class DocumentPresenter extends Presenter
 
         return $class;
     }
+
+    public function sumClass()
+    {
+        if ($this->model->status == DocumentStatus::CONFIRMED) {
+            if ($this->model->document_type) {
+                return 'text-success';
+            } else {
+                return 'text-danger';
+            }
+        }
+
+        return "";
+    }
+
+    public function sum()
+    {
+        $nf = numfmt_create('he_IL', \NumberFormatter::CURRENCY);
+        $minus = $this->model->document_type === 0 ? '-' : '';
+        return numfmt_format_currency($nf, $this->model->sum, 'ILS');
+    }
 }

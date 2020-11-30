@@ -14,6 +14,7 @@ class YandexVision
 
     public function analyze($file)
     {
+        $mime = mime_content_type($file);
         $encoded = base64_encode(file_get_contents($file));
 
         return Http::withHeaders([
@@ -23,6 +24,7 @@ class YandexVision
             'folder_id' => self::folder_id,
             "analyze_specs" => [
                 "content" => $encoded,
+                'mime_type' => $mime,
                 "features" => [
                     "type" => "TEXT_DETECTION",
                     "text_detection_config" => [

@@ -35,7 +35,11 @@ class AuthServiceProvider extends ServiceProvider
         \Blade::directive('permission', function ($expression) {
             return "<?php if (\\Auth::user()->hasPermission({$expression})) : ?>";
         });
-        
+
+        \Blade::directive('nopermission', function ($expression) {
+            return "<?php if (!\\Auth::user()->hasPermission({$expression})) : ?>";
+        });
+
         \Blade::directive('endpermission', function ($expression) {
             return "<?php endif; ?>";
         });

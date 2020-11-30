@@ -11714,6 +11714,23 @@ label {
   text-align: right;
 }
 
+.document-image {
+  max-height: 500px;
+  -o-object-fit: contain;
+     object-fit: contain;
+}
+
+.document-text {
+  text-align: right;
+  max-height: 500px;
+  overflow-y: auto;
+  padding-right: 20px;
+}
+
+.document-text__card {
+  padding-right: 1rem;
+}
+
 @media (max-width: 991.98px) {
   .sidebar:not(.expanded) {
     margin-left: -250px;

@@ -96,7 +96,6 @@ Route::group(['middleware' => ['auth', 'verified']], function () {
     });
 
 
-
     /**
      * User Management
      */
@@ -187,18 +186,34 @@ Route::group(['middleware' => ['auth', 'verified']], function () {
 
     Route::get('activity/user/{user}/log', 'Users\ActivityController@index')->name('activity.user')
         ->middleware('permission:users.activity');
-});
 
-/**
- * Document upload route
- */
-Route::group(['prefix' => 'documents'], function() {
-    Route::get('/', 'DocumentController@index')->name('documents.index');
-    Route::get('/upload', 'DocumentController@upload')->name('documents.upload')
-        ->middleware('permission:document.upload');
-    Route::post('/upload', 'DocumentController@store')->name('documents.store')
-        ->middleware('permission:document.upload');;
-    Route::get('/{document}', 'DocumentController@show')->name('documents.show');
+
+    /**
+     * Document upload route
+     */
+    Route::group(['prefix' => 'documents'], function () {
+        Route::get('/', 'DocumentController@index')->name('documents.index');
+        Route::get('/upload', 'DocumentController@upload')->name('documents.upload')
+            ->middleware('permission:document.upload');
+        Route::get('/create', 'DocumentController@create')->name('document.create')->middleware('permission:document.upload');
+        Route::post('/create', 'DocumentController@manualStore')->name('document.manualStore')->middleware('permission:document.upload');
+        Route::post('/upload', 'DocumentController@store')->name('documents.store')
+            ->middleware('permission:document.upload');
+        Route::put('/{document}', 'DocumentController@update')->name('documents.update');
+        Route::get('/{document}', 'DocumentController@show')->name('documents.show');
+        Route::delete('/{document}', 'DocumentController@destroy')->name('documents.destroy')->middleware('permission:document.delete');
+    });
+
+    /**
+     * Clients
+     */
+
+    Route::group(['prefix' => 'clients', 'middleware' => 'permission:clients.manage'], function () {
+        Route::get('/', 'ClientController@index')->name('clients.index');
+        Route::get('/create', 'ClientController@create')->name('clients.create');
+        Route::post('/create', 'Users\UsersController@store')->name('clients.store');
+        Route::get('/{client}', 'ClientController@show')->name('clients.show');
+    });
 });
 
 

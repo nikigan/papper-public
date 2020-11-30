@@ -19,7 +19,7 @@ class ProcessDocument implements ShouldQueue
     /**
      * @var Document
      */
-    protected $document;
+    protected Document $document;
 
     /**
      * Create a new job instance.

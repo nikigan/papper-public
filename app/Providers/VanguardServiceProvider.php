@@ -4,6 +4,7 @@ namespace Vanguard\Providers;
 
 use Vanguard\Announcements\Announcements;
 use Vanguard\Plugins\VanguardServiceProvider as BaseVanguardServiceProvider;
+use Vanguard\Support\Plugins\Clients;
 use Vanguard\Support\Plugins\Dashboard\Dashboard;
 use Vanguard\Support\Plugins\Dashboard\Widgets\BannedUsers;
 use Vanguard\Support\Plugins\Dashboard\Widgets\LatestRegistrations;
@@ -30,12 +31,13 @@ class VanguardServiceProvider extends BaseVanguardServiceProvider
     {
         return [
             Dashboard::class,
+            UploadDocument::class,
+            Clients::class,
             Users::class,
             UserActivity::class,
             RolesAndPermissions::class,
             Settings::class,
-            Announcements::class,
-            UploadDocument::class
+            Announcements::class
         ];
     }
 

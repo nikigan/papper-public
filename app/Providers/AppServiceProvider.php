@@ -3,6 +3,7 @@
 namespace Vanguard\Providers;
 
 use Carbon\Carbon;
+use Illuminate\Support\Facades\Blade;
 use Vanguard\Repositories\Country\CountryRepository;
 use Vanguard\Repositories\Country\EloquentCountry;
 use Vanguard\Repositories\Permission\EloquentPermission;
@@ -27,6 +28,14 @@ class AppServiceProvider extends ServiceProvider
         Carbon::setLocale(config('app.locale'));
         config(['app.name' => setting('app_name')]);
         \Illuminate\Database\Schema\Builder::defaultStringLength(191);
+
+
+
+        Blade::directive('money', function ($amount) {
+//            $string = numfmt_format_currency($nf, $amount, 'ILS');
+            /*return "<?php echo number_format($amount, 2, '.', ','); ?>";*/
+            return "<?php echo numfmt_format_currency(numfmt_create('he_IL', \NumberFormatter::CURRENCY), $amount, 'ILS');?>";
+        });
     }
 
     /**

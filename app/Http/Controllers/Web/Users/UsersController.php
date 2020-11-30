@@ -116,8 +116,13 @@ class UsersController extends Controller
 
         $this->users->create($data);
 
-        return redirect()->route('users.index')
-            ->withSuccess(__('User created successfully.'));
+        if (auth()->user()->hasPermission('users.manage')) {
+            return redirect()->route('users.index')
+                ->withSuccess(__('User created successfully.'));
+        } else {
+            return redirect()->route('clients.index')
+                ->withSuccess(__('Client created successfully.'));
+        }
     }
 
     /**
