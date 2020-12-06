@@ -207,6 +207,7 @@ return [
         Vanguard\Providers\RouteServiceProvider::class,
         Vanguard\Services\Auth\TwoFactor\AuthyServiceProvider::class,
         Vanguard\Providers\VanguardServiceProvider::class,
+        \Vanguard\Providers\ViewProvider::class
     ],
 
     /*

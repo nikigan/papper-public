@@ -101,28 +101,24 @@ class UsersController extends Controller
         // When user is created by administrator, we will set his
         // status to Active by default.
         $data = $request->all() + [
-            'status' => UserStatus::ACTIVE,
-            'email_verified_at' => now()
-        ];
+                'status' => UserStatus::ACTIVE,
+                'email_verified_at' => now()
+            ];
 
-        if (! data_get($data, 'country_id')) {
+        if (!data_get($data, 'country_id')) {
             $data['country_id'] = null;
         }
 
         // Username should be updated only if it is provided.
-        if (! data_get($data, 'username')) {
+        if (!data_get($data, 'username')) {
             $data['username'] = null;
         }
 
         $this->users->create($data);
 
-        if (auth()->user()->hasPermission('users.manage')) {
-            return redirect()->route('users.index')
-                ->withSuccess(__('User created successfully.'));
-        } else {
-            return redirect()->route('clients.index')
-                ->withSuccess(__('Client created successfully.'));
-        }
+        return redirect()->route('users.index')
+            ->withSuccess(__('User created successfully.'));
+
     }
 
     /**

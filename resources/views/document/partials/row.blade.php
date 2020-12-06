@@ -14,7 +14,7 @@
             {{ $document->user->username ?: __('N/A') }}
         </a>
     </td>
-    <td class="align-middle">{{ $document->created_at->format(config('app.date_format')) }}</td>
+    <td class="align-middle">{{ $document->getDocumentDate() ?? 'N/A'}}</td>
     <td class="align-middle">
         <span class="badge badge-lg badge-{{ $document->present()->labelClass() }}">
             {{ trans("document.status.{$document->status}") }}
@@ -61,7 +61,7 @@
         @endif--}}
 
 
-        @if($current_user->hasPermission('document.delete'))
+        @if(auth()->user()->hasPermission('document.delete'))
             <a href="{{ route('documents.destroy', $document) }}"
                class="btn btn-icon"
                title="@lang('Delete Document')"

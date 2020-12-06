@@ -74,7 +74,7 @@
                     @endif
                 </div>
             </div>
-                @include('document.partials.table')
+            @include('document.partials.table')
         </div>
     </div>
 @endsection

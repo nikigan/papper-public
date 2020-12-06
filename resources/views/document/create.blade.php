@@ -45,7 +45,7 @@
                 <div class="custom-control custom-radio custom-control-inline">
                     <input type="radio" id="document_type_0" name="document_type" class="custom-control-input"
                            value="0" checked>
-                    <label class="custom-control-label" for="document_type_0">@lang('Decease')</label>
+                    <label class="custom-control-label" for="document_type_0">@lang('Expense')</label>
                 </div>
                 <div class="custom-control custom-radio custom-control-inline">
                     <input type="radio" id="document_type_1" name="document_type" class="custom-control-input"

@@ -8,6 +8,7 @@ use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
 use Vanguard\Document;
+use Vanguard\Services\AbbyOCR;
 use Vanguard\Services\YandexVision;
 
 class ProcessDocument implements ShouldQueue
@@ -40,7 +41,7 @@ class ProcessDocument implements ShouldQueue
      */
     public function handle()
     {
-        $yandex = new YandexVision();
+        /*$yandex = new YandexVision();
 
         $response = $yandex->analyze($this->file)->json();
 
@@ -54,9 +55,14 @@ class ProcessDocument implements ShouldQueue
 
         $text = join("\n", array_map(function ($t) {
             return $t[0];
-        }, $text));
+        }, $text));*/
 
-        $this->document->document_text = $text;
-        $this->document->save();
+        /*$response = AbbyOCR::processDocument($this->file);
+        \Storage::disk('local')->put("response.json", json_encode($response->json(), JSON_PRETTY_PRINT));
+        dd($response->json());*/
+
+        /*$this->document->document_text = $text;
+        $this->document->save();*/
+        sleep(2);
     }
 }

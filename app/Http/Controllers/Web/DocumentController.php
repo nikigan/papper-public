@@ -27,10 +27,19 @@ class DocumentController extends Controller
     public function index()
     {
         $current_user = auth()->user();
-        if ($current_user->hasRole('Auditor') || $current_user->hasRole('Admin')) {
-            $documents = Document::with('user')->orderByDesc('created_at')->get();
+        if ($current_user->hasRole('Auditor') || $current_user->hasRole('Admin') || $current_user->hasRole('Accountant')) {
+            $documents = Document::query()
+                ->whereHas('user', function($q) use ($current_user) {
+                    $q->where('auditor_id', $current_user->id)
+                    ->orWhere('accountant_id', $current_user->id);
+                })
+                ->orderByDesc('document_date')
+                ->paginate(10);
         } else {
-            $documents = Document::query()->with('user')->where('user_id', '=', $current_user->id)->orderByDesc('created_at')->get();
+            $documents = Document::query()
+                ->with('user')
+                ->where('user_id', '=', $current_user->id)
+                ->orderByDesc('document_date')->paginate(10);
         }
         $statuses = DocumentStatus::lists();
         return view('document.index', compact('documents', 'statuses', 'current_user'));
@@ -61,7 +70,7 @@ class DocumentController extends Controller
 
             $filename = $request->file('file')->getClientOriginalName();
 
-            if ($request->file('file')->getMimeType() == "application/pdf") {
+            /*if ($request->file('file')->getMimeType() == "application/pdf") {
                 $imagick = new Imagick();
                 try {
                     $folder = auth()->id();
@@ -84,11 +93,11 @@ class DocumentController extends Controller
                 } catch (\ImagickException $e) {
                     dd($e);
                 }
-            } else {
-                $folder = auth()->id();
-                $date = date('Y-m-d');
-                $file = $request->file('file')->store("upload/documents/{$folder}/{$date}", 'public');
-            }
+            } else {*/
+            $folder = auth()->id();
+            $date = date('Y-m-d');
+            $file = $request->file('file')->store("upload/documents/{$folder}/{$date}", 'public');
+            //}
 
 
             $document = Document::query()->create([
@@ -104,11 +113,13 @@ class DocumentController extends Controller
         return redirect()->with('error', 'File is missing');
     }
 
-    public function create() {
+    public function create()
+    {
         return view('document.create');
     }
 
-    public function manualStore(Request $request) {
+    public function manualStore(Request $request)
+    {
         $request->validate([
             'document_number' => 'required|unique:documents',
             'sum' => 'required|numeric',
@@ -127,16 +138,17 @@ class DocumentController extends Controller
         }
 
         Document::create($request->except('file') + [
-            'file' => $file,
-            'sum_without_vat' => $sum_without_vat,
-            'user_id' => auth()->id()]);
+                'file' => $file,
+                'sum_without_vat' => $sum_without_vat,
+                'user_id' => auth()->id()]);
 
         return redirect()->route('documents.index')->withSuccess(__('Document created successfully'));
     }
 
     public function update(Request $request, Document $document)
     {
-        $document->update($request->all());
+        $sum_without_vat = $request->sum - $request->vat;
+        $document->update($request->all() + ['sum_without_vat' => $sum_without_vat]);
         return redirect()->route('documents.show', $document)->withSuccess(__('Document updated successfully.'));
     }
 

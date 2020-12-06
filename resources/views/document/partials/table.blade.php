@@ -4,7 +4,7 @@
         <tr>
             <th class="min-width-80">@lang('Document id')</th>
             <th class="min-width-100">@lang('Username')</th>
-            <th class="min-width-80">@lang('Upload date')</th>
+            <th class="min-width-80">@lang('Document date')</th>
             <th class="min-width-80">@lang('Status')</th>
             <th class="min-width-100">@lang('Sum')</th>
             <th class="min-width-100">@lang('VAT')</th>
@@ -32,3 +32,4 @@
         </tbody>
     </table>
 </div>
+{{$documents->withQueryString()->links()}}

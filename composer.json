@@ -26,7 +26,7 @@
         }
     ],
     "require": {
-        "php": "^7.2.5",
+        "php": "^7.4",
         "ext-fileinfo": "^7.4",
         "ext-imagick": "^3.4",
         "ext-json": "*",

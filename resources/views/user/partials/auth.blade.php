@@ -5,6 +5,7 @@
            id="email"
            name="email"
            placeholder="@lang('Email')"
+           required
            value="{{ $edit ? $user->email : '' }}">
 </div>
 
@@ -24,6 +25,7 @@
            class="form-control input-solid"
            id="password"
            name="password"
+           required
            @if ($edit) placeholder="@lang("Leave field blank if you don't want to change it")" @endif>
 </div>
 

@@ -90,7 +90,7 @@
                                    value="0"
                                    @unless($document->document_type) checked @endunless"
                                    @nopermission('document.edit') disabled @endpermission>
-                            <label class="custom-control-label" for="document_type_0">@lang('Decease')</label>
+                            <label class="custom-control-label" for="document_type_0">@lang('Expense')</label>
                         </div>
                         <div class="custom-control custom-radio custom-control-inline">
                             <input type="radio" id="document_type_1" name="document_type"
@@ -109,15 +109,13 @@
                     {!! Form::select('status', $statuses, $document->status,
                     ['class' => 'form-control input-solid my-3', 'id' => 'status']) !!}
                     @permission('document.text')
-                    @isset($document->text)
-                        <div class="card">
-                            <div class="card-body document-text__card">
-                                <div class="document-text">
-                                    {!! nl2br($document->document_text ?? '') !!}
+                            <div class="card">
+                                <div class="card-body document-text__card">
+                                    <div class="document-text">
+                                        {!! nl2br($document->document_text ?? '') !!}
+                                    </div>
                                 </div>
                             </div>
-                        </div>
-                    @endisset
                     @endpermission
                     @permission('document.edit')
                     <button type="submit" class="btn btn-primary">

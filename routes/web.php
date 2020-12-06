@@ -211,8 +211,21 @@ Route::group(['middleware' => ['auth', 'verified']], function () {
     Route::group(['prefix' => 'clients', 'middleware' => 'permission:clients.manage'], function () {
         Route::get('/', 'ClientController@index')->name('clients.index');
         Route::get('/create', 'ClientController@create')->name('clients.create');
-        Route::post('/create', 'Users\UsersController@store')->name('clients.store');
+        Route::post('/create', 'ClientController@store')->name('clients.store');
         Route::get('/{client}', 'ClientController@show')->name('clients.show');
+        Route::put('/{client}/accountant/{accountant}', 'ClientController@editAccountant')->name('clients.edit.accountant');
+        Route::get('/{client}/documents', 'ClientController@documents')->name('clients.documents');
+    });
+
+    /**
+     * Accountants
+     */
+
+    Route::group(['prefix' => 'accountants', 'middleware' => 'permission:client.assign'], function() {
+        Route::get('/', 'AccountantController@index')->name('accountants.index');
+        Route::get('/create', 'AccountantController@create')->name('accountants.create');
+        Route::post('/create', 'AccountantController@store')->name('accountants.store');
+        Route::get('/{client}', 'AccountantController@show')->name('accountants.show');
     });
 });
 

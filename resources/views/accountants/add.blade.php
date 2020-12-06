@@ -1,14 +1,14 @@
 @extends('layouts.app')
 
-@section('page-title', __('Add Client'))
-@section('page-heading', __('Create New Client'))
+@section('page-title', __('Add Accountant'))
+@section('page-heading', __('Create New Accountant'))
 
 @section('breadcrumbs')
     <li class="breadcrumb-item">
-        <a href="{{ route('clients.index') }}">@lang('Clients')</a>
+        <a href="{{ route('accountants.index') }}">@lang('Accountants')</a>
     </li>
     <li class="breadcrumb-item active">
-        <a>@lang('Create Client')</a>
+        <a>@lang('Create Accountant')</a>
     </li>
 @stop
 
@@ -16,7 +16,7 @@
 
     @include('partials.messages')
 
-    {!! Form::open(['route' => 'clients.store', 'files' => true, 'id' => 'user-form']) !!}
+    {!! Form::open(['route' => 'accountants.store', 'files' => true, 'id' => 'user-form']) !!}
     <div class="card">
         <div class="card-body">
             <div class="row">
@@ -56,7 +56,7 @@
     <div class="row">
         <div class="col-md-12">
             <button type="submit" class="btn btn-primary">
-                @lang('Create User')
+                @lang('Create Accountant')
             </button>
         </div>
     </div>
@@ -67,4 +67,5 @@
 
 @section('scripts')
     {!! HTML::script('assets/js/as/profile.js') !!}
+{{--    {!! JsValidator::formRequest('Vanguard\Http\Requests\CreateAccountantRequest', '#user-form') !!}--}}
 @stop
