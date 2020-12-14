@@ -20,7 +20,7 @@
 
                 @include('partials.messages')
 
-                <form role="form" action="<?= url('login') ?>" method="POST" id="login-form" autocomplete="off" class="mt-3">
+                <form role="form" @if($admin)action="{{route('admin.login')}}"@else action="{{route('login')}}"@endif method="POST" id="login-form" autocomplete="off" class="mt-3">
 
                     <input type="hidden" value="<?= csrf_token() ?>" name="_token">
 

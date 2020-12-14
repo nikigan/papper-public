@@ -5,7 +5,7 @@ namespace Vanguard\Http\Middleware;
 use Closure;
 use Illuminate\Contracts\Auth\Guard;
 
-class Authenticate
+class CheckAdmin
 {
     /**
      * The Guard implementation.
@@ -24,7 +24,6 @@ class Authenticate
     {
         $this->auth = $auth;
     }
-
     /**
      * Handle an incoming request.
      *
@@ -34,12 +33,9 @@ class Authenticate
      */
     public function handle($request, Closure $next)
     {
-        if ($this->auth->guest()) {
-            return $request->expectsJson()
-                ? response('Unauthorized.', 401)
-                : redirect()->guest(route('login'));
+        if (!$request->user()->hasRole("Admin")) {
+            abort(403);
         }
-
         return $next($request);
     }
 }

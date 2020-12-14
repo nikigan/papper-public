@@ -13,6 +13,7 @@
 @stop
 
 @section('content')
+    @include('partials.messages')
     <div class="container">
         <div class="card">
             <div class="card-header">{{__("Create invoice")}}</div>
@@ -28,7 +29,7 @@
                                        value="{{$id}}" required/>
                                 @lang("Invoice date")*:
                                 <br/>
-                                <input type="text" name='invoice[invoice_date]' class="form-control"
+                                <input type="date" name='invoice[invoice_date]' class="form-control"
                                        value="{{ date('Y-m-d') }}" required/>
                             </div>
                         </div>
@@ -94,10 +95,10 @@
                                                 @endforeach
                                             </select>--}}
                                         </td>
-                                        <td><input type="text" name='qty[]' placeholder='@lang("Enter Qty")'
-                                                   class="form-control qty" step="0" min="0"/></td>
-                                        <td><input type="text" name='price[]' placeholder='@lang("Enter Unit Price")'
-                                                   class="form-control price" step="0.00" min="0"/></td>
+                                        <td><input type="number" name='qty[]' placeholder='@lang("Enter Qty")'
+                                                   class="form-control qty" step="1" min="0"/></td>
+                                        <td><input type="number" name='price[]' placeholder='@lang("Enter Unit Price")'
+                                                   class="form-control price" step="0.01" min="0"/></td>
                                         <td><input type="number" name='total[]' placeholder='0.00'
                                                    class="form-control total" readonly/></td>
                                     </tr>
@@ -211,7 +212,7 @@
                 if (html != '') {
                     var qty = $(this).find('.qty').val();
                     var price = $(this).find('.price').val();
-                    $(this).find('.total').val(qty * price);
+                    $(this).find('.total').val((qty * price).toFixed(2));
 
                     calc_total();
                 }
@@ -221,7 +222,7 @@
         function calc_total() {
             total = 0;
             $('.total').each(function () {
-                total += parseInt($(this).val());
+                total += parseFloat($(this).val());
             });
             $('#sub_total').val(total.toFixed(2));
             const k = $('#include_tax').prop('checked') ? 1 : -1;

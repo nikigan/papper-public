@@ -1,5 +1,17 @@
 @extends('layouts.app')
 
+@section('page-title', 'Invoice')
+@section('page-heading', 'Invoice')
+
+@section('breadcrumbs')
+    <li class="breadcrumb-item">
+        <a href="{{route('invoice.index')}}">@lang('Invoices')</a>
+    </li>
+    <li class="breadcrumb-item active">
+        <a>@lang('Invoice') {{$invoice->invoice_number}}</a>
+    </li>
+@stop
+
 @section('content')
     <div class="container">
         <div class="row justify-content-center">
@@ -48,6 +60,9 @@
                                         @endif
                                         @if ($invoice->customer->email != '')
                                             <br/><br/><b>Email</b>: {{ $invoice->customer->email }}
+                                        @endif
+                                        @if ($invoice->customer->vat_number != '')
+                                            <br/><br/><b>VAT number</b>: {{ $invoice->customer->vat_number }}
                                         @endif
 
                                         @if ($invoice->customer->customer_fields)

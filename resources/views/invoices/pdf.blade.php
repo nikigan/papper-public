@@ -2,12 +2,10 @@
 
 @section('content')
     <div class="clearfix">
-        {{--@if (config('invoices.logo_file') != '')
-            <div class="text-center">
-                <img src="{{ asset(config('invoices.logo_file')) }}" />
-            </div>
-        @endif--}}
-
+        {{--<div class="text-center">
+            <img src="{{ asset('assets/img/vanguard-logo-no-text.png') }}"/>
+        </div>
+--}}
         <div class="text-center">
             <b>Invoice {{ $invoice->invoice_number }}</b>
             <br>
@@ -19,7 +17,7 @@
         <div class="float-left">
             <b>To</b>:
             {{ $invoice->customer->name }}
-            <br /><br />
+            <br/><br/>
 
             <b>Address</b>:
             {{ $invoice->customer->address }}
@@ -32,36 +30,38 @@
                 ,
                 {{ $invoice->customer->state }}
             @endif
-            , {{ $invoice->customer->country->title }}
 
             @if ($invoice->customer->phone != '')
-                <br /><br /><b>Phone</b>: {{ $invoice->customer->phone }}
+                <br/><br/><b>Phone</b>: {{ $invoice->customer->phone }}
             @endif
             @if ($invoice->customer->email != '')
-                <br /><br /><b>Email</b>: {{ $invoice->customer->email }}
+                <br/><br/><b>Email</b>: {{ $invoice->customer->email }}
+            @endif
+            @if ($invoice->customer->vat_number != '')
+                <br/><br/><b>VAT number</b>: {{ $invoice->customer->vat_number }}
             @endif
 
             @if ($invoice->customer->customer_fields)
                 @foreach ($invoice->customer->customer_fields as $field)
-                    <br /><br /><b>{{ $field->field_key }}</b>: {{ $field->field_value }}
+                    <br/><br/><b>{{ $field->field_key }}</b>: {{ $field->field_value }}
                 @endforeach
             @endif
         </div>
 
         <div class="float-right">
-            <b>From</b>: {{ config('invoices.seller.name') }}
-            <br /><br />
-            <b>Address</b>: {{ config('invoices.seller.address') }}
-            @if (config('invoices.seller.email') != '')
-                <br /><br />
-                <b>Email</b>: {{ config('invoices.seller.email') }}
+            <b>From</b>: {{ $invoice->creator->present()->name() }}
+            <br/><br/>
+            @if ($invoice->creator->address)
+                <b>Address</b>: {{ $invoice->creator->address }}
+                <br/><br/>
             @endif
-            @if (is_array(config('invoices.seller.additional_info')))
+            <b>Email</b>: {{ $invoice->creator->email }}
+            {{--@if (is_array(config('invoices.seller.additional_info')))
                 @foreach (config('invoices.seller.additional_info') as $key => $value)
                     <br /><br />
                     <b>{{ $key }}</b>: {{ $value }}
                 @endforeach
-            @endif
+            @endif--}}
         </div>
     </div>
 
@@ -69,11 +69,11 @@
         <table class="table table-bordered">
             <thead>
             <tr>
-                <th class="text-center"> # </th>
-                <th> Product </th>
-                <th class="text-center"> Qty </th>
-                <th class="text-center"> Price ({{ config('invoices.currency') }}) </th>
-                <th class="text-center"> Total ({{ config('invoices.currency') }}) </th>
+                <th class="text-center"> #</th>
+                <th> Product</th>
+                <th class="text-center"> Qty</th>
+                <th class="text-center"> Price ({{ config('invoices.currency') }})</th>
+                <th class="text-center"> Total ({{ config('invoices.currency') }})</th>
             </tr>
             </thead>
             <tbody>
@@ -83,7 +83,7 @@
                     <td>{{ $item->name }}</td>
                     <td class="text-center">{{ $item->quantity }}</td>
                     <td class="text-center">{{ $item->price }}</td>
-                    <td class="text-center">{{ number_format($item->total, 2) }}</td>
+                    <td class="text-center">{{ number_format($item->quantity * $item->price, 2) }}</td>
                 </tr>
             @endforeach
             </tbody>
@@ -98,7 +98,7 @@
                 <tr>
                     <th class="text-right">Sub Total ({{ config('invoices.currency') }}):</th>
                     <td class="text-left">
-                        {{ number_format($invoice->total, 2) }}
+                        {{ number_format($invoice->total_amount, 2) }}
                     </td>
                 </tr>
                 <tr>
@@ -109,7 +109,7 @@
                 <tr>
                     <th class="text-right">Tax Amount ({{ config('invoices.currency') }}):</th>
                     <td class="text-left">
-                        {{ number_format($invoice->total * $invoice->tax_percent / 100, 2) }}
+                        {{ number_format($invoice->total_amount * $invoice->tax_percent / 100, 2) }}
                     </td>
                 </tr>
             @endif
@@ -117,9 +117,9 @@
                 <th class="text-right">Grand Total ({{ config('invoices.currency') }}):</th>
                 <td class="text-left">
                     @if ($invoice->tax_percent > 0)
-                        {{ number_format($invoice->total * (1 + $invoice->tax_percent / 100), 2) }}
+                        {{ number_format($invoice->total_amount * (1 + $invoice->tax_percent / 100), 2) }}
                     @else
-                        {{ number_format($invoice->total, 2) }}
+                        {{ number_format($invoice->total_amount, 2) }}
                     @endif
                 </td>
             </tr>

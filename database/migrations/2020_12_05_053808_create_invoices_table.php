@@ -19,8 +19,8 @@ class CreateInvoicesTable extends Migration
             $table->date('invoice_date');
             $table->unsignedInteger('customer_id');
             $table->unsignedInteger('creator_id');
-            $table->foreign('customer_id')->references('id')->on('customers');
-            $table->foreign('creator_id')->references('id')->on('users');
+            $table->foreign('customer_id')->references('id')->on('customers')->onDelete('cascade');
+            $table->foreign('creator_id')->references('id')->on('users')->onDelete('cascade');
             $table->decimal('tax_percent')->default(0);
             $table->timestamps();
         });

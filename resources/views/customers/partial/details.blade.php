@@ -3,7 +3,7 @@
         <div class="form-group">
             <label for="first_name">@lang('Name')</label>
             <input type="text" class="form-control input-solid" id="first_name"
-                   name="name" placeholder="@lang('Name')" required value="{{ $edit ? $customer->first_name : old('name') }}">
+                   name="name" placeholder="@lang('Name')" required value="{{ $edit ? $customer->name : old('name') }}">
         </div>
         <div class="form-group">
             <label for="email">@lang('Email')</label>

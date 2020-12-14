@@ -10,12 +10,11 @@ class CustomerController extends Controller
 {
     /**
      * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
      */
     public function index()
     {
-        //
+        $customers = Customer::query()->where('creator_id', auth()->id())->get();
+        return view('customers.index', compact('customers'));
     }
 
     /**
@@ -45,18 +44,16 @@ class CustomerController extends Controller
         Customer::query()->create($request->all() + [
             'creator_id' => auth()->id()
             ]);
-        return redirect()->back()->with('success', __('Customer created successfully'));
+        return redirect()->route('customers.index')->with('success', __('Customer created successfully'));
     }
 
     /**
      * Display the specified resource.
      *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
      */
-    public function show($id)
+    public function show(Customer $customer)
     {
-        //
+        return view('customers.show', compact('customer'));
     }
 
     /**
@@ -67,29 +64,32 @@ class CustomerController extends Controller
      */
     public function edit($id)
     {
-        //
+
     }
 
     /**
      * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(Request $request, Customer $customer)
     {
-        //
+        $request->validate([
+            'email' => 'required',
+            'phone' => 'required',
+            'address' => 'required',
+            'name' => 'required',
+            'vat_number' => 'required'
+        ]);
+
+        $customer->update($request->all());
+        return redirect()->route('customers.index')->with('success', __('Customer info updated successfully'));
     }
 
     /**
      * Remove the specified resource from storage.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy(Customer $customer)
     {
-        //
+        $customer->delete();
+        return redirect()->back()->with('success', 'Customer deleted successfylly');
     }
 }

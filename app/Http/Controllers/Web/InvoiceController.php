@@ -4,6 +4,7 @@ namespace Vanguard\Http\Controllers\Web;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Response;
 use Illuminate\View\View;
 use Vanguard\Customer;
 use Vanguard\Http\Controllers\Controller;
@@ -38,7 +39,7 @@ class InvoiceController extends Controller
     {
         $statement = DB::select("SHOW TABLE STATUS LIKE 'invoices'");
         $id = $statement[0]->Auto_increment;
-        $tax = 0;
+        $tax = 17;
         $user = auth()->user();
         $customers = Customer::query()->where('creator_id', $user->id)->get();
 
@@ -53,7 +54,10 @@ class InvoiceController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'invoice[invoice_number]' => 'unique:invoices'
+            'invoice.invoice_number' => 'unique:invoices,invoice_number',
+            'invoice.invoice_date' => 'before_or_equal:today',
+            'invoice.customer_id' => 'required'
+
         ]);
 
         $invoice = Invoice::query()->create($request->invoice + [
@@ -109,17 +113,18 @@ class InvoiceController extends Controller
 
     /**
      * Remove the specified resource from storage.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy(Invoice $invoice)
     {
-        //
+        $invoice->delete();
+        return redirect()->back()-with('success', __('Invoice deleted successfully'));
     }
 
     public function download(Invoice $invoice)
-    {
-
+    {;
+        $pdf = \PDF::loadView('invoices.pdf', compact('invoice'));
+        return Response::streamDownload(function () use ($pdf) {
+            echo $pdf->stream();
+        }, "invoice-{$invoice->invoice_number}.pdf");
     }
 }

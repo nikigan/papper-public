@@ -49,8 +49,19 @@
                                 <td>{{ $invoice->customer->name }}</td>
                                 <td>{{ number_format($invoice->total_amount, 2) }}</td>
                                 <td>
-                                    <a href="{{ route('invoice.show', $invoice) }}" class="btn btn-sm btn-primary">@lang("View invoice")</a>
-                                    <a href="{{ route('invoice.download', $invoice) }}" class="btn btn-sm btn-warning">@lang("Download PDF")</a>
+                                    <a href="{{ route('invoice.show', $invoice) }}" class="btn btn-sm btn-primary"><i class="fa fa-eye"></i></a>
+                                    <a href="{{ route('invoice.download', $invoice) }}" class="btn btn-sm btn-warning"><i class="fa fa-download"></i></a>
+                                    <a href="{{ route('invoice.destroy', $invoice) }}"
+                                       class="btn btn-sm btn-danger"
+                                       title="@lang('Delete Invoice')"
+                                       data-toggle="tooltip"
+                                       data-placement="top"
+                                       data-method="DELETE"
+                                       data-confirm-title="@lang('Please Confirm')"
+                                       data-confirm-text="@lang('Are you sure that you want to delete this invoice?')"
+                                       data-confirm-delete="@lang('Yes, delete it!')">
+                                        <i class="fa fa-trash"></i>
+                                    </a>
                                 </td>
                             </tr>
                         @endforeach

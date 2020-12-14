@@ -30,7 +30,7 @@ class RegisterController extends Controller
     /**
      * Show the application registration form.
      *
-     * @return \Illuminate\Http\Response
+     * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\View\View
      */
     public function show()
     {
@@ -49,7 +49,7 @@ class RegisterController extends Controller
     public function register(RegisterRequest $request, RoleRepository $roles)
     {
         $user = $this->users->create(
-            array_merge($request->validFormData(), ['role_id' => $roles->findByName('User')->id])
+            array_merge($request->validFormData(), ['role_id' => $roles->findByName('Auditor')->id])
         );
 
         event(new Registered($user));

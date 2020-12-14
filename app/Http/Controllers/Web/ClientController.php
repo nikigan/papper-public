@@ -4,11 +4,13 @@ namespace Vanguard\Http\Controllers\Web;
 
 use Carbon\Carbon;
 use Illuminate\Http\Request;
+use Password;
 use Vanguard\Document;
 use Vanguard\Http\Controllers\Controller;
 use Vanguard\Repositories\Country\CountryRepository;
 use Vanguard\Repositories\Role\RoleRepository;
 use Vanguard\Repositories\User\UserRepository;
+use Vanguard\Services\Auth\TwoFactor\Authenticatable;
 use Vanguard\Support\Enum\UserStatus;
 use Vanguard\User;
 
@@ -91,7 +93,10 @@ class ClientController extends Controller
             $data['username'] = null;
         }
 
-        $this->users->create($data);
+        $user = $this->users->create($data);
+        Password::sendResetLink([
+            'email' => $request->email
+        ]);
 
         return redirect()->route('clients.index')
             ->withSuccess(__('Client created successfully.'));
