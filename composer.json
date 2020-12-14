@@ -29,9 +29,11 @@
         "php": "^7.4",
         "ext-fileinfo": "^7.4",
         "ext-imagick": "^3.4",
+        "ext-intl": "*",
         "ext-json": "*",
         "akaunting/setting": "^1.0",
         "anhskohbo/no-captcha": "3.*",
+        "barryvdh/laravel-dompdf": "^0.8.7",
         "fideloper/proxy": "^4.2",
         "fruitcake/laravel-cors": "^1.0",
         "guzzlehttp/guzzle": "^6.3",
@@ -49,8 +51,7 @@
         "vanguardapp/activity-log": "^2.0.0",
         "vanguardapp/announcements": "^2.0.0",
         "vanguardapp/plugins": "^2.0.0",
-        "webpatser/laravel-countries": "dev-master",
-        "ext-intl": "*"
+        "webpatser/laravel-countries": "dev-master"
     },
     "require-dev": {
         "fzaninotto/faker": "~1.4",

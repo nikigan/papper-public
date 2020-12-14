@@ -36,9 +36,9 @@ class ClientController extends Controller
     public function index()
     {
         $users = User::query()
-            ->where(function($q){
+            ->where(function ($q) {
                 $q->where('auditor_id', auth()->id())
-                ->orWhere('accountant_id', auth()->id());
+                    ->orWhere('accountant_id', auth()->id());
             })
             ->where('role_id', '<>', 4)
             ->get();
@@ -82,12 +82,12 @@ class ClientController extends Controller
                 'role_id' => $this->roles->findByName('User')->id
             ];
 
-        if (! data_get($data, 'country_id')) {
+        if (!data_get($data, 'country_id')) {
             $data['country_id'] = null;
         }
 
         // Username should be updated only if it is provided.
-        if (! data_get($data, 'username')) {
+        if (!data_get($data, 'username')) {
             $data['username'] = null;
         }
 
@@ -103,53 +103,52 @@ class ClientController extends Controller
         //$user = User::query()->with('documents')->where('id', '=', $id)->get();
         $user = User::query()->findOrFail($id);
         $current_user_id = auth()->id();
-        if ((isset($user->accountant) || isset($user->auditor))) {
-            if ($user->accountant->id == $current_user_id || $user->auditor->id == $current_user_id) {
-                $documents = Document::query()->where('user_id', $id)->orderByDesc('document_date')->get();
-                $months = $documents->groupBy(function ($d) {
-                    return Carbon::parse($d->document_date)->format('m/y');
-                });
+        if ((isset($user->accountant) && $user->accountant->id == $current_user_id) || (isset($user->auditor) && $user->auditor->id == $current_user_id)) {
+            $documents = Document::query()->where('user_id', $id)->orderByDesc('document_date')->get();
+            $months = $documents->groupBy(function ($d) {
+                return Carbon::parse($d->document_date)->format('m/y');
+            });
 
-                $result = [];
-                $total_sum = 0;
-                $total_vat = 0;
-                foreach ($months as $date => $month) {
-                    $sum = 0;
-                    $vat = 0;
-                    foreach ($month as $doc) {
-
-                        if ($doc->status == 'Confirmed') {
-                            $k = $doc->document_type ? 1 : -1;
-                            $sum += $k * $doc->sum;
-                            $vat += $k * $doc->vat;
-                        }
-                    }
-                    $total_sum += $sum;
-                    $total_vat += $vat;
-                    $result[$date] = ['sum' => $sum, 'vat' => $vat, 'class' => $sum >= 0 ? 'text-success' : 'text-danger'];
-                }
-                /*$sum = 0;
+            $result = [];
+            $total_sum = 0;
+            $total_vat = 0;
+            foreach ($months as $date => $month) {
+                $sum = 0;
                 $vat = 0;
-                foreach ($documents as $document) {
-                    if ($document->status == 'Confirmed') {
-                        $k = $document->document_type ? 1 : -1;
-                        $sum += $k * $document->sum;
-                        $vat += $k * $document->vat;
+                foreach ($month as $doc) {
+
+                    if ($doc->status == 'Confirmed') {
+                        $k = $doc->document_type ? 1 : -1;
+                        $sum += $k * $doc->sum;
+                        $vat += $k * $doc->vat;
                     }
                 }
-                $sum_class = $sum > 0 ? 'text-success' : 'text-danger';*/
-                $sum_class = $total_sum > 0 ? 'text-success' : 'text-danger';
-                $current_user = auth()->user();
-                return view('clients.show',
-                    ['monthly_docs' => $result, 'sum' => $total_sum, 'vat' => $total_vat]
-                    + compact('user', 'current_user', 'sum_class', 'current_user_id'));
+                $total_sum += $sum;
+                $total_vat += $vat;
+                $result[$date] = ['sum' => $sum, 'vat' => $vat, 'class' => $sum >= 0 ? 'text-success' : 'text-danger'];
             }
+            /*$sum = 0;
+            $vat = 0;
+            foreach ($documents as $document) {
+                if ($document->status == 'Confirmed') {
+                    $k = $document->document_type ? 1 : -1;
+                    $sum += $k * $document->sum;
+                    $vat += $k * $document->vat;
+                }
+            }
+            $sum_class = $sum > 0 ? 'text-success' : 'text-danger';*/
+            $sum_class = $total_sum > 0 ? 'text-success' : 'text-danger';
+            $current_user = auth()->user();
+            return view('clients.show',
+                ['monthly_docs' => $result, 'sum' => $total_sum, 'vat' => $total_vat]
+                + compact('user', 'current_user', 'sum_class', 'current_user_id'));
         }
 
         return redirect()->back()->withErrors(__('You cannot look at client that is not yours'));
     }
 
-    public function documents (Request $request, User $client) {
+    public function documents(Request $request, User $client)
+    {
         $month = $request->query('month');
         $year = $request->query('year');
 
@@ -165,7 +164,8 @@ class ClientController extends Controller
         return view('clients.documents.show', ['user' => $client] + compact('documents', 'year', 'month'));
     }
 
-    public function editAccountant($user_id, $accountant_id) {
+    public function editAccountant($user_id, $accountant_id)
+    {
         User::find($user_id)->update([
             'accountant_id' => $accountant_id
         ]);

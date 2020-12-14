@@ -4,6 +4,7 @@
  * Authentication
  */
 
+use Vanguard\Http\Controllers\Web\InvoiceController;
 use Vanguard\Http\Controllers\Web\DocumentController;
 
 Route::get('login', 'Auth\LoginController@show');
@@ -227,6 +228,14 @@ Route::group(['middleware' => ['auth', 'verified']], function () {
         Route::post('/create', 'AccountantController@store')->name('accountants.store');
         Route::get('/{client}', 'AccountantController@show')->name('accountants.show');
     });
+
+
+    /**
+     * Invoices
+     */
+    Route::resource('invoice', "InvoiceController")->except('edit', 'update');
+    Route::resource('customers', 'CustomerController');
+    Route::get('invoice/{invoice}/download', 'InvoiceController@download')->name('invoice.download');
 });
 
 
