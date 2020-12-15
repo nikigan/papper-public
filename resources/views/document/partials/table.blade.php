@@ -2,7 +2,7 @@
     <table class="table table-borderless table-striped">
         <thead>
         <tr>
-            <th class="min-width-80">@lang('Document id')</th>
+            <th class="min-width-80">#</th>
             <th class="min-width-100">@lang('Username')</th>
             <th class="min-width-80">@lang('Document date')</th>
             <th class="min-width-80">@lang('Status')</th>

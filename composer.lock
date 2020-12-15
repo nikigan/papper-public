@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "da8a78d175be1c0bf687f3b92d2b146f",
+    "content-hash": "7f3f2065a5e44d131c9ce6e1b853dc36",
     "packages": [
         {
             "name": "akaunting/setting",
@@ -6519,6 +6519,64 @@
                 }
             ],
             "time": "2020-11-13T08:04:11+00:00"
+        },
+        {
+            "name": "diglabby/laravel-find-missing-translations",
+            "version": "1.0.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/diglabby/laravel-find-missing-translations.git",
+                "reference": "aecfcf88f29ea50d8dd402369669286ab3148d94"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/diglabby/laravel-find-missing-translations/zipball/aecfcf88f29ea50d8dd402369669286ab3148d94",
+                "reference": "aecfcf88f29ea50d8dd402369669286ab3148d94",
+                "shasum": ""
+            },
+            "require": {
+                "illuminate/console": "^5.8|^6.0|^7.0",
+                "illuminate/support": "^5.8|^6.0|^7.0",
+                "php": "^7.1.3"
+            },
+            "require-dev": {
+                "orchestra/testbench": "^3.8|^4.0|^5.0",
+                "phpunit/phpunit": "^7.5|^8.5|^9.2"
+            },
+            "type": "library",
+            "extra": {
+                "laravel": {
+                    "providers": [
+                        "Diglabby\\FindMissingTranslations\\ServiceProvider"
+                    ]
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Diglabby\\FindMissingTranslations\\": "src"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "description": "A console command to find missing translations for Laravel projects",
+            "keywords": [
+                "diglabby",
+                "laravel",
+                "translation"
+            ],
+            "support": {
+                "issues": "https://github.com/diglabby/laravel-find-missing-translations/issues",
+                "source": "https://github.com/diglabby/laravel-find-missing-translations/tree/1.0.0"
+            },
+            "funding": [
+                {
+                    "url": "https://doika.falanster.by/",
+                    "type": "custom"
+                }
+            ],
+            "time": "2020-06-26T10:29:39+00:00"
         },
         {
             "name": "doctrine/cache",

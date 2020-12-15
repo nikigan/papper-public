@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use Password;
 use Vanguard\Document;
 use Vanguard\Http\Controllers\Controller;
+use Vanguard\Invoice;
 use Vanguard\Repositories\Country\CountryRepository;
 use Vanguard\Repositories\Role\RoleRepository;
 use Vanguard\Repositories\User\UserRepository;
@@ -114,6 +115,9 @@ class ClientController extends Controller
                 return Carbon::parse($d->document_date)->format('m/y');
             });
 
+            $invoices = Invoice::query()->where('creator_id', $user->id)->get();
+//            dd($invoices);
+
             $result = [];
             $total_sum = 0;
             $total_vat = 0;
@@ -161,7 +165,7 @@ class ClientController extends Controller
             $documents = Document::query()->where('user_id', $client->id)
                 ->whereMonth('document_date', $month)
                 ->whereYear('document_date', 20 . $year)
-                ->paginate(2);
+                ->paginate(10);
         } else {
             $documents = Document::query()->where('user_id', $client->id)->paginate(10);
         }

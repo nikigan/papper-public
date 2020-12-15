@@ -11,6 +11,7 @@ class Invoices extends Plugin
     {
         return Item::create(__('Invoices'))
             ->route('invoice.index')
+            ->permissions('invoices.manage')
             ->icon('fas fa-file-alt')
             ->active("invoices*");
     }

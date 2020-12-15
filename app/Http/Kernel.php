@@ -3,6 +3,8 @@
 namespace Vanguard\Http;
 
 use Illuminate\Foundation\Http\Kernel as HttpKernel;
+use Vanguard\Http\Middleware\CanViewClient;
+use Vanguard\Http\Middleware\SetLocale;
 
 class Kernel extends HttpKernel
 {
@@ -71,6 +73,8 @@ class Kernel extends HttpKernel
         'verify-2fa-phone' => \Vanguard\Http\Middleware\VerifyTwoFactorPhone::class,
         'password-reset' => \Vanguard\Http\Middleware\PasswordResetEnabled::class,
         'banned' => \Vanguard\Http\Middleware\CheckIfBanned::class,
+        'locale' => SetLocale::class,
+        'view.client' => CanViewClient::class
     ];
 
     /**

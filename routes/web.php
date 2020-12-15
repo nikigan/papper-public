@@ -79,33 +79,12 @@ Route::group(['middleware' => ['auth', 'verified']], function () {
             ->middleware('session.database');
     });
 
-    /**
-     * Two-Factor Authentication Setup
-     */
-
-    Route::group(['middleware' => 'two-factor'], function () {
-        Route::post('two-factor/enable', 'TwoFactorController@enable')->name('two-factor.enable');
-
-        Route::get('two-factor/verification', 'TwoFactorController@verification')
-            ->name('two-factor.verification')
-            ->middleware('verify-2fa-phone');
-
-        Route::post('two-factor/resend', 'TwoFactorController@resend')
-            ->name('two-factor.resend')
-            ->middleware('throttle:1,1', 'verify-2fa-phone');
-
-        Route::post('two-factor/verify', 'TwoFactorController@verify')
-            ->name('two-factor.verify')
-            ->middleware('verify-2fa-phone');
-
-        Route::post('two-factor/disable', 'TwoFactorController@disable')->name('two-factor.disable');
-    });
-
 
     /**
      * User Management
      */
-    Route::group(['prefix' => 'admin', 'middleware' => 'role:Admin'], function () {
+    Route::group(['prefix' => 'admin', 'middleware' => ['role:Admin']], function () {
+
         Route::resource('users', 'Users\UsersController')
             ->except('update')->middleware('permission:users.manage');
 
@@ -127,6 +106,12 @@ Route::group(['middleware' => ['auth', 'verified']], function () {
             Route::post('two-factor/enable', 'TwoFactorController@enable')->name('user.two-factor.enable');
             Route::post('two-factor/disable', 'TwoFactorController@disable')->name('user.two-factor.disable');
         });
+
+       /* Route::group(['prefix' => 'document_types'], function () {
+            Route::get('/', 'DocumentTypeController@index')->name('document_types.index');
+            Route::post('/', 'DocumentTypeController@update')->name('document_types.update');
+        });*/
+        Route::resource('document_types', 'DocumentTypeController');
 
         /**
          * Roles & Permissions
@@ -194,6 +179,28 @@ Route::group(['middleware' => ['auth', 'verified']], function () {
         Route::get('activity/user/{user}/log', 'Users\ActivityController@index')->name('activity.user')
             ->middleware('permission:users.activity');
 
+        /**
+         * Two-Factor Authentication Setup
+         */
+
+        Route::group(['middleware' => 'two-factor'], function () {
+            Route::post('two-factor/enable', 'TwoFactorController@enable')->name('two-factor.enable');
+
+            Route::get('two-factor/verification', 'TwoFactorController@verification')
+                ->name('two-factor.verification')
+                ->middleware('verify-2fa-phone');
+
+            Route::post('two-factor/resend', 'TwoFactorController@resend')
+                ->name('two-factor.resend')
+                ->middleware('throttle:1,1', 'verify-2fa-phone');
+
+            Route::post('two-factor/verify', 'TwoFactorController@verify')
+                ->name('two-factor.verify')
+                ->middleware('verify-2fa-phone');
+
+            Route::post('two-factor/disable', 'TwoFactorController@disable')->name('two-factor.disable');
+        });
+
     });
 
 
@@ -217,13 +224,15 @@ Route::group(['middleware' => ['auth', 'verified']], function () {
      * Clients
      */
 
-    Route::group(['prefix' => 'clients', 'middleware' => 'permission:clients.manage'], function () {
+    Route::group(['prefix' => 'clients', 'middleware' => ['permission:clients.manage']], function () {
         Route::get('/', 'ClientController@index')->name('clients.index');
         Route::get('/create', 'ClientController@create')->name('clients.create');
         Route::post('/create', 'ClientController@store')->name('clients.store');
-        Route::get('/{client}', 'ClientController@show')->name('clients.show');
-        Route::put('/{client}/accountant/{accountant}', 'ClientController@editAccountant')->name('clients.edit.accountant');
-        Route::get('/{client}/documents', 'ClientController@documents')->name('clients.documents');
+        Route::group(['middleware' => 'view.client'], function () {
+            Route::get('/{client}', 'ClientController@show')->name('clients.show');
+            Route::put('/{client}/accountant/{accountant}', 'ClientController@editAccountant')->name('clients.edit.accountant');
+            Route::get('/{client}/documents', 'ClientController@documents')->name('clients.documents');
+        });
     });
 
     /**
