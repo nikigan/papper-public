@@ -113,6 +113,12 @@ Route::group(['middleware' => ['auth', 'verified']], function () {
         });*/
         Route::resource('document_types', 'DocumentTypeController');
 
+        Route::resource('currency', 'CurrencyController');
+
+        Route::resource('payment_types', 'PaymentTypeController');
+
+        Route::resource('organization_types', 'OrganizationTypeController');
+
         /**
          * Roles & Permissions
          */

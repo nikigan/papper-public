@@ -24,6 +24,21 @@ class Invoice extends Model
         return $this->hasMany(InvoicesItem::class);
     }
 
+    public function document_type()
+    {
+        return $this->belongsTo(DocumentType::class, 'document_type');
+    }
+
+    public function currency()
+    {
+        return $this->belongsTo(Currency::class, 'currency_id');
+    }
+
+    public function payment_type()
+    {
+        return $this->belongsTo(PaymentType::class, 'payment_type');
+    }
+
     public function getTotalAmountAttribute()
     {
         $total_amount = 0;

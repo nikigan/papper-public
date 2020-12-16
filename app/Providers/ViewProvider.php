@@ -5,7 +5,13 @@ namespace Vanguard\Providers;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\View;
 use Illuminate\Support\ServiceProvider;
+use Vanguard\Announcements\Announcements;
 use Vanguard\Document;
+use Vanguard\Support\Plugins\RolesAndPermissions;
+use Vanguard\Support\Plugins\Settings;
+use Vanguard\Support\Plugins\Users;
+use Vanguard\UserActivity\UserActivity;
+use function foo\func;
 
 class ViewProvider extends ServiceProvider
 {
@@ -46,5 +52,19 @@ class ViewProvider extends ServiceProvider
             $sum_class = $sum > 0 ? 'text-success' : 'text-danger';
             $view->with(['documents' => $documents, 'sum' => $sum, 'vat' => $vat, 'sum_class' => $sum_class]);
         });
+
+        /*View::composer('partials.sidebar.main', function(\Illuminate\View\View $view) {
+           if (auth()->user()->hasRole('Admin')) {
+               $plugins = [
+                   Users::class,
+                   UserActivity::class,
+                   RolesAndPermissions::class,
+                   Settings::class,
+                   Announcements::class
+               ];
+
+               $view->with(compact('plugins'));
+           }
+        });*/
     }
 }

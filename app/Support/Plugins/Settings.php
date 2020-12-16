@@ -27,14 +27,45 @@ class Settings extends Plugin
                 return $user->hasPermission('settings.notifications');
             });
 
+        $document_types = Item::create(__('Document Types'))
+            ->route('document_types.index')
+            ->active('document_types')
+            ->permissions(function (User $user) {
+                return $user->hasRole('Admin');
+            });
+
+        $currencies = Item::create(__('Currencies'))
+            ->route('currency.index')
+            ->active('currency')
+            ->permissions(function (User $user) {
+                return $user->hasRole('Admin');
+            });
+
+        $payment_types = Item::create(__('Payment types'))
+            ->route('payment_types.index')
+            ->active('payment_types')
+            ->permissions(function (User $user) {
+                return $user->hasRole('Admin');
+            });
+
+        $organization_types = Item::create(__('Organization types'))
+            ->route('organization_types.index')
+            ->permissions(function (User $user) {
+                return $user->hasRole('Admin');
+            });
+
         return Item::create(__('Settings'))
             ->href('#settings-dropdown')
             ->icon('fas fa-cogs')
             ->permissions(['settings.general', 'settings.auth', 'settings.notifications'])
             ->addChildren([
+                $document_types,
+                $currencies,
+                $payment_types,
+                $organization_types,
                 $general,
                 $authAndRegistration,
-                $notifications,
+                $notifications
             ]);
     }
 }

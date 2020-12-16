@@ -62,7 +62,7 @@ class VanguardServiceProvider extends BaseVanguardServiceProvider
             UnconfirmedUsers::class,
             RegistrationHistory::class,
             LatestRegistrations::class,
-            ActivityWidget::class,
+//            ActivityWidget::class,
         ];
     }
 }
