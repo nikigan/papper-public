@@ -26,6 +26,11 @@
                         <input type="text" class="form-control input-solid" id="name"
                                name="name" placeholder="@lang('Type Name')" required value="{{old('name')}}">
                     </div>
+                    <div class="custom-control custom-checkbox">
+                        <input type="checkbox" class="custom-control-input" id="have_tax"
+                               name="have_tax" value="1" checked>
+                        <label for="have_tax" class="custom-control-label">@lang('Have to pay taxes')</label>
+                    </div>
                 </div>
                 <div class="col-md-6">
                     @foreach($document_types as $type)

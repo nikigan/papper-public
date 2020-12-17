@@ -49,8 +49,9 @@ class InvoiceController extends Controller
         $currencies = Currency::all();
         $customers = Customer::query()->where('creator_id', $user->id)->get();
         $payment_types = PaymentType::all();
+        $have_tax = $organization_type->have_tax;
 
-        return view('invoices.create', compact('tax', 'user', 'customers', 'id', 'document_types', 'currencies', 'payment_types'));
+        return view('invoices.create', compact('tax', 'user', 'customers', 'id', 'document_types', 'currencies', 'payment_types', 'have_tax'));
     }
 
     /**
@@ -109,8 +110,9 @@ class InvoiceController extends Controller
     {
         $document_name = $invoice->document_type()->first()->name;
         $currency = $invoice->currency;
+        $have_tax = auth()->user()->organization_type->have_tax;
         $tax_k = $invoice->include_tax ? 1 : -1;
-        return view('invoices.show', compact('invoice', 'document_name', 'currency', 'tax_k'));
+        return view('invoices.show', compact('invoice', 'document_name', 'currency', 'tax_k', 'have_tax'));
     }
 
     /**

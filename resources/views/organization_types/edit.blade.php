@@ -28,6 +28,11 @@
                             <input type="text" class="form-control input-solid" id="name"
                                    name="name" placeholder="@lang('Type Name')" required value="{{ $organizationType->name }}">
                         </div>
+                        <div class="custom-control custom-checkbox">
+                            <input type="checkbox" class="custom-control-input" id="have_tax"
+                                   name="have_tax" value="1" @if($organizationType->have_tax) checked @endif>
+                            <label for="have_tax" class="custom-control-label">@lang('Have to pay taxes')</label>
+                        </div>
                     </div>
                     <div class="col-md-6">
                         @foreach($document_types as $type)
@@ -45,7 +50,7 @@
         <div class="row">
             <div class="col-md-12">
                 <button type="submit" class="btn btn-primary">
-                    @lang('Edit Organization Type')
+                    @lang('Update Organization Type')
                 </button>
             </div>
         </div>

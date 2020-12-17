@@ -120,6 +120,7 @@
                                     <div class="float-right col-md-5">
                                         <table class="table table-bordered table-hover" id="tab_logic_total">
                                             <tbody>
+                                            @if($have_tax)
                                             <tr>
                                                 <th class="text-center" width="60%">Sub Total
                                                     ({{ $currency->ISO_code }})
@@ -135,6 +136,7 @@
                                                 </th>
                                                 <td class="text-center">{{ number_format($invoice->total_amount * $invoice->tax_percent / 100, 2) }}</td>
                                             </tr>
+                                            @endif
                                             <tr>
                                                 <th class="text-center">Grand Total ({{ $currency->ISO_code }}
                                                     )

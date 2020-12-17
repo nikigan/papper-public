@@ -45,7 +45,7 @@ class OrganizationTypeController extends Controller
 
         $types = $request->get('document_types');
 
-        $organization_type = OrganizationType::query()->create(['name' =>$request->get('name')]);
+        $organization_type = OrganizationType::query()->create(['name' => $request->get('name'), 'have_tax' => $request->get('have_tax') ?? 0]);
         $organization_type->document_types()->sync(array_keys($types));
 
         return redirect()->route('organization_types.index')->with('success', __('Organization type created successfully'));
@@ -79,7 +79,7 @@ class OrganizationTypeController extends Controller
 
         $types = $request->get('document_types');
 
-        $organizationType->update(['name' =>$request->get('name')]);
+        $organizationType->update(['name' => $request->get('name'), 'have_tax' => $request->get('have_tax') ?? 0]);
         $organizationType->document_types()->sync(array_keys($types));
 
         return redirect()->route('organization_types.index')->with('success', __('Organization type updated successfully'));
