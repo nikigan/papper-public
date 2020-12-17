@@ -6,10 +6,13 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Response;
 use Illuminate\View\View;
+use Vanguard\Currency;
 use Vanguard\Customer;
+use Vanguard\DocumentType;
 use Vanguard\Http\Controllers\Controller;
 use Vanguard\Invoice;
 use Vanguard\InvoicesItem;
+use Vanguard\PaymentType;
 
 class InvoiceController extends Controller
 {
@@ -41,9 +44,13 @@ class InvoiceController extends Controller
         $id = $statement[0]->Auto_increment;
         $tax = 17;
         $user = auth()->user();
+        $organization_type = $user->organization_type;
+        $document_types = $organization_type->document_types;
+        $currencies = Currency::all();
         $customers = Customer::query()->where('creator_id', $user->id)->get();
+        $payment_types = PaymentType::all();
 
-        return view('invoices.create', compact('tax', 'user', 'customers', 'id'));
+        return view('invoices.create', compact('tax', 'user', 'customers', 'id', 'document_types', 'currencies', 'payment_types'));
     }
 
     /**
@@ -53,14 +60,29 @@ class InvoiceController extends Controller
      */
     public function store(Request $request)
     {
+        $prefix = DocumentType::query()->find($request->get('invoice')['document_type'])->prefix;
+
+        $request->merge([
+            'invoice[invoice_number]' => $prefix . $request->get('invoice')['invoice_number']
+        ]);
+
         $request->validate([
-            'invoice.invoice_number' => 'unique:invoices,invoice_number',
+            'invoice[invoice_number]' => 'unique:invoices,invoice_number',
             'invoice.invoice_date' => 'before_or_equal:today',
             'invoice.customer_id' => 'required'
 
         ]);
 
-        $invoice = Invoice::query()->create($request->invoice + [
+        /*dd($request->except('invoice.invoice_number')['invoice'] + [
+                'invoice_number' => $request->get('invoice[invoice_number]'),
+                'creator_id' => auth()->id()
+            ]);*/
+        /*dd($request->except('invoice.invoice_number')['invoice'] + [
+        'invoice_number' => $request->get('invoice[invoice_number]'),
+        'creator_id' => auth()->id()
+    ]);*/
+        $invoice = Invoice::query()->create($request->except('invoice.invoice_number')['invoice'] + [
+            'invoice_number' => $request->get('invoice[invoice_number]'),
             'creator_id' => auth()->id()
             ]);
 
@@ -85,7 +107,10 @@ class InvoiceController extends Controller
      */
     public function show(Invoice $invoice)
     {
-        return view('invoices.show', compact('invoice'));
+        $document_name = $invoice->document_type()->first()->name;
+        $currency = $invoice->currency;
+        $tax_k = $invoice->include_tax ? 1 : -1;
+        return view('invoices.show', compact('invoice', 'document_name', 'currency', 'tax_k'));
     }
 
     /**

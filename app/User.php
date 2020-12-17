@@ -115,6 +115,11 @@ class User extends Authenticatable implements TwoFactorAuthenticatableContract, 
         return $this->belongsTo(User::class, 'accountant_id');
     }
 
+    public function organization_type()
+    {
+        return $this->belongsTo(OrganizationType::class);
+    }
+
     /**
      * Send the password reset notification.
      *

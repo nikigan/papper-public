@@ -17,3 +17,4 @@ yarn-error.log
 /documentation
 /public/upload/documents/
 /papper.auth.zip
+*.zip

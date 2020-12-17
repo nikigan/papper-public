@@ -22,15 +22,55 @@
                 <div class="card-body">
                     <div class="container">
                         <div class="row clearfix">
-                            <div class="col-md-4 offset-4 text-center">
-                                @lang("Invoice number")*:
-                                <br/>
-                                <input type="text" name='invoice[invoice_number]' class="form-control"
-                                       value="{{$id}}" required/>
-                                @lang("Invoice date")*:
-                                <br/>
-                                <input type="date" name='invoice[invoice_date]' class="form-control"
-                                       value="{{ date('Y-m-d') }}" required/>
+                            <div class="col-md-6 text-center">
+                                <div class="form-group">
+                                    <label for="document_type">@lang("Document type")*:</label>
+                                        <select name='invoice[document_type]' class="form-control" id="document_type">
+                                            @foreach($document_types as $document_type)
+                                                <option value="{{$document_type->id}}"
+                                                        data-prefix="{{$document_type->prefix}}"
+                                                        @if($loop->first) selected @endif>@lang($document_type->name)</option>
+                                            @endforeach
+                                        </select>
+                                </div>
+                                <div class="form-group">
+                                    <label for="invoice_number">@lang("Document number")*:</label>
+                                    <div class="input-group">
+                                        <div class="input-group-prepend">
+                                            <div class="input-group-text"
+                                                 id="prefix">{{$document_types[0]->prefix}}</div>
+                                        </div>
+                                        <input type="text" name='invoice[invoice_number]' class="form-control"
+                                               value="{{$id}}" required
+                                               id="invoice_number"/>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label for="date">@lang("Document date")*:</label>
+                                        <input id="date" type="date" name='invoice[invoice_date]' max="{{ date('Y-m-d') }}"
+                                               class="form-control"
+                                               value="{{ date('Y-m-d') }}" required/>
+                                </div>
+                            </div>
+                            <div class="col-md-6 text-center">
+                                <div class="form-group">
+                                    <label for="currency">@lang("Currency")*:</label>
+                                        <select name='invoice[currency_id]' class="form-control" id="currency">
+                                            @foreach($currencies as $currency)
+                                                <option value="{{$currency->id}}"
+                                                        data-currency="{{$currency->ISO_code}}">@lang($currency->name)</option>
+                                            @endforeach
+                                        </select>
+                                </div>
+                                <div class="form-group">
+                                    <label for="payment">@lang("Payment type")*:</label>
+                                        <select name='invoice[payment_type]' class="form-control" id="payment">
+                                            @foreach($payment_types as $payment_type)
+                                                <option
+                                                    value="{{$payment_type->id}}">@lang($payment_type->name)</option>
+                                            @endforeach
+                                        </select>
+                                </div>
                             </div>
                         </div>
 
@@ -79,8 +119,12 @@
                                         <th class="text-center"> #</th>
                                         <th class="text-center"> @lang("Product")</th>
                                         <th class="text-center"> @lang("Qty")</th>
-                                        <th class="text-center"> @lang("Price") ({{ config('invoices.currency') }})</th>
-                                        <th class="text-center"> @lang("Total") ({{ config('invoices.currency') }})</th>
+                                        <th class="text-center"> @lang("Price") (<span
+                                                class="currency">{{$currencies[0]->ISO_code}}</span>)
+                                        </th>
+                                        <th class="text-center"> @lang("Total") (<span
+                                                class="currency">{{$currencies[0]->ISO_code}}</span>)
+                                        </th>
                                     </tr>
                                     </thead>
                                     <tbody>
@@ -122,7 +166,7 @@
                                         <tbody>
                                         <tr>
                                             <th class="text-center" style="width: 60%">@lang("Sub Total")
-                                                ({{ config('invoices.currency') }})
+                                                (<span class="currency">{{$currencies[0]->ISO_code}}</span>)
                                             </th>
                                             <td class="text-center"><input type="number" name='sub_total'
                                                                            placeholder='0.00' class="form-control"
@@ -149,7 +193,7 @@
                                         </tr>
                                         <tr>
                                             <th class="text-center">@lang("Tax Amount")
-                                                ({{ config('invoices.currency') }})
+                                                (<span class="currency">{{$currencies[0]->ISO_code}}</span>)
                                             </th>
                                             <td class="text-center"><input type="number" name='tax_amount'
                                                                            id="tax_amount" placeholder='0.00'
@@ -157,7 +201,7 @@
                                         </tr>
                                         <tr>
                                             <th class="text-center">@lang("Grand Total")
-                                                ({{ config('invoices.currency') }})
+                                                (<span class="currency">{{$currencies[0]->ISO_code}}</span>)
                                             </th>
                                             <td class="text-center"><input type="number" name='total_amount'
                                                                            id="total_amount" placeholder='0.00'
@@ -204,6 +248,15 @@
             $('#include_tax').change(function () {
                 calc_total();
             });
+
+            $('#document_type').change(function (event) {
+                const prefix = $('#document_type option:selected').data('prefix');
+                $('#prefix').text(prefix);
+            });
+
+            $('#currency').change(function () {
+                $('.currency').text($(this).find('option:selected').data('currency'));
+            })
         });
 
         function calc() {
@@ -230,5 +283,6 @@
             $('#tax_amount').val(tax_sum.toFixed(2));
             $('#total_amount').val((k * tax_sum + total).toFixed(2));
         }
+
     </script>
 @stop

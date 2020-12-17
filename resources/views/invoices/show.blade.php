@@ -17,7 +17,7 @@
         <div class="row justify-content-center">
             <div class="col-md-12">
                 <div class="card">
-                    <div class="card-header">Invoice number {{ $invoice->invoice_number }}</div>
+                    <div class="card-header">{{$document_name}} number {{ $invoice->invoice_number }}</div>
 
                     <div class="card-body">
                         <div class="container">
@@ -30,7 +30,7 @@
                                 @endif
 
                                 <div class="col-md-4 offset-4 text-center">
-                                    <b>Invoice {{ $invoice->invoice_number }}</b>
+                                    <b>{{$document_name}} {{ $invoice->invoice_number }}</b>
                                     <br/>
                                     {{ $invoice->invoice_date }}
                                 </div>
@@ -97,8 +97,8 @@
                                             <th class="text-center"> #</th>
                                             <th class="text-center"> Product</th>
                                             <th class="text-center"> Qty</th>
-                                            <th class="text-center"> Price ({{ config('invoices.currency') }})</th>
-                                            <th class="text-center"> Total ({{ config('invoices.currency') }})</th>
+                                            <th class="text-center"> Price ({{ $currency->ISO_code }})</th>
+                                            <th class="text-center"> Total ({{ $currency->ISO_code }})</th>
                                         </tr>
                                         </thead>
                                         <tbody>
@@ -122,7 +122,7 @@
                                             <tbody>
                                             <tr>
                                                 <th class="text-center" width="60%">Sub Total
-                                                    ({{ config('invoices.currency') }})
+                                                    ({{ $currency->ISO_code }})
                                                 </th>
                                                 <td class="text-center">{{ number_format($invoice->total_amount, 2) }}</td>
                                             </tr>
@@ -131,15 +131,15 @@
                                                 <td class="text-center">{{ $invoice->tax_percent }}%</td>
                                             </tr>
                                             <tr>
-                                                <th class="text-center">Tax Amount ({{ config('invoices.currency') }})
+                                                <th class="text-center">Tax Amount ({{ $currency->ISO_code }})
                                                 </th>
                                                 <td class="text-center">{{ number_format($invoice->total_amount * $invoice->tax_percent / 100, 2) }}</td>
                                             </tr>
                                             <tr>
-                                                <th class="text-center">Grand Total ({{ config('invoices.currency') }}
+                                                <th class="text-center">Grand Total ({{ $currency->ISO_code }}
                                                     )
                                                 </th>
-                                                <td class="text-center">{{ number_format($invoice->total_amount + ($invoice->total_amount * $invoice->tax_percent / 100), 2) }}</td>
+                                                <td class="text-center">{{ number_format($invoice->total_amount + ($tax_k * $invoice->total_amount * $invoice->tax_percent / 100), 2) }}</td>
                                             </tr>
                                             </tbody>
                                         </table>

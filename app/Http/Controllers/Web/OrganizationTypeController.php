@@ -88,11 +88,12 @@ class OrganizationTypeController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  int  $id
+     * @param OrganizationType $organizationType
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy(OrganizationType $organizationType)
     {
-        //
+        $organizationType->delete();
+        return redirect()->route('organization_types.index')->with('success', __('Ogranization type deleted successfully'));
     }
 }
