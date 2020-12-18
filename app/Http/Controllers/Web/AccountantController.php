@@ -3,6 +3,7 @@
 namespace Vanguard\Http\Controllers\Web;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Crypt;
 use Vanguard\Http\Controllers\Controller;
 use Vanguard\Repositories\Country\CountryRepository;
 use Vanguard\Repositories\Role\RoleRepository;
@@ -90,7 +91,9 @@ class AccountantController extends Controller
             $data['username'] = null;
         }
 
-        $this->users->create($data);
+        $user = $this->users->create($data);
+        $token = Crypt::encrypt($user->id);
+        $user->sendEmailAccountCreated($token);
 
         return redirect()->route('accountants.index')
             ->withSuccess(__('Accountant created successfully.'));

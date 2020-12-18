@@ -148,10 +148,14 @@ class InvoiceController extends Controller
     }
 
     public function download(Invoice $invoice)
-    {;
-        $pdf = \PDF::loadView('invoices.pdf', compact('invoice'));
+    {
+        $document_name = $invoice->document_type()->first()->name;
+        $currency = $invoice->currency;
+        $have_tax = auth()->user()->organization_type->have_tax;
+        $tax_k = $invoice->include_tax ? 1 : -1;
+        $pdf = \PDF::loadView('invoices.pdf', compact('invoice', 'document_name', 'currency', 'have_tax', 'tax_k'));
         return Response::streamDownload(function () use ($pdf) {
             echo $pdf->stream();
-        }, "invoice-{$invoice->invoice_number}.pdf");
+        }, "{$document_name}-{$invoice->invoice_number}.pdf");
     }
 }

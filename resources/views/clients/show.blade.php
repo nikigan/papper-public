@@ -16,6 +16,16 @@
 
 @section('content')
     @include('partials.messages')
+
+    <ul class="nav nav-pills pb-3">
+        <li class="nav-item">
+            <a class="nav-link" href="{{route('clients.last', ['client' => $user])}}">@lang('Last')</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" href="{{route('clients.waiting', ['client' => $user])}}">@lang('Waiting')</a>
+        </li>
+    </ul>
+
     <div class="card">
         <div class="card-body">
             <h2>{{ $user->present()->name }}</h2>

@@ -5,6 +5,7 @@ namespace Vanguard\Http;
 use Illuminate\Foundation\Http\Kernel as HttpKernel;
 use Vanguard\Http\Middleware\CanViewClient;
 use Vanguard\Http\Middleware\SetLocale;
+use Vanguard\Http\Middleware\ValidateSignature;
 
 class Kernel extends HttpKernel
 {
@@ -74,7 +75,7 @@ class Kernel extends HttpKernel
         'password-reset' => \Vanguard\Http\Middleware\PasswordResetEnabled::class,
         'banned' => \Vanguard\Http\Middleware\CheckIfBanned::class,
         'locale' => SetLocale::class,
-        'view.client' => CanViewClient::class
+        'view.client' => CanViewClient::class,
     ];
 
     /**

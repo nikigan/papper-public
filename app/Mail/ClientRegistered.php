@@ -13,15 +13,17 @@ class ClientRegistered extends Mailable implements ShouldQueue
     use Queueable, SerializesModels;
 
     public $token;
+    protected $user;
 
     /**
      * Create a new message instance.
      *
      * @return void
      */
-    public function __construct($token)
+    public function __construct($token, $user)
     {
         $this->token = $token;
+        $this->user = $user;
     }
 
     /**
@@ -33,6 +35,6 @@ class ClientRegistered extends Mailable implements ShouldQueue
     {
         $subject = sprintf("[%s] %s", setting('app_name'), __('You are registered'));
 
-        return $this->subject($subject)->markdown('mail.user-registered');
+        return $this->subject($subject)->markdown('mail.client-registered')->with(['user' => $this->user]);
     }
 }

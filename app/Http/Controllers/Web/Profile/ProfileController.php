@@ -5,6 +5,7 @@ namespace Vanguard\Http\Controllers\Web\Profile;
 use Illuminate\Contracts\View\Factory;
 use Illuminate\View\View;
 use Vanguard\Http\Controllers\Controller;
+use Vanguard\OrganizationType;
 use Vanguard\Repositories\Country\CountryRepository;
 use Vanguard\Repositories\Role\RoleRepository;
 use Vanguard\Repositories\User\UserRepository;
@@ -56,6 +57,7 @@ class ProfileController extends Controller
             'user' => auth()->user(),
             'edit' => true,
             'roles' => $roles,
+            'organization_types' => OrganizationType::all()->pluck('name', 'id'),
             'countries' => [0 => __('Select a Country')] + $this->countries->lists()->toArray(),
             'socialLogins' => $this->users->getUserSocialLogins(auth()->id()),
             'statuses' => UserStatus::lists()

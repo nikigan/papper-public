@@ -21,6 +21,9 @@ Route::group(['middleware' => ['registration', 'guest']], function () {
     Route::post('register', 'Auth\RegisterController@register');
 });
 
+Route::get('/invite/client/{user}', 'InviteController@inviteClient')->name('client.invite');
+Route::post('/invite/client/{user}', 'InviteController@updateClient')->name('client.invite.update');
+
 Route::emailVerification();
 
 Route::group(['middleware' => ['password-reset', 'guest']], function () {
@@ -238,6 +241,8 @@ Route::group(['middleware' => ['auth', 'verified']], function () {
             Route::get('/{client}', 'ClientController@show')->name('clients.show');
             Route::put('/{client}/accountant/{accountant}', 'ClientController@editAccountant')->name('clients.edit.accountant');
             Route::get('/{client}/documents', 'ClientController@documents')->name('clients.documents');
+            Route::get('/{client}/last', 'ClientController@last')->name('clients.last');
+            Route::get('/{client}/waiting', 'ClientController@waiting')->name('clients.waiting');
         });
     });
 

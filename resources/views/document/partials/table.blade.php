@@ -32,4 +32,6 @@
         </tbody>
     </table>
 </div>
-{{$documents->withQueryString()->links()}}
+@if($documents instanceof \Illuminate\Pagination\LengthAwarePaginator)
+    {{ $documents->withQueryString()->links() }}
+@endif

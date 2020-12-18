@@ -7,7 +7,7 @@
         </div>
 --}}
         <div class="text-center">
-            <b>Invoice {{ $invoice->invoice_number }}</b>
+            <b>{{$document_name}} {{ $invoice->invoice_number }}</b>
             <br>
             {{ $invoice->invoice_date }}
         </div>
@@ -72,8 +72,8 @@
                 <th class="text-center"> #</th>
                 <th> Product</th>
                 <th class="text-center"> Qty</th>
-                <th class="text-center"> Price ({{ config('invoices.currency') }})</th>
-                <th class="text-center"> Total ({{ config('invoices.currency') }})</th>
+                <th class="text-center"> Price ({{ $currency->ISO_code }})</th>
+                <th class="text-center"> Total ({{ $currency->ISO_code }})</th>
             </tr>
             </thead>
             <tbody>
@@ -96,7 +96,7 @@
             <tbody>
             @if ($invoice->tax_percent > 0)
                 <tr>
-                    <th class="text-right">Sub Total ({{ config('invoices.currency') }}):</th>
+                    <th class="text-right">Sub Total ({{ $currency->ISO_code  }}):</th>
                     <td class="text-left">
                         {{ number_format($invoice->total_amount, 2) }}
                     </td>
@@ -107,17 +107,17 @@
                         {{ $invoice->tax_percent }}%
                 </tr>
                 <tr>
-                    <th class="text-right">Tax Amount ({{ config('invoices.currency') }}):</th>
+                    <th class="text-right">Tax Amount ({{ $currency->ISO_code  }}):</th>
                     <td class="text-left">
                         {{ number_format($invoice->total_amount * $invoice->tax_percent / 100, 2) }}
                     </td>
                 </tr>
             @endif
             <tr>
-                <th class="text-right">Grand Total ({{ config('invoices.currency') }}):</th>
+                <th class="text-right">Grand Total ({{ $currency->ISO_code  }}):</th>
                 <td class="text-left">
                     @if ($invoice->tax_percent > 0)
-                        {{ number_format($invoice->total_amount * (1 + $invoice->tax_percent / 100), 2) }}
+                        {{ number_format($invoice->total_amount + ($tax_k * $invoice->total_amount * $invoice->tax_percent / 100), 2) }}
                     @else
                         {{ number_format($invoice->total_amount, 2) }}
                     @endif

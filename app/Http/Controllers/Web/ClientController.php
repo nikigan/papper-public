@@ -4,6 +4,8 @@ namespace Vanguard\Http\Controllers\Web;
 
 use Carbon\Carbon;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Crypt;
+use Illuminate\Support\Facades\Hash;
 use Password;
 use Vanguard\Document;
 use Vanguard\Http\Controllers\Controller;
@@ -12,6 +14,7 @@ use Vanguard\Repositories\Country\CountryRepository;
 use Vanguard\Repositories\Role\RoleRepository;
 use Vanguard\Repositories\User\UserRepository;
 use Vanguard\Services\Auth\TwoFactor\Authenticatable;
+use Vanguard\Support\Enum\DocumentStatus;
 use Vanguard\Support\Enum\UserStatus;
 use Vanguard\User;
 
@@ -24,6 +27,8 @@ class ClientController extends Controller
     private $users;
 
     private RoleRepository $roles;
+
+    private $token;
 
     /**
      * UsersController constructor.
@@ -95,9 +100,8 @@ class ClientController extends Controller
         }
 
         $user = $this->users->create($data);
-        Password::sendResetLink([
-            'email' => $request->email
-        ]);
+        $token = Crypt::encrypt($user->id);
+        $user->sendEmailAccountCreated($token);
 
         return redirect()->route('clients.index')
             ->withSuccess(__('Client created successfully.'));
@@ -116,7 +120,6 @@ class ClientController extends Controller
             });
 
             $invoices = Invoice::query()->where('creator_id', $user->id)->get();
-//            dd($invoices);
 
             $result = [];
             $total_sum = 0;
@@ -136,16 +139,7 @@ class ClientController extends Controller
                 $total_vat += $vat;
                 $result[$date] = ['sum' => $sum, 'vat' => $vat, 'class' => $sum >= 0 ? 'text-success' : 'text-danger'];
             }
-            /*$sum = 0;
-            $vat = 0;
-            foreach ($documents as $document) {
-                if ($document->status == 'Confirmed') {
-                    $k = $document->document_type ? 1 : -1;
-                    $sum += $k * $document->sum;
-                    $vat += $k * $document->vat;
-                }
-            }
-            $sum_class = $sum > 0 ? 'text-success' : 'text-danger';*/
+
             $sum_class = $total_sum > 0 ? 'text-success' : 'text-danger';
             $current_user = auth()->user();
             return view('clients.show',
@@ -179,6 +173,20 @@ class ClientController extends Controller
             'accountant_id' => $accountant_id
         ]);
         return redirect()->back();
+    }
+
+    public function last($id)
+    {
+        $user = User::query()->findOrFail($id);
+        $documents = Document::query()->where('user_id', $user->id)->orderByDesc('document_date')->limit(20)->get();
+        return view('clients.documents.last', ['waiting' => false] + compact('user', 'documents'));
+    }
+
+    public function waiting($id)
+    {
+        $user = User::query()->findOrFail($id);
+        $documents = Document::query()->where('user_id', $user->id)->where('status', '=', DocumentStatus::UNCONFIRMED)->orderByDesc('document_date')->paginate(10);
+        return view('clients.documents.last', ['waiting' => true] + compact('user', 'documents'));
     }
 
     /**

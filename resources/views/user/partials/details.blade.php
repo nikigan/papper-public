@@ -1,15 +1,24 @@
 <div class="row">
     <div class="col-md-6">
+        @unless($profile)
+            <div class="form-group">
+                <label for="first_name">@lang('Role')</label>
+                {!! Form::select('role_id', $roles, $edit ? $user->role->id : '',
+                    ['class' => 'form-control input-solid', 'id' => 'role_id', $profile ? 'disabled' : '']) !!}
+            </div>
+            <div class="form-group">
+                <label for="status">@lang('Status')</label>
+                {!! Form::select('status', $statuses, $edit ? $user->status : '',
+                    ['class' => 'form-control input-solid', 'id' => 'status', $profile ? 'disabled' : '']) !!}
+            </div>
+        @endunless
+        @role('User')
         <div class="form-group">
-            <label for="first_name">@lang('Role')</label>
-            {!! Form::select('role_id', $roles, $edit ? $user->role->id : '',
-                ['class' => 'form-control input-solid', 'id' => 'role_id', $profile ? 'disabled' : '']) !!}
+            <label for="organization_type">@lang('Organization Type')</label>
+            {!! Form::select('organization_type_id', $organization_types, $edit ? $user->organization_type->id : '',
+            ['class' => 'form-control input-solid', 'id' => 'organization_type_id']) !!}
         </div>
-        <div class="form-group">
-            <label for="status">@lang('Status')</label>
-            {!! Form::select('status', $statuses, $edit ? $user->status : '',
-                ['class' => 'form-control input-solid', 'id' => 'status', $profile ? 'disabled' : '']) !!}
-        </div>
+        @endrole
         <div class="form-group">
             <label for="first_name">@lang('First Name')</label>
             <input type="text" class="form-control input-solid" id="first_name"
@@ -30,7 +39,7 @@
                        name="birthday"
                        id='birthday'
                        value="{{ $edit && $user->birthday ? $user->present()->birthday : '' }}"
-                       class="form-control input-solid" />
+                       class="form-control input-solid"/>
             </div>
         </div>
         <div class="form-group">
