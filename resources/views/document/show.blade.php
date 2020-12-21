@@ -83,6 +83,26 @@
                             </div>
                         </div>
                     </div>
+                    <div class="form-row">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label for="document_date">@lang('Document date')</label>
+                                <input type="date" max="{{ date('Y-m-d') }}" value="{{ \Carbon\Carbon::parse($document->document_date)->format('Y-m-d') }}" class="form-control" id="document_date" name="document_date" required>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label for="currency">@lang("Currency"):</label>
+                                <select name='currency_id' class="form-control" id="currency">
+                                    @foreach($currencies as $currency)
+                                        <option value="{{$currency->id}}"
+                                                data-currency="{{$currency->ISO_code}}"
+                                                    @if($document->currency->id == $currency->id) selected @endif>@lang($currency->name)</option>
+                                    @endforeach
+                                </select>
+                            </div>
+                        </div>
+                    </div>
                     <div class="my-3">
                         <div class="custom-control custom-radio custom-control-inline">
                             <input type="radio" id="document_type_0" name="document_type"

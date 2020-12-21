@@ -6,6 +6,7 @@ use Hash;
 use Illuminate\Http\Request;
 use Imagick;
 use Storage;
+use Vanguard\Currency;
 use Vanguard\Document;
 use Vanguard\Http\Controllers\Controller;
 use Vanguard\Jobs\ProcessDocument;
@@ -47,12 +48,13 @@ class DocumentController extends Controller
 
     public function show(Document $document)
     {
+        $currencies = Currency::all();
         $isPdf = false;
         if ($document->file) {
             $isPdf = mime_content_type($document->file) == 'application/pdf';
         }
         $statuses = DocumentStatus::lists();
-        return view('document.show', ['document' => $document, 'isPdf' => $isPdf, 'statuses' => $statuses]);
+        return view('document.show', ['document' => $document, 'isPdf' => $isPdf, 'statuses' => $statuses, 'currencies' => $currencies]);
     }
 
     public function upload()
@@ -115,7 +117,8 @@ class DocumentController extends Controller
 
     public function create()
     {
-        return view('document.create');
+        $currencies = Currency::all();
+        return view('document.create', compact('currencies'));
     }
 
     public function manualStore(Request $request)

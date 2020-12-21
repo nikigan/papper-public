@@ -19,8 +19,8 @@
             @isset($sum_class)
                 <tr>
                     <td colspan="4"></td>
-                    <td><strong class="{{$sum_class}}">@money($sum)</strong></td>
-                    <td><strong class="{{$sum_class}}">@money($vat)</strong></td>
+                    <td><strong class="{{$sum_class}}">{{$sum}}</strong></td>
+                    <td><strong class="{{$sum_class}}">{{$vat}}</strong></td>
                     <td></td>
                 </tr>
             @endisset

@@ -7,6 +7,7 @@ use Illuminate\Support\Facades\View;
 use Illuminate\Support\ServiceProvider;
 use Vanguard\Announcements\Announcements;
 use Vanguard\Document;
+use Vanguard\Invoice;
 use Vanguard\Support\Plugins\RolesAndPermissions;
 use Vanguard\Support\Plugins\Settings;
 use Vanguard\Support\Plugins\Users;
@@ -39,7 +40,7 @@ class ViewProvider extends ServiceProvider
             } else {
                 $documents = Document::query()->orderByDesc('document_date')->get();
             }*/
-            $documents = $view->getData()['documents'] ?? Document::query()->where('user_id', $id)->orderByDesc('document_date')->paginate(10);
+            $documents = $view->getData()['documents'] ?? Document::query()->where('user_id', $id)->orderByDesc('document_date')->get();
             $sum = 0;
             $vat = 0;
             foreach ($documents as $document) {
@@ -50,6 +51,18 @@ class ViewProvider extends ServiceProvider
                 }
             }
             $sum_class = $sum > 0 ? 'text-success' : 'text-danger';
+
+            /*$invoices = Invoice::query()->where('creator_id', $id)->get();
+
+            foreach ($invoices as $key => $value) {
+                $tax_k = $value->include_tax ? 1 : -1;
+                $invoices[$key]['total_amount'] = $value->total_amount + ($tax_k * $value->tax_percent/100 * $value->include_tax);
+                $invoices[$key]['vat'];
+
+            }
+            dump($documents);
+            dd($invoices);*/
+
             $view->with(['documents' => $documents, 'sum' => $sum, 'vat' => $vat, 'sum_class' => $sum_class]);
         });
 

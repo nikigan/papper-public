@@ -19,6 +19,11 @@ class Document extends Model
         return $this->belongsTo('Vanguard\User');
     }
 
+    public function currency()
+    {
+        return $this->belongsTo(Currency::class);
+    }
+
     public function getDate() {
         return Carbon::parse($this->created_at)->format('H:i d.m.Y');
     }

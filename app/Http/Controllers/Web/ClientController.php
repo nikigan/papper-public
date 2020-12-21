@@ -119,8 +119,6 @@ class ClientController extends Controller
                 return Carbon::parse($d->document_date)->format('m/y');
             });
 
-            $invoices = Invoice::query()->where('creator_id', $user->id)->get();
-
             $result = [];
             $total_sum = 0;
             $total_vat = 0;

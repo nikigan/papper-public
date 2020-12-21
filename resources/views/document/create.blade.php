@@ -118,6 +118,25 @@
                     <label class="custom-control-label" for="document_type_1">@lang('Income')</label>
                 </div>
             </div>
+            <div class="form-row">
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label for="document_date">@lang('Document date')</label>
+                        <input type="date" max="{{ date('Y-m-d') }}" value="{{ date('Y-m-d') }}" class="form-control" id="document_date" name="document_date" required>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label for="currency">@lang("Currency"):</label>
+                        <select name='currency_id' class="form-control" id="currency">
+                            @foreach($currencies as $currency)
+                                <option value="{{$currency->id}}"
+                                        data-currency="{{$currency->ISO_code}}">@lang($currency->name)</option>
+                            @endforeach
+                        </select>
+                    </div>
+                </div>
+            </div>
             <div class="col-lg-6" id="drop-area">
                 <label for="file" id="file-label">Upload file</label>
                 <input type="file" accept="image/png, image/jpeg, .pdf" name="file" id="file">

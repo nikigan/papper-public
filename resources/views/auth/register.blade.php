@@ -18,6 +18,7 @@
                 <h5 class="card-title text-center mt-4 text-uppercase">
                     @lang('Register')
                 </h5>
+                <p class="text-center">@lang('You are registering as an auditor now. If you want to register as a client or as an accountant, contact your auditor.')</p>
 
                 <div class="p-4">
                     @include('auth.social.buttons')
