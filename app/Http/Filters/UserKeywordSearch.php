@@ -14,6 +14,7 @@ class UserKeywordSearch implements Filter
             $q->orWhere('email', 'like', "%{$search}%");
             $q->orWhere('first_name', 'like', "%{$search}%");
             $q->orWhere('last_name', 'like', "%{$search}%");
+            $q->orWhere('phone', 'like', "{$search}%");
         });
     }
 }

@@ -6,6 +6,8 @@ use Carbon\Carbon;
 use Illuminate\Support\Facades\Blade;
 use Vanguard\Repositories\Country\CountryRepository;
 use Vanguard\Repositories\Country\EloquentCountry;
+use Vanguard\Repositories\Document\DocumentRepository;
+use Vanguard\Repositories\Document\EloquentDocument;
 use Vanguard\Repositories\Permission\EloquentPermission;
 use Vanguard\Repositories\Permission\PermissionRepository;
 use Vanguard\Repositories\Role\EloquentRole;
@@ -50,6 +52,7 @@ class AppServiceProvider extends ServiceProvider
         $this->app->singleton(PermissionRepository::class, EloquentPermission::class);
         $this->app->singleton(SessionRepository::class, DbSession::class);
         $this->app->singleton(CountryRepository::class, EloquentCountry::class);
+        $this->app->singleton(DocumentRepository::class, EloquentDocument::class);
 
         if ($this->app->environment('local')) {
             $this->app->register(\Barryvdh\LaravelIdeHelper\IdeHelperServiceProvider::class);

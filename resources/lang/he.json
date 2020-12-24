@@ -257,5 +257,6 @@
     "Type prefix": "",
     "Delete Type": "",
     "Are you sure that you want to delete this type?" : "",
-    "Document type created successfully": ""
+    "Document type created successfully": "",
+    "Other": ""
 }

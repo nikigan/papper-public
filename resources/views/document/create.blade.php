@@ -106,16 +106,29 @@
                     </div>
                 </div>
             </div>
-            <div class="my-3">
-                <div class="custom-control custom-radio custom-control-inline">
-                    <input type="radio" id="document_type_0" name="document_type" class="custom-control-input"
-                           value="0" checked>
-                    <label class="custom-control-label" for="document_type_0">@lang('Expense')</label>
+            <div class="form-row my-3 align-items-center">
+                <div class="col-md-6 form-group">
+                    <div class="custom-control custom-radio custom-control-inline">
+                        <input type="radio" id="document_type_0" name="document_type" class="custom-control-input"
+                               value="0" checked>
+                        <label class="custom-control-label" for="document_type_0">@lang('Expense')</label>
+                    </div>
+                    <div class="custom-control custom-radio custom-control-inline">
+                        <input type="radio" id="document_type_1" name="document_type" class="custom-control-input"
+                               value="1">
+                        <label class="custom-control-label" for="document_type_1">@lang('Income')</label>
+                    </div>
                 </div>
-                <div class="custom-control custom-radio custom-control-inline">
-                    <input type="radio" id="document_type_1" name="document_type" class="custom-control-input"
-                           value="1">
-                    <label class="custom-control-label" for="document_type_1">@lang('Income')</label>
+                <div class="col-md-6">
+                    <div class="form-group" id="expense_type_block">
+                        <label for="expense_type">@lang("Expense type"):</label>
+                        <select name='expense_type_id' class="form-control" id="expense_type">
+                            @foreach($expense_types as $type)
+                                <option value="{{$type->id}}">@lang($type->name)</option>
+                            @endforeach
+                            <option value="">@lang('Other')</option>
+                        </select>
+                    </div>
                 </div>
             </div>
             <div class="form-row">
@@ -149,6 +162,7 @@
                     </div>
                     <a href="{{route('vendors.create')}}">@lang('Add a new vendor')</a>
                 </div>
+
             </div>
             <div class="col-lg-6" id="drop-area">
                 <label for="file" id="file-label">Upload file</label>
@@ -172,7 +186,6 @@
 
 @section('scripts')
     <script>
-
         let dropArea = document.getElementById('drop-area');
         let fileInput = document.getElementById('file');
         ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(eventName => {
@@ -227,6 +240,14 @@
                 }
             }
         }
+
+        $('input[name=\"document_type\"]').change(function(event) {
+            if (event.target.value == 0) {
+                $('#expense_type_block').show();
+            } else {
+                $('#expense_type_block').hide();
+            }
+        })
     </script>
     @stop
 

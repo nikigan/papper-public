@@ -109,7 +109,7 @@
                         <div class="col-md-6">
                             <div class="form-group">
                                 <label for="vendor">@lang("Vendor"):</label>
-                                <select name='vendor_id' class="form-control" id="vendor" disabled>
+                                <select name='vendor_id' class="form-control" id="vendor" @nopermission('document.edit') disabled @endpermission>
                                     @foreach($vendors as $vendor)
                                         <option
                                             value="{{$vendor->id}}"
@@ -120,6 +120,19 @@
                                 </select>
                             </div>
                         </div>
+                        @if($document->document_type == 0)
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="expense_type">@lang("Expense type"):</label>
+                                    <select name='expense_type_id' class="form-control" id="expense_type" @nopermission('document.edit') disabled @endpermission>
+                                        @foreach($expense_types as $type)
+                                            <option value="{{$type->id}}">@lang($type->name)</option>
+                                        @endforeach
+                                        <option value="">@lang('Other')</option>
+                                    </select>
+                                </div>
+                            </div>
+                        @endif
                     </div>
                     <div class="my-3">
                         <div class="custom-control custom-radio custom-control-inline">

@@ -61,13 +61,13 @@
                     !!}--}}
                 </div>
 
-                <div class="col-md-6">
+                <div class="col-md-6 col-12">
                     @if(auth()->user()->hasPermission('document.upload'))
-                        <a href="{{ route('documents.upload') }}" class="btn btn-primary btn-rounded float-right">
+                        <a href="{{ route('documents.upload') }}" class="btn btn-primary btn-rounded float-right mb-sm-2">
                             <i class="fas fa-plus mr-2"></i>
                             @lang('Upload Document')
                         </a>
-                        <a href="{{ route('document.create') }}" class="btn btn-primary btn-rounded float-right mr-2">
+                        <a href="{{ route('document.create') }}" class="btn btn-primary btn-rounded float-right mr-lg-2">
                             <i class="fas fa-plus mr-2"></i>
                             @lang('Create Document')
                         </a>

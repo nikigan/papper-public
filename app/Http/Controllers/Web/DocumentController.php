@@ -8,6 +8,7 @@ use Imagick;
 use Storage;
 use Vanguard\Currency;
 use Vanguard\Document;
+use Vanguard\ExpenseType;
 use Vanguard\Http\Controllers\Controller;
 use Vanguard\Jobs\ProcessDocument;
 use Vanguard\Services\YandexVision;
@@ -57,7 +58,8 @@ class DocumentController extends Controller
             $isPdf = mime_content_type($document->file) == 'application/pdf';
         }
         $statuses = DocumentStatus::lists();
-        return view('document.show', ['document' => $document, 'isPdf' => $isPdf, 'statuses' => $statuses, 'currencies' => $currencies, 'vendors' => $vendors]);
+        $expense_types = ExpenseType::all();
+        return view('document.show', ['document' => $document, 'isPdf' => $isPdf, 'statuses' => $statuses, 'currencies' => $currencies, 'vendors' => $vendors, 'expense_types' => $expense_types]);
     }
 
     public function upload()
@@ -122,7 +124,8 @@ class DocumentController extends Controller
     {
         $currencies = Currency::all();
         $vendors = Vendor::all();
-        return view('document.create', compact('currencies', 'vendors'));
+        $expense_types = ExpenseType::all();
+        return view('document.create', compact('currencies', 'vendors', 'expense_types'));
     }
 
     public function manualStore(Request $request)

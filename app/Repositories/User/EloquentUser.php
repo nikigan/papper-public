@@ -2,7 +2,7 @@
 
 namespace Vanguard\Repositories\User;
 
-use Vanguard\Http\Filters\UserKeywordSearch;
+use Vanguard\Http\Filters\DocumentKeywordSearch;
 use Vanguard\Repositories\Role\RoleRepository;
 use Vanguard\Role;
 use Vanguard\Services\Auth\Social\ManagesSocialAvatarSize;
@@ -105,7 +105,7 @@ class EloquentUser implements UserRepository
         }
 
         if ($search) {
-            (new UserKeywordSearch)($query, $search);
+            (new DocumentKeywordSearch)($query, $search);
         }
 
         $result = $query->orderBy('id', 'desc')
@@ -267,5 +267,15 @@ class EloquentUser implements UserRepository
     {
         return User::where('role_id', $fromRoleId)
             ->update(['role_id' => $toRoleId]);
+    }
+
+    public function clients(): \Illuminate\Database\Eloquent\Builder
+    {
+        return User::query()
+            ->where(function ($q) {
+                $q->where('auditor_id', auth()->id())
+                    ->orWhere('accountant_id', auth()->id());
+            })
+            ->where('role_id', '<>', 4);
     }
 }

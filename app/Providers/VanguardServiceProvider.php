@@ -17,6 +17,7 @@ use Vanguard\Support\Plugins\Dashboard\Widgets\UnconfirmedUsers;
 use Vanguard\Support\Plugins\Dashboard\Widgets\UserActions;
 use Vanguard\Support\Plugins\Invoices;
 use Vanguard\Support\Plugins\RolesAndPermissions;
+use Vanguard\Support\Plugins\Search;
 use Vanguard\Support\Plugins\Settings;
 use Vanguard\Support\Plugins\UploadDocument;
 use Vanguard\Support\Plugins\Users;
@@ -35,6 +36,7 @@ class VanguardServiceProvider extends BaseVanguardServiceProvider
     {
         return [
 //            Dashboard::class,
+            Search::class,
             UploadDocument::class,
             Vendors::class,
             Invoices::class,

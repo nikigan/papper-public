@@ -9,7 +9,7 @@ use Vanguard\Events\User\Banned;
 use Vanguard\Events\User\Deleted;
 use Vanguard\Events\User\UpdatedByAdmin;
 use Vanguard\Http\Controllers\Api\ApiController;
-use Vanguard\Http\Filters\UserKeywordSearch;
+use Vanguard\Http\Filters\DocumentKeywordSearch;
 use Vanguard\Http\Requests\User\CreateUserRequest;
 use Vanguard\Http\Requests\User\UpdateUserRequest;
 use Vanguard\Http\Resources\UserResource;
@@ -44,7 +44,7 @@ class UsersController extends ApiController
         $users = QueryBuilder::for(User::class)
             ->allowedIncludes(UserResource::allowedIncludes())
             ->allowedFilters([
-                AllowedFilter::custom('search', new UserKeywordSearch),
+                AllowedFilter::custom('search', new DocumentKeywordSearch),
                 AllowedFilter::exact('status'),
             ])
             ->allowedSorts(['id', 'first_name', 'last_name', 'email', 'created_at', 'updated_at'])

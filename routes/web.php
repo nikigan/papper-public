@@ -214,6 +214,8 @@ Route::group(['middleware' => ['auth', 'verified']], function () {
 
     });
 
+    Route::get('/search', 'SearchController@index')->name('search.index');
+
 
     /**
      * Document upload route
