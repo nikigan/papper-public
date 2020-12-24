@@ -54,6 +54,12 @@ class Settings extends Plugin
                 return $user->hasRole('Admin');
             });
 
+        $expense_types = Item::create(__('Expense types'))
+            ->route('expense_types.index')
+            ->permissions(function (User $user) {
+                return $user->hasRole('Admin');
+            });
+
         return Item::create(__('Settings'))
             ->href('#settings-dropdown')
             ->icon('fas fa-cogs')
@@ -63,6 +69,7 @@ class Settings extends Plugin
                 $currencies,
                 $payment_types,
                 $organization_types,
+                $expense_types,
                 $general,
                 $authAndRegistration,
                 $notifications

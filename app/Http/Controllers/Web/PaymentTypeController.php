@@ -65,7 +65,7 @@ class PaymentTypeController extends Controller
             'name' => ['required', Rule::unique('payment_types', 'name')->ignore($paymentType->id)]
         ]);
 
-        PaymentType::query()->update($request->all());
+        $paymentType->update($request->all());
 
         return redirect()->route('payment_types.index')->with('success', __('Payment type updated successfully'));
     }

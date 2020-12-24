@@ -12,6 +12,8 @@ use Vanguard\Http\Controllers\Controller;
 use Vanguard\Jobs\ProcessDocument;
 use Vanguard\Services\YandexVision;
 use Vanguard\Support\Enum\DocumentStatus;
+use Vanguard\Support\Plugins\Vendors;
+use Vanguard\Vendor;
 
 class DocumentController extends Controller
 {
@@ -49,12 +51,13 @@ class DocumentController extends Controller
     public function show(Document $document)
     {
         $currencies = Currency::all();
+        $vendors = Vendor::all();
         $isPdf = false;
         if ($document->file) {
             $isPdf = mime_content_type($document->file) == 'application/pdf';
         }
         $statuses = DocumentStatus::lists();
-        return view('document.show', ['document' => $document, 'isPdf' => $isPdf, 'statuses' => $statuses, 'currencies' => $currencies]);
+        return view('document.show', ['document' => $document, 'isPdf' => $isPdf, 'statuses' => $statuses, 'currencies' => $currencies, 'vendors' => $vendors]);
     }
 
     public function upload()
@@ -118,7 +121,8 @@ class DocumentController extends Controller
     public function create()
     {
         $currencies = Currency::all();
-        return view('document.create', compact('currencies'));
+        $vendors = Vendor::all();
+        return view('document.create', compact('currencies', 'vendors'));
     }
 
     public function manualStore(Request $request)

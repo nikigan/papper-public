@@ -137,6 +137,19 @@
                     </div>
                 </div>
             </div>
+            <div class="form-row">
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label for="vendor">@lang("Vendor"):</label>
+                        <select name='vendor_id' class="form-control" id="vendor">
+                            @foreach($vendors as $vendor)
+                                <option value="{{$vendor->id}}">@lang($vendor->name)</option>
+                            @endforeach
+                        </select>
+                    </div>
+                    <a href="{{route('vendors.create')}}">@lang('Add a new vendor')</a>
+                </div>
+            </div>
             <div class="col-lg-6" id="drop-area">
                 <label for="file" id="file-label">Upload file</label>
                 <input type="file" accept="image/png, image/jpeg, .pdf" name="file" id="file">

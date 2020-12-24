@@ -122,6 +122,8 @@ Route::group(['middleware' => ['auth', 'verified']], function () {
 
         Route::resource('organization_types', 'OrganizationTypeController');
 
+        Route::resource('expense_types', 'ExpenseTypeController');
+
         /**
          * Roles & Permissions
          */
@@ -263,6 +265,7 @@ Route::group(['middleware' => ['auth', 'verified']], function () {
      */
     Route::resource('invoice', "InvoiceController")->except('edit', 'update');
     Route::resource('customers', 'CustomerController');
+    Route::resource('vendors', 'VendorController');
     Route::get('invoice/{invoice}/download', 'InvoiceController@download')->name('invoice.download');
 });
 

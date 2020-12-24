@@ -87,17 +87,35 @@
                         <div class="col-md-6">
                             <div class="form-group">
                                 <label for="document_date">@lang('Document date')</label>
-                                <input type="date" max="{{ date('Y-m-d') }}" value="{{ \Carbon\Carbon::parse($document->document_date)->format('Y-m-d') }}" class="form-control" id="document_date" name="document_date" required>
+                                <input type="date" max="{{ date('Y-m-d') }}"
+                                       value="{{ \Carbon\Carbon::parse($document->document_date)->format('Y-m-d') }}"
+                                       class="form-control" id="document_date" name="document_date" readonly required>
                             </div>
                         </div>
                         <div class="col-md-6">
                             <div class="form-group">
                                 <label for="currency">@lang("Currency"):</label>
-                                <select name='currency_id' class="form-control" id="currency">
+                                <select name='currency_id' class="form-control" id="currency" disabled>
                                     @foreach($currencies as $currency)
                                         <option value="{{$currency->id}}"
                                                 data-currency="{{$currency->ISO_code}}"
-                                                    @if($document->currency->id == $currency->id) selected @endif>@lang($currency->name)</option>
+                                                @if($document->currency->id == $currency->id) selected @endif>@lang($currency->name)</option>
+                                    @endforeach
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label for="vendor">@lang("Vendor"):</label>
+                                <select name='vendor_id' class="form-control" id="vendor" disabled>
+                                    @foreach($vendors as $vendor)
+                                        <option
+                                            value="{{$vendor->id}}"
+                                            @isset($document->vendor)
+                                            @if($document->vendor->id == $vendor->id) selected @endif
+                                            @endisset>@lang($vendor->name)</option>
                                     @endforeach
                                 </select>
                             </div>
@@ -108,14 +126,16 @@
                             <input type="radio" id="document_type_0" name="document_type"
                                    class="custom-control-input"
                                    value="0"
+                                   readonly
                                    @unless($document->document_type) checked @endunless"
-                                   @nopermission('document.edit') disabled @endpermission>
+                            @nopermission('document.edit') disabled @endpermission>
                             <label class="custom-control-label" for="document_type_0">@lang('Expense')</label>
                         </div>
                         <div class="custom-control custom-radio custom-control-inline">
                             <input type="radio" id="document_type_1" name="document_type"
                                    class="custom-control-input"
                                    value="1"
+                                   readonly
                                    @if($document->document_type) checked @endif
                                    @nopermission('document.edit') disabled @endpermission>
                             <label class="custom-control-label" for="document_type_1">@lang('Income')</label>
@@ -126,16 +146,18 @@
                         <input type="file" accept="image/png, image/jpeg, .pdf" name="file" id="file"
                                class="form-control-file" value="{{ old('file', $document->file) }}">
                     </div>--}}
+                    @permission('document.edit')
                     {!! Form::select('status', $statuses, $document->status,
                     ['class' => 'form-control input-solid my-3', 'id' => 'status']) !!}
+                    @endpermission
                     @permission('document.text')
-                            <div class="card">
-                                <div class="card-body document-text__card">
-                                    <div class="document-text">
-                                        {!! nl2br($document->document_text ?? '') !!}
-                                    </div>
-                                </div>
+                    <div class="card">
+                        <div class="card-body document-text__card">
+                            <div class="document-text">
+                                {!! nl2br($document->document_text ?? '') !!}
                             </div>
+                        </div>
+                    </div>
                     @endpermission
                     @permission('document.edit')
                     <button type="submit" class="btn btn-primary">

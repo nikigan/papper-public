@@ -38,7 +38,7 @@ class CustomerController extends Controller
             'phone' => 'required',
             'address' => 'required',
             'name' => 'required',
-            'vat_number' => 'required'
+            'vat_number' => 'required|unique:customers'
         ]);
 
         Customer::query()->create($request->all() + [
@@ -57,17 +57,6 @@ class CustomerController extends Controller
     }
 
     /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function edit($id)
-    {
-
-    }
-
-    /**
      * Update the specified resource in storage.
      */
     public function update(Request $request, Customer $customer)
@@ -77,7 +66,7 @@ class CustomerController extends Controller
             'phone' => 'required',
             'address' => 'required',
             'name' => 'required',
-            'vat_number' => 'required'
+            'vat_number' => 'required|unique:customers'
         ]);
 
         $customer->update($request->all());

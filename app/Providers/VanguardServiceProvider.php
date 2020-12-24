@@ -20,6 +20,7 @@ use Vanguard\Support\Plugins\RolesAndPermissions;
 use Vanguard\Support\Plugins\Settings;
 use Vanguard\Support\Plugins\UploadDocument;
 use Vanguard\Support\Plugins\Users;
+use Vanguard\Support\Plugins\Vendors;
 use Vanguard\UserActivity\UserActivity;
 use \Vanguard\UserActivity\Widgets\ActivityWidget;
 
@@ -35,6 +36,7 @@ class VanguardServiceProvider extends BaseVanguardServiceProvider
         return [
 //            Dashboard::class,
             UploadDocument::class,
+            Vendors::class,
             Invoices::class,
             Customers::class,
             Clients::class,

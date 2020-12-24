@@ -24,7 +24,7 @@
         <span class="{{$document->present()->sumClass()}}">{{$document->present()->sum()}}</span>
     </td>
     <td class="align-middle">
-        <span class="{{$document->present()->sumClass()}}">{{$document->present()->sum()}}</span>
+        <span class="{{$document->present()->sumClass()}}">{{$document->present()->vat()}}</span>
     </td>
     <td class="text-center align-middle">
         {{--<div class="dropdown show d-inline-block">
