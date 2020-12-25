@@ -18,6 +18,7 @@ use Vanguard\Support\Enum\DocumentStatus;
 use Vanguard\Support\Enum\UserStatus;
 use Vanguard\User;
 
+
 class ClientController extends Controller
 {
 
@@ -43,13 +44,7 @@ class ClientController extends Controller
 
     public function index()
     {
-        $users = User::query()
-            ->where(function ($q) {
-                $q->where('auditor_id', auth()->id())
-                    ->orWhere('accountant_id', auth()->id());
-            })
-            ->where('role_id', '<>', 4)
-            ->get();
+        $users = $this->users->clients()->paginate(10);
         return view('clients.index', compact('users'));
     }
 
@@ -114,10 +109,24 @@ class ClientController extends Controller
         $user = User::query()->findOrFail($id);
         $current_user_id = auth()->id();
         if ((isset($user->accountant) && $user->accountant->id == $current_user_id) || (isset($user->auditor) && $user->auditor->id == $current_user_id)) {
-            $documents = Document::query()->where('user_id', $id)->orderByDesc('document_date')->get();
+            $documents = Document::query()
+                ->where('user_id', $id)
+                ->orderByDesc('document_date')
+                ->get();
+
             $months = $documents->groupBy(function ($d) {
                 return Carbon::parse($d->document_date)->format('m/y');
             });
+
+            $invoices = Invoice::query()
+                ->where('creator_id', $id)
+                ->orderByDesc('invoice_date')
+                ->get();
+
+            $invoices_months = $invoices->groupBy(function ($d) {
+                return Carbon::parse($d->invoice_date)->format('m/y');
+            });
+
 
             $result = [];
             $total_sum = 0;
@@ -138,6 +147,26 @@ class ClientController extends Controller
                 $result[$date] = ['sum' => $sum, 'vat' => $vat, 'class' => $sum >= 0 ? 'text-success' : 'text-danger'];
             }
 
+            foreach ($invoices_months as $date => $month) {
+                $sum = 0;
+                $vat = 0;
+                foreach ($month as $invoice) {
+                    $tax = $invoice->total_amount * $invoice->tax_percent / 100;
+                    $sum += $invoice->total_amount + ($invoice->include_tax ? 0 : -1 * $tax);
+                    $vat += $tax;
+                }
+                $total_sum += $sum;
+                $total_vat += $vat;
+                $result[$date] = ['sum' => $result[$date]['sum'] + $sum, 'vat' => $result[$date]['vat'] ?? 0 + $vat, 'class' => $sum >= 0 ? 'text-success' : 'text-danger'];
+
+            }
+
+            uksort($result,
+                function ($dt1, $dt2) {
+                    $tm1 = Carbon::createFromFormat('m/y', $dt1);
+                    $tm2 = Carbon::createFromFormat('m/y', $dt2);
+                    return ($tm1 < $tm2) ? 1 : (($tm1 > $tm2) ? -1 : 0);
+            });
             $sum_class = $total_sum > 0 ? 'text-success' : 'text-danger';
             $current_user = auth()->user();
             return view('clients.show',
@@ -158,11 +187,16 @@ class ClientController extends Controller
                 ->whereMonth('document_date', $month)
                 ->whereYear('document_date', 20 . $year)
                 ->paginate(10);
+
+            $invoices = Invoice::query()->where('creator_id', $client->id)
+                ->whereMonth('invoice_date', $month)
+                ->whereYear('invoice_date', 20 . $year)
+                ->paginate(10);
         } else {
             $documents = Document::query()->where('user_id', $client->id)->paginate(10);
         }
 
-        return view('clients.documents.show', ['user' => $client] + compact('documents', 'year', 'month'));
+        return view('clients.documents.show', ['user' => $client] + compact('documents', 'year', 'month', 'invoices'));
     }
 
     public function editAccountant($user_id, $accountant_id)

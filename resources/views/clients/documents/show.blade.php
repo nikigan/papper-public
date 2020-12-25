@@ -25,43 +25,56 @@
     <div class="card">
         <div class="card-body">
             @include('document.partials.table')
-            {{--<div class="table-responsive" id="users-table-wrapper">
-                <div class="table-responsive" id="users-table-wrapper">
-                    <table class="table table-borderless table-striped">
-                        <thead>
-                        <tr>
-                            <th class="min-width-80">@lang('Document id')</th>
-                            <th class="min-width-100">@lang('Username')</th>
-                            <th class="min-width-80">@lang('Upload date')</th>
-                            <th class="min-width-80">@lang('Status')</th>
-                            <th class="min-width-100">@lang('Sum')</th>
-                            <th class="min-width-100">@lang('VAT')</th>
-                            <th class="text-center min-width-100">@lang('Action')</th>
-                        </tr>
-                        </thead>
-                        <tbody>
-                        @if (count($documents))
-                            @foreach ($documents as $document)
-                                @include('document.partials.row')
-                            @endforeach
-                            @isset($sum_class)
-                                <tr>
-                                    <td colspan="4"></td>
-                                    <td><strong class="{{$sum_class}}">@money($sum)</strong></td>
-                                    <td><strong class="{{$sum_class}}">@money($vat)</strong></td>
-                                    <td></td>
-                                </tr>
-                            @endisset
-                        @else
+        </div>
+    </div>
+    <h4>@lang('Invoices')</h4>
+    <div class="card">
+        <div class="card-body">
+            <div class="table-responsive" id="users-table-wrapper">
+                <table class="table table-borderless table-striped">
+                    <thead>
+                    <tr>
+                        <th>@lang("Invoice Date")</th>
+                        <th>@lang("Invoice Number")</th>
+                        <th>@lang("Customer")</th>
+                        <th>@lang("Total Amount")</th>
+                        <th>@lang("Action")</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    @if (count($invoices))
+                        @foreach ($invoices as $invoice)
                             <tr>
-                                <td colspan="7"><em>@lang('No records found.')</em></td>
+                                <td>{{ $invoice->invoice_date }}</td>
+                                <td>{{ $invoice->invoice_number }}</td>
+                                <td>{{ $invoice->customer->name }}</td>
+                                <td>{{ number_format($invoice->total_amount, 2) }}</td>
+                                <td>
+                                    <a href="{{ route('invoice.show', $invoice) }}" class="btn btn-sm btn-primary"><i class="fa fa-eye"></i></a>
+                                    <a href="{{ route('invoice.download', $invoice) }}" class="btn btn-sm btn-warning"><i class="fa fa-download"></i></a>
+                                    <a href="{{ route('invoice.destroy', $invoice) }}"
+                                       class="btn btn-sm btn-danger"
+                                       title="@lang('Delete Invoice')"
+                                       data-toggle="tooltip"
+                                       data-placement="top"
+                                       data-method="DELETE"
+                                       data-confirm-title="@lang('Please Confirm')"
+                                       data-confirm-text="@lang('Are you sure that you want to delete this invoice?')"
+                                       data-confirm-delete="@lang('Yes, delete it!')">
+                                        <i class="fa fa-trash"></i>
+                                    </a>
+                                </td>
                             </tr>
-                        @endif
-                        </tbody>
-                    </table>
-                </div>
-
-            </div>--}}
+                        @endforeach
+                    @else
+                        <tr>
+                            <td colspan="5"><em>@lang('No records found.')</em></td>
+                        </tr>
+                    @endif
+                    </tbody>
+                </table>
+            </div>
+            {{$invoices->withQueryString()->links()}}
         </div>
     </div>
 @endsection

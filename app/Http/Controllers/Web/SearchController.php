@@ -33,7 +33,7 @@ class SearchController extends Controller
 
         $clients = $this->users->clients();
         (new UserKeywordSearch)($clients, $query);
-        $clients = $clients->get();
+        $clients = $clients->paginate(10);
 
         $documents = $this->documents->documentsAuditor();
         (new DocumentKeywordSearch)($documents, $query);
@@ -44,9 +44,9 @@ class SearchController extends Controller
         if ($start_date) {
             $documents = $documents->where('document_date', '>=', $start_date);
         }
-        $documents = $documents->get();
-        dump($documents);
-        dump($clients);
+        $documents = $documents->paginate(10);
+        /*dump($documents);
+        dump($clients);*/
 
         return view('search.index', compact('clients', 'documents'));
     }

@@ -40,7 +40,7 @@ class ViewProvider extends ServiceProvider
             } else {
                 $documents = Document::query()->orderByDesc('document_date')->get();
             }*/
-            $documents = $view->getData()['documents'] ?? Document::query()->where('user_id', $id)->orderByDesc('document_date')->get();
+            $documents = $view->getData()['documents'] ?? Document::query()->where('user_id', $id)->orderByDesc('document_date')->paginate(10);
             $sum = 0;
             $vat = 0;
             foreach ($documents as $document) {

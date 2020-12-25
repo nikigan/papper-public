@@ -64,8 +64,9 @@ class InvoiceController extends Controller
         $prefix = DocumentType::query()->find($request->get('invoice')['document_type'])->prefix;
 
         $request->merge([
-            'invoice[invoice_number]' => $prefix . $request->get('invoice')['invoice_number']
+            'invoice[invoice_number]' => $prefix . $request->get('invoice')['invoice_number'],
         ]);
+        $tax = $request->get('invoice')['include_tax'] == 'on' ? 1 : 0;
 
         $request->validate([
             'invoice[invoice_number]' => 'unique:invoices,invoice_number',
@@ -82,7 +83,10 @@ class InvoiceController extends Controller
         'invoice_number' => $request->get('invoice[invoice_number]'),
         'creator_id' => auth()->id()
     ]);*/
-        $invoice = Invoice::query()->create($request->except('invoice.invoice_number')['invoice'] + [
+
+
+        $invoice = Invoice::query()->create($request->except('invoice.invoice_number', 'invoice.include_tax')['invoice'] + [
+            'include_tax' => $tax,
             'invoice_number' => $request->get('invoice[invoice_number]'),
             'creator_id' => auth()->id()
             ]);
@@ -110,7 +114,7 @@ class InvoiceController extends Controller
     {
         $document_name = $invoice->document_type()->first()->name;
         $currency = $invoice->currency;
-        $have_tax = auth()->user()->organization_type->have_tax;
+        $have_tax = $invoice->creator->organization_type->have_tax;
         $tax_k = $invoice->include_tax ? 1 : -1;
         return view('invoices.show', compact('invoice', 'document_name', 'currency', 'tax_k', 'have_tax'));
     }
@@ -144,7 +148,7 @@ class InvoiceController extends Controller
     public function destroy(Invoice $invoice)
     {
         $invoice->delete();
-        return redirect()->back()-with('success', __('Invoice deleted successfully'));
+        return redirect()->route('invoice.index')-with('success', __('Invoice deleted successfully'));
     }
 
     public function download(Invoice $invoice)

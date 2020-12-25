@@ -42,6 +42,7 @@
 
     <script src="{{ url(mix('assets/js/vendor.js')) }}"></script>
     <script src="{{ url('assets/js/as/app.js') }}"></script>
+    <script src="{{ url('assets/js/custom.js') }}"></script>
     @yield('scripts')
 
     @hook('app:scripts')

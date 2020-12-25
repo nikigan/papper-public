@@ -48,4 +48,15 @@ class Invoice extends Model
         return $total_amount;
     }
 
+    public function getGrandTotalAttribute()
+    {
+        $tax = $this->tax_percent / 100;
+        $total = 0;
+        foreach ($this->invoice_items as $item) {
+            $total += $item->price * $item->quantity;
+        }
+
+        return $total + ($this->include_tax ? -1 * $total * $tax : $total * $tax );
+    }
+
 }
