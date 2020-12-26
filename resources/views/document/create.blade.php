@@ -165,9 +165,13 @@
 
             </div>
             <div class="col-lg-6" id="drop-area">
-                <label for="file" id="file-label">Upload file</label>
+                <label for="file" id="file-label">@lang('Upload file')</label>
                 <input type="file" accept="image/png, image/jpeg, .pdf" name="file" id="file">
                 <div id="gallery"></div>
+            </div>
+            <div class="col-lg-8 mx-auto">
+                <label for="note" id="file-label">@lang('Comments')</label>
+                <textarea name="note" id="note" rows="7" class="form-control"></textarea>
             </div>
         </div>
     </div>

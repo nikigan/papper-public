@@ -177,6 +177,7 @@
                                 ['class' => 'form-control input-solid my-3', 'id' => 'status']) !!}
                                 @endpermission
                                 @permission('document.text')
+                                @if ($document->document_text)
                                 <div class="card">
                                     <div class="card-body document-text__card">
                                         <div class="document-text">
@@ -184,7 +185,18 @@
                                         </div>
                                     </div>
                                 </div>
+                                @endif
                                 @endpermission
+                                @if ($document->note)
+                                    <h6>@lang('Comments')</h6>
+                                    <div class="card">
+                                        <div class="card-body document-text__card">
+                                            <div class="document-text">
+                                                {!! nl2br($document->note ?? '') !!}
+                                            </div>
+                                        </div>
+                                    </div>
+                                @endif
                                 @permission('document.edit')
                                 <button type="submit" class="btn btn-primary">
                                     @lang('Update Document')
