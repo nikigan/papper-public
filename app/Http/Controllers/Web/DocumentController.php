@@ -5,11 +5,13 @@ namespace Vanguard\Http\Controllers\Web;
 use Hash;
 use Illuminate\Http\Request;
 use Imagick;
+use Maatwebsite\Excel\Facades\Excel;
 use Storage;
 use Vanguard\Currency;
 use Vanguard\Document;
 use Vanguard\ExpenseType;
 use Vanguard\Http\Controllers\Controller;
+use Vanguard\Http\Filters\DocumentKeywordSearch;
 use Vanguard\Jobs\ProcessDocument;
 use Vanguard\Services\YandexVision;
 use Vanguard\Support\Enum\DocumentStatus;
@@ -28,7 +30,7 @@ class DocumentController extends Controller
         $this->middleware('auth');
     }
 
-    public function index()
+    public function index(Request $request)
     {
         $current_user = auth()->user();
         if ($current_user->hasRole('Auditor') || $current_user->hasRole('Admin') || $current_user->hasRole('Accountant')) {
@@ -37,14 +39,30 @@ class DocumentController extends Controller
                     $q->where('auditor_id', $current_user->id)
                     ->orWhere('accountant_id', $current_user->id);
                 })
-                ->orderByDesc('document_date')
-                ->paginate(10);
+                ->orderByDesc('document_date');
         } else {
             $documents = Document::query()
                 ->with('user')
                 ->where('user_id', '=', $current_user->id)
-                ->orderByDesc('document_date')->paginate(10);
+                ->orderByDesc('created_at');
         }
+
+        if ($request->get('query')) {
+            (new DocumentKeywordSearch)($documents, $request->get('query'));
+        }
+
+        $start_date = $request->get('start_date') ?? false;
+        $end_date = $request->get('end_date') ?? false;
+
+        if ($start_date) {
+            $documents = $documents->whereDate('document_date', '>=', $start_date);
+        }
+
+        if ($end_date) {
+            $documents = $documents->whereDate('document_date', '<=', $end_date);
+        }
+
+        $documents = $documents->paginate(10);
         $statuses = DocumentStatus::lists();
         return view('document.index', compact('documents', 'statuses', 'current_user'));
     }

@@ -214,7 +214,7 @@ Route::group(['middleware' => ['auth', 'verified']], function () {
 
     });
 
-    Route::get('/search', 'SearchController@index')->name('search.index');
+    Route::get('/search', 'SearchController@index')->middleware('permission:search')->name('search.index');
 
 
     /**

@@ -157,8 +157,7 @@ class ClientController extends Controller
                 }
                 $total_sum += $sum;
                 $total_vat += $vat;
-                $result[$date] = ['sum' => $result[$date]['sum'] + $sum, 'vat' => $result[$date]['vat'] ?? 0 + $vat, 'class' => $sum >= 0 ? 'text-success' : 'text-danger'];
-
+                $result[$date] = ['sum' => ($result[$date]['sum'] ?? 0 ) + $sum, 'vat' => ($result[$date]['vat'] ?? 0) + $vat, 'class' => $sum >= 0 ? 'text-success' : 'text-danger'];
             }
 
             uksort($result,

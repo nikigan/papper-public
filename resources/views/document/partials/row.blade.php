@@ -1,7 +1,7 @@
 <tr>
     <td class="align-middle">
         <a href="{{ route('documents.show', $document) }}">
-            {{ $document->id ?: __('N/A') }}
+            {{ $document->document_number ?: __('N/A') }}
         </a>
     </td>
     <td class="align-middle">

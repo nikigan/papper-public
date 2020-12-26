@@ -45,6 +45,7 @@
         "laravel/socialite": "^4.0",
         "laravel/ui": "^2.0",
         "laravelcollective/html": "^6.1",
+        "maatwebsite/excel": "^3.1",
         "proengsoft/laravel-jsvalidation": "^3.0.0",
         "spatie/laravel-query-builder": "^2.8",
         "spatie/pdf-to-image": "^2.1",
