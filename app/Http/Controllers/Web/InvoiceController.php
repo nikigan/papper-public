@@ -57,7 +57,7 @@ class InvoiceController extends Controller
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
+     * @param \Illuminate\Http\Request $request
      */
     public function store(Request $request)
     {
@@ -66,13 +66,12 @@ class InvoiceController extends Controller
         $request->merge([
             'invoice[invoice_number]' => $prefix . $request->get('invoice')['invoice_number'],
         ]);
-        $tax = $request->get('invoice')['include_tax'] == 'on' ? 1 : 0;
+        $tax = isset($request->get('invoice')['include_tax']) ? 1 : 0;
 
         $request->validate([
             'invoice[invoice_number]' => 'unique:invoices,invoice_number',
             'invoice.invoice_date' => 'before_or_equal:today',
             'invoice.customer_id' => 'required'
-
         ]);
 
         /*dd($request->except('invoice.invoice_number')['invoice'] + [
@@ -84,14 +83,14 @@ class InvoiceController extends Controller
         'creator_id' => auth()->id()
     ]);*/
 
-
         $invoice = Invoice::query()->create($request->except('invoice.invoice_number', 'invoice.include_tax')['invoice'] + [
-            'include_tax' => $tax,
-            'invoice_number' => $request->get('invoice[invoice_number]'),
-            'creator_id' => auth()->id()
+                'include_tax' => $tax,
+                'invoice_number' => $request->get('invoice[invoice_number]'),
+                'creator_id' => auth()->id(),
+                'note' => $request->get('note')
             ]);
 
-        for ($i=0; $i < count($request->service); $i++) {
+        for ($i = 0; $i < count($request->service); $i++) {
             if (isset($request->qty[$i]) && isset($request->price[$i])) {
                 InvoicesItem::create([
                     'invoice_id' => $invoice->id,
@@ -122,19 +121,19 @@ class InvoiceController extends Controller
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  int  $id
+     * @param int $id
      * @return \Illuminate\Http\Response
      */
-   /* public function edit($id)
-    {
-        //
-    }*/
+    /* public function edit($id)
+     {
+         //
+     }*/
 
     /**
      * Update the specified resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
+     * @param \Illuminate\Http\Request $request
+     * @param int $id
      * @return \Illuminate\Http\Response
      */
     /*public function update(Request $request, $id)
@@ -148,7 +147,7 @@ class InvoiceController extends Controller
     public function destroy(Invoice $invoice)
     {
         $invoice->delete();
-        return redirect()->route('invoice.index')-with('success', __('Invoice deleted successfully'));
+        return redirect()->route('invoice.index')->with('success', __('Invoice deleted successfully'));
     }
 
     public function download(Invoice $invoice)

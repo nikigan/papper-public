@@ -117,6 +117,11 @@
                             </div>
                             <div class="row clearfix" style="margin-top:20px">
                                 <div class="col-md-12">
+                                    @if($invoice->note)
+                                    <div class="float-left col-md-7">
+                                        <p>{{$invoice->note}}</p>
+                                    </div>
+                                    @endif
                                     <div class="float-right col-md-5">
                                         <table class="table table-bordered table-hover" id="tab_logic_total">
                                             <tbody>

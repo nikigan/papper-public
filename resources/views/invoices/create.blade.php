@@ -41,14 +41,14 @@
                                                  id="prefix">{{$document_types[0]->prefix}}</div>
                                         </div>
                                         <input type="text" name='invoice[invoice_number]' class="form-control"
-                                               value="{{$id}}" required
+                                               value="{{$id}}" required readonly
                                                id="invoice_number"/>
                                     </div>
                                 </div>
                                 <div class="form-group">
                                     <label for="date">@lang("Document date")*:</label>
                                     <input id="date" type="date" name='invoice[invoice_date]' max="{{ date('Y-m-d') }}"
-                                           class="form-control"
+                                           class="form-control datechk"
                                            value="{{ date('Y-m-d') }}" required/>
                                 </div>
                             </div>
@@ -161,6 +161,12 @@
                         </div>
                         <div class="row clearfix" style="margin-top:20px">
                             <div class="col-md-12">
+                                <div class="float-left col-md-7">
+                                    <div class="form-group">
+                                        <label for="note">@lang('Comments'):</label>
+                                        <textarea name="note" class="form-control" id="note" rows="10"></textarea>
+                                    </div>
+                                </div>
                                 <div class="float-right col-md-5">
                                     <table class="table table-bordered table-hover" id="tab_logic_total">
                                         <tbody>

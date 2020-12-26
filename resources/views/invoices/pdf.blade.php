@@ -92,6 +92,11 @@
 
 
     <div class="clearfix mt-3">
+        @if($invoice->note)
+            <div class="float-left col-md-7">
+                <p>{{$invoice->note}}</p>
+            </div>
+        @endif
         <table class="float-right table tbl-total">
             <tbody>
             @if ($invoice->tax_percent > 0)

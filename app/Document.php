@@ -12,7 +12,7 @@ class Document extends Model
     use Presentable;
 
     protected $presenter = DocumentPresenter::class;
-    protected $fillable = ['file', 'user_id', 'document_number', 'sum', 'sum_without_vat', 'vat', 'document_type', 'status', 'document_date', 'vendor_id', 'currency_id', 'expense_type_id'];
+    protected $fillable = ['file', 'user_id', 'document_number', 'sum', 'sum_without_vat', 'vat', 'document_type', 'status', 'document_date', 'vendor_id', 'currency_id', 'expense_type_id', 'note'];
 
     public function user()
     {
