@@ -11,7 +11,7 @@
 
 @section('content')
     @include('partials.messages')
-    <h1>List of created invoices</h1>
+    <h1>@lang('List of created invoices')</h1>
 
     <div class="card">
         <div class="card-body">
@@ -23,7 +23,7 @@
                 </div>
 
                 <div class="col-md-6">
-                    <a href="{{ route('invoice.create') }}" class="btn btn-primary btn-rounded float-right mr-2">
+                    <a href="{{ route('invoice.create') }}" class="btn btn-primary btn-rounded action-btn mr-2">
                         <i class="fas fa-plus mr-2"></i>
                         @lang('Create Invoice')
                     </a>

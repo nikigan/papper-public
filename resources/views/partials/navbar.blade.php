@@ -48,7 +48,7 @@
             </div>
         </div>
 
-        <ul class="navbar-nav ml-auto pr-3 flex-row">
+        <ul class="navbar-nav @if(config('app.dir') == 'ltr') ml-auto @else mr-auto @endif pr-3 flex-row">
             @if (app('impersonate')->isImpersonating())
                 <li class="nav-item d-flex align-items-center visible-lg">
                     <a href="{{ route('impersonate.leave') }}" class="btn text-danger">
@@ -73,7 +73,7 @@
                          height="50"
                          class="rounded-circle img-thumbnail img-responsive">
                 </a>
-                <div class="dropdown-menu dropdown-menu-right position-absolute p-0" aria-labelledby="navbarDropdown">
+                <div class="dropdown-menu @if(config('app.dir') == 'ltr') dropdown-menu-right @else dropdown-menu-left @endif position-absolute                     p-0" aria-labelledby="navbarDropdown">
                     <a class="dropdown-item py-2" href="{{ route('profile') }}">
                         <i class="fas fa-user text-muted mr-2"></i>
                         @lang('My Profile')

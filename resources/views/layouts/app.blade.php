@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="en">
+<html lang="{{config('app.locale')}}" dir="{{config('app.dir')}}">
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
     <meta charset="utf-8">
@@ -10,13 +10,15 @@
 
     <title>@yield('page-title') - {{ setting('app_name') }}</title>
 
-    <link rel="apple-touch-icon-precomposed" sizes="144x144" href="{{ url('assets/img/icons/apple-touch-icon-144x144.png') }}" />
-    <link rel="apple-touch-icon-precomposed" sizes="152x152" href="{{ url('assets/img/icons/apple-touch-icon-152x152.png') }}" />
-    <link rel="icon" type="image/png" href="{{ url('assets/img/icons/favicon-32x32.png') }}" sizes="32x32" />
-    <link rel="icon" type="image/png" href="{{ url('assets/img/icons/favicon-16x16.png') }}" sizes="16x16" />
+    <link rel="apple-touch-icon-precomposed" sizes="144x144"
+          href="{{ url('assets/img/icons/apple-touch-icon-144x144.png') }}"/>
+    <link rel="apple-touch-icon-precomposed" sizes="152x152"
+          href="{{ url('assets/img/icons/apple-touch-icon-152x152.png') }}"/>
+    <link rel="icon" type="image/png" href="{{ url('assets/img/icons/favicon-32x32.png') }}" sizes="32x32"/>
+    <link rel="icon" type="image/png" href="{{ url('assets/img/icons/favicon-16x16.png') }}" sizes="16x16"/>
     <meta name="application-name" content="{{ setting('app_name') }}"/>
-    <meta name="msapplication-TileColor" content="#FFFFFF" />
-    <meta name="msapplication-TileImage" content="{{ url('assets/img/icons/mstile-144x144.png') }}" />
+    <meta name="msapplication-TileColor" content="#FFFFFF"/>
+    <meta name="msapplication-TileImage" content="{{ url('assets/img/icons/mstile-144x144.png') }}"/>
 
     <link media="all" type="text/css" rel="stylesheet" href="{{ url(mix('assets/css/vendor.css')) }}">
     <link media="all" type="text/css" rel="stylesheet" href="{{ url(mix('assets/css/app.css')) }}">
@@ -25,7 +27,57 @@
 
     @hook('app:styles')
 </head>
-<body>
+<style>
+@if(config('app.dir') == "rtl")
+
+        body {
+            text-align: right;
+            direction: rtl;
+        }
+
+        .content-page {
+            margin-left: unset;
+            margin-right: 250px;
+        }
+
+        @media (max-width: 991.98px) {
+            .content-page {
+                margin-right: 0;
+            }
+        }
+
+        @media (max-width: 991.98px) {
+            .sidebar:not(.expanded) {
+                margin-left: unset;
+                margin-right: -250px;
+            }
+        }
+
+        .navbar .page-header {
+            margin-right: 0;
+            margin-left: 15px;
+        }
+
+        .action-btn {
+            float: left;
+            margin-right: 10px;
+        }
+
+        .sidebar-list {
+            padding-right: 0;
+            text-align: right;
+        }
+
+        @else
+
+        .action-btn {
+            float: right;
+            margin-left: 10px;
+        }
+        @endif
+    </style>
+
+    <body>
     @include('partials.navbar')
 
     <div class="container-fluid">
@@ -46,5 +98,5 @@
     @yield('scripts')
 
     @hook('app:scripts')
-</body>
+    </body>
 </html>

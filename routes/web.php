@@ -225,6 +225,7 @@ Route::group(['middleware' => ['auth', 'verified']], function () {
         Route::get('/upload', 'DocumentController@upload')->name('documents.upload')
             ->middleware('permission:document.upload');
         Route::get('/create', 'DocumentController@create')->name('document.create')->middleware('permission:document.upload');
+        Route::get('/waiting', 'DocumentController@waiting')->name('documents.waiting');
         Route::post('/create', 'DocumentController@manualStore')->name('document.manualStore')->middleware('permission:document.upload');
         Route::post('/upload', 'DocumentController@store')->name('documents.store')
             ->middleware('permission:document.upload');
@@ -241,12 +242,16 @@ Route::group(['middleware' => ['auth', 'verified']], function () {
         Route::get('/', 'ClientController@index')->name('clients.index');
         Route::get('/create', 'ClientController@create')->name('clients.create');
         Route::post('/create', 'ClientController@store')->name('clients.store');
-        Route::group(['middleware' => 'view.client'], function () {
-            Route::get('/{client}', 'ClientController@show')->name('clients.show');
-            Route::put('/{client}/accountant/{accountant}', 'ClientController@editAccountant')->name('clients.edit.accountant');
-            Route::get('/{client}/documents', 'ClientController@documents')->name('clients.documents');
-            Route::get('/{client}/last', 'ClientController@last')->name('clients.last');
-            Route::get('/{client}/waiting', 'ClientController@waiting')->name('clients.waiting');
+        Route::group(['middleware' => 'view.client', 'prefix' => '/{client}'], function () {
+            Route::get('/', 'ClientController@show')->name('clients.show');
+            Route::put('/accountant/{accountant}', 'ClientController@editAccountant')->name('clients.edit.accountant');
+            Route::get('/documents', 'ClientController@documents')->name('clients.documents');
+            Route::get('/last', 'ClientController@last')->name('clients.last');
+            Route::get('/waiting', 'ClientController@waiting')->name('clients.waiting');
+            Route::get('/info', 'ClientController@info')->name('clients.info');
+            Route::group(['prefix' => 'reports', 'middleware' => 'permission:reports.general'], function () {
+                Route::get('report1', 'ReportController@report1')->name('reports.report1.index');
+            });
         });
     });
 
@@ -269,6 +274,7 @@ Route::group(['middleware' => ['auth', 'verified']], function () {
     Route::resource('customers', 'CustomerController');
     Route::resource('vendors', 'VendorController');
     Route::get('invoice/{invoice}/download', 'InvoiceController@download')->name('invoice.download');
+
 });
 
 

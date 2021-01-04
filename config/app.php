@@ -146,6 +146,8 @@ return [
 
     'cipher' => 'AES-256-CBC',
 
+    'dir' => env('APP_DIR', 'rtl'),
+
     /*
     |--------------------------------------------------------------------------
     | Autoloaded Service Providers

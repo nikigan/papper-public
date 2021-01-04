@@ -4,12 +4,13 @@
 namespace Vanguard\Repositories\Document;
 
 
+use Illuminate\Database\Eloquent\Builder;
 use Vanguard\Document;
 
 class EloquentDocument implements DocumentRepository
 {
 
-    public function documentsAuditor(): \Illuminate\Database\Eloquent\Builder
+    public function documentsAuditor(): Builder
     {
         $current_user = auth()->user();
          return Document::query()

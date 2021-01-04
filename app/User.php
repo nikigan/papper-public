@@ -48,7 +48,7 @@ class User extends Authenticatable implements TwoFactorAuthenticatableContract, 
         'email', 'password', 'username', 'first_name', 'last_name', 'phone', 'avatar',
         'address', 'country_id', 'birthday', 'last_login', 'confirmation_token', 'status',
         'remember_token', 'role_id', 'email_verified_at', 'accountant_id', 'auditor_id',
-        'organization_type_id'
+        'organization_type_id', 'vat_number'
     ];
 
     /**
@@ -104,6 +104,11 @@ class User extends Authenticatable implements TwoFactorAuthenticatableContract, 
     public function documents()
     {
         return $this->hasMany('Vanguard\Document');
+    }
+
+    public function invoices()
+    {
+        return $this->hasMany(Invoice::class, 'creator_id');
     }
 
     public function auditor()

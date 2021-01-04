@@ -34,15 +34,12 @@ class DocumentPresenter extends Presenter
 
     public function sumClass()
     {
-        if ($this->model->status == DocumentStatus::CONFIRMED) {
-            if ($this->model->document_type) {
-                return 'text-success';
-            } else {
-                return 'text-danger';
-            }
+        if ($this->model->document_type) {
+            return 'text-success';
+        } else {
+            return 'text-danger';
         }
 
-        return "";
     }
 
     public function sum()

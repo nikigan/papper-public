@@ -40,4 +40,8 @@ class Document extends Model
     public function getDocumentDate() {
         return Carbon::parse($this->document_date)->format(config('app.date_format'));
     }
+
+    public function getDocumentDateAttribute($value) {
+        return Carbon::parse($value)->format(config('app.date_format'));
+    }
 }

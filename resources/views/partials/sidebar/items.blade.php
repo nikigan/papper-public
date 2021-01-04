@@ -12,9 +12,12 @@
         @endif
 
         <span>{{ $item->getTitle() }}</span>
+            @if($item->getCount())
+            <span class="badge badge-pill badge-danger">{{$item->getCount()}}</span>
+            @endif
     </a>
 
-    @if ($item->isDropdown())
+@if ($item->isDropdown())
         <ul class="{{ Request::is($item->getExpandedPath()) ? '' : 'collapse' }} list-unstyled sub-menu"
             id="{{ str_replace('#', '', $item->getHref()) }}">
             @foreach ($item->children() as $child)

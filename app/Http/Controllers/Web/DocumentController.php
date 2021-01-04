@@ -13,6 +13,7 @@ use Vanguard\ExpenseType;
 use Vanguard\Http\Controllers\Controller;
 use Vanguard\Http\Filters\DocumentKeywordSearch;
 use Vanguard\Jobs\ProcessDocument;
+use Vanguard\Repositories\Document\DocumentRepository;
 use Vanguard\Services\YandexVision;
 use Vanguard\Support\Enum\DocumentStatus;
 use Vanguard\Support\Plugins\Vendors;
@@ -25,9 +26,12 @@ class DocumentController extends Controller
      * UploadDocument constructor.
      */
 
-    public function __construct()
+    protected $documentRepository;
+
+    public function __construct(DocumentRepository $documentRepository)
     {
         $this->middleware('auth');
+        $this->documentRepository = $documentRepository;
     }
 
     public function index(Request $request)
@@ -65,6 +69,31 @@ class DocumentController extends Controller
         $documents = $documents->paginate(10);
         $statuses = DocumentStatus::lists();
         return view('document.index', compact('documents', 'statuses', 'current_user'));
+    }
+
+    public function waiting(Request $request)
+    {
+        $documents = $this->documentRepository->documentsAuditor();
+        $start_date = $request->get('start_date') ?? false;
+        $end_date = $request->get('end_date') ?? false;
+
+        if ($request->get('query')) {
+            (new DocumentKeywordSearch)($documents, $request->get('query'));
+        }
+        if ($start_date) {
+            $documents = $documents->whereDate('document_date', '>=', $start_date);
+        }
+
+        if ($end_date) {
+            $documents = $documents->whereDate('document_date', '<=', $end_date);
+        }
+
+        $documents = $documents->where('status', DocumentStatus::UNCONFIRMED)->paginate(10);
+        $statuses = DocumentStatus::lists();
+        $current_user = auth()->user();
+
+        return view('document.index', compact('documents', 'statuses', 'current_user'));
+
     }
 
     public function show(Document $document)

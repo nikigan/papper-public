@@ -20,7 +20,7 @@
                 <div class="col-md-2 mt-2 mt-md-0">
                 </div>
                 <div class="col-md-6">
-                    <a href="{{ route('vendors.create') }}" class="btn btn-primary btn-rounded float-right">
+                    <a href="{{ route('vendors.create') }}" class="btn btn-primary btn-rounded action-btn">
                         <i class="fas fa-plus mr-2"></i>
                         @lang('Create Vendor')
                     </a>

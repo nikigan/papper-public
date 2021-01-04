@@ -81,5 +81,5 @@ return [
     */
     'required_extra_columns' => [
 
-    ],
+    ]
 ];

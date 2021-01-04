@@ -176,6 +176,11 @@ class ClientController extends Controller
         return redirect()->back()->withErrors(__('You cannot look at client that is not yours'));
     }
 
+
+    public function info(User $client) {
+        return view('clients.info', compact('client'));
+    }
+
     public function documents(Request $request, User $client)
     {
         $month = $request->query('month');

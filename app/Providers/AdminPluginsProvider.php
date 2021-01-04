@@ -10,8 +10,8 @@ use Vanguard\Support\Plugins\Clients;
 use Vanguard\Support\Plugins\Customers;
 use Vanguard\Support\Plugins\Invoices;
 use Vanguard\Support\Plugins\RolesAndPermissions;
-use Vanguard\Support\Plugins\Settings;
-use Vanguard\Support\Plugins\UploadDocument;
+use Vanguard\Support\Plugins\Reports;
+use Vanguard\Support\Plugins\UnconfirmedDocuments;
 use Vanguard\Support\Plugins\Users;
 use Vanguard\UserActivity\UserActivity;
 
@@ -28,7 +28,7 @@ class AdminPluginsProvider extends BaseVanguardServiceProvider
             Users::class,
             UserActivity::class,
             RolesAndPermissions::class,
-            Settings::class,
+            Reports::class,
             Announcements::class
         ];
     }

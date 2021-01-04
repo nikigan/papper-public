@@ -2,8 +2,8 @@
 
 return [
     'status' => [
-        'Confirmed' => 'Confirmed',
-        'Unconfirmed' => 'Unconfirmed',
+        'Confirmed' => 'מאושרים',
+        'Unconfirmed' => 'לא מאושרים',
         'Rejected' => 'Rejected'
     ]
 ];

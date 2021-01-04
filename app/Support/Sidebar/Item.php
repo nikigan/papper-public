@@ -15,6 +15,8 @@ class Item
     protected $activePath;
     protected $permissions;
     protected $children;
+    protected $count;
+
 
     /**
      * Item constructor.
@@ -78,6 +80,12 @@ class Item
     public function icon($icon)
     {
         $this->icon = $icon;
+
+        return $this;
+    }
+
+    public function count($count) {
+        $this->count = $count;
 
         return $this;
     }
@@ -161,6 +169,11 @@ class Item
     public function getTitle()
     {
         return $this->title;
+    }
+
+    public function getCount()
+    {
+        return $this->count;
     }
 
     /**

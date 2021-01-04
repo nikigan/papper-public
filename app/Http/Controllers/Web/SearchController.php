@@ -2,7 +2,6 @@
 
 namespace Vanguard\Http\Controllers\Web;
 
-use Illuminate\Database\Query\Builder;
 use Illuminate\Http\Request;
 use Vanguard\Http\Controllers\Controller;
 use Vanguard\Http\Filters\DocumentKeywordSearch;
@@ -11,16 +10,17 @@ use Vanguard\Http\Filters\UserKeywordSearch;
 use Vanguard\Invoice;
 use Vanguard\Repositories\Document\DocumentRepository;
 use Vanguard\Repositories\User\UserRepository;
-use Vanguard\User;
 
 class SearchController extends Controller
 {
 
-    protected $users;
-    protected $documents;
+    protected UserRepository $users;
+    protected DocumentRepository $documents;
 
     /**
      * SearchController constructor.
+     * @param UserRepository $users
+     * @param DocumentRepository $documents
      */
     public function __construct(UserRepository $users, DocumentRepository $documents)
     {
@@ -61,8 +61,6 @@ class SearchController extends Controller
 
 
         $invoices = $invoices->paginate(10, ['*'], 'invoice_page');
-        /*dump($documents);
-        dump($clients);*/
 
         return view('search.index', compact('clients', 'documents', 'invoices'));
     }

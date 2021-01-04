@@ -27,7 +27,7 @@
 
                             <span class="input-group-append">
                                 @if (Request::has('query') && Request::get('query') != '')
-                                    <a href="{{ route('documents.index') }}"
+                                    <a href="{{ url()->current()}}"
                                        class="btn btn-light d-flex align-items-center text-muted"
                                        role="button">
                                                             <i class="fas fa-times"></i>
@@ -60,7 +60,7 @@
         </div>
     </div>
 
-    <h1>List of uploaded documents</h1>
+    <h1>@lang('List of uploaded documents')</h1>
     {{-- <div class="row py-3">
          @foreach($documents as $document)
              <div class="col-lg-4">
@@ -112,11 +112,11 @@
 
                 <div class="col-md-6 col-12">
                     @if(auth()->user()->hasPermission('document.upload'))
-                        <a href="{{ route('documents.upload') }}" class="btn btn-primary btn-rounded float-right mb-sm-2">
+                        <a href="{{ route('documents.upload') }}" class="btn btn-primary btn-rounded action-btn mb-sm-2">
                             <i class="fas fa-plus mr-2"></i>
                             @lang('Upload Document')
                         </a>
-                        <a href="{{ route('document.create') }}" class="btn btn-primary btn-rounded float-right mr-lg-2">
+                        <a href="{{ route('document.create') }}" class="btn btn-primary btn-rounded action-btn mr-lg-2">
                             <i class="fas fa-plus mr-2"></i>
                             @lang('Create Document')
                         </a>

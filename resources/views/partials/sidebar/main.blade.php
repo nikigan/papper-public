@@ -27,7 +27,7 @@
     </div>
 
     <div class="sidebar-sticky">
-        <ul class="nav flex-column">
+        <ul class="nav flex-column sidebar-list">
             @foreach (\Vanguard\Plugins\Vanguard::availablePlugins() as $plugin)
                 @include('partials.sidebar.items', ['item' => $plugin->sidebar()])
             @endforeach

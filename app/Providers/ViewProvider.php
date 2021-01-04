@@ -9,7 +9,7 @@ use Vanguard\Announcements\Announcements;
 use Vanguard\Document;
 use Vanguard\Invoice;
 use Vanguard\Support\Plugins\RolesAndPermissions;
-use Vanguard\Support\Plugins\Settings;
+use Vanguard\Support\Plugins\Reports;
 use Vanguard\Support\Plugins\Users;
 use Vanguard\UserActivity\UserActivity;
 use function foo\func;
