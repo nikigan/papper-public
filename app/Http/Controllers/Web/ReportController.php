@@ -5,6 +5,7 @@ namespace Vanguard\Http\Controllers\Web;
 use Illuminate\Http\Request;
 use Vanguard\DocumentType;
 use Vanguard\Http\Controllers\Controller;
+use Vanguard\Support\Enum\DocumentStatus;
 use Vanguard\User;
 
 class ReportController extends Controller
@@ -12,10 +13,10 @@ class ReportController extends Controller
     public function report1(Request $request, User $client)
     {
 
-        $start_date = $request->get('start_date') ?? null;
-        $end_date = $request->get('end_date') ?? null;
+        $start_date = $request->get('start_date') ?? date('Y-m-d', strtotime(date('Y-m-d') . "-1 month"));
+        $end_date = $request->get('end_date') ?? date('Y-m-d');
 
-        $expenses = $client->documents()->where('document_type', '=', 0)->orderByDesc('document_date');
+        $expenses = $client->documents()->where('document_type', '=', 0)->orderByDesc('document_date')->where('status', DocumentStatus::CONFIRMED);
 
         $expenses_columns = [
             [
@@ -80,11 +81,13 @@ class ReportController extends Controller
 
         $expenses = $expenses->get();
         $incomes = $incomes->get();
+
         $invoices = $invoices->get();
 
         $incomes = $incomes->merge($invoices);
+        $incomes_without_vat = $incomes->where('vat', '<>', 0);
 
 
-        return view('reports.report1', compact('expenses', 'invoices', 'incomes', 'expenses_columns', 'income_columns'));
+        return view('reports.report1', compact('expenses', 'invoices', 'incomes', 'expenses_columns', 'income_columns', 'client'));
     }
 }

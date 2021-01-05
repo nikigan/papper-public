@@ -214,7 +214,7 @@ class ClientController extends Controller
     public function last($id)
     {
         $user = User::query()->findOrFail($id);
-        $documents = Document::query()->where('user_id', $user->id)->orderByDesc('document_date')->limit(20)->get();
+        $documents = Document::query()->where('user_id', $user->id)->orderByDesc('updated_at')->limit(20)->get();
         return view('clients.documents.last', ['waiting' => false] + compact('user', 'documents'));
     }
 
