@@ -170,7 +170,7 @@ class ClientController extends Controller
             $current_user = auth()->user();
             return view('clients.show',
                 ['monthly_docs' => $result, 'sum' => $total_sum, 'vat' => $total_vat]
-                + compact('user', 'current_user', 'sum_class', 'current_user_id'));
+                + compact('user', 'current_user', 'sum_class', 'current_user_id', 'invoices'));
         }
 
         return redirect()->back()->withErrors(__('You cannot look at client that is not yours'));

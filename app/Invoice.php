@@ -24,7 +24,7 @@ class Invoice extends Model
         return $this->hasMany(InvoicesItem::class);
     }
 
-    public function document_type()
+    public function dt()
     {
         return $this->belongsTo(DocumentType::class, 'document_type');
     }

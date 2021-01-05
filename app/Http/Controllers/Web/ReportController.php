@@ -18,51 +18,7 @@ class ReportController extends Controller
 
         $expenses = $client->documents()->where('document_type', '=', 0)->orderByDesc('document_date')->where('status', DocumentStatus::CONFIRMED);
 
-        $expenses_columns = [
-            [
-                'name' => 'document_date',
-                'title' => 'Date'
-            ],
-            [
-                'name' => 'document_number',
-                'title' => 'Number'
-            ],
-            [
-                'name' => 'sum',
-                'title' => 'Sum'
-            ],
-            [
-                'name' => 'vat',
-                'title' => 'VAT'
-            ],
-        ];
-
-        $incomes = $client->documents()->where('document_type', '=', 1);
-
-        $income_columns = [
-            [
-                'name' => 'document_date',
-                'title' => 'Date'
-            ],
-            [
-                'name' => 'document_number',
-                'title' => 'Number'
-            ],
-            [
-                'name' => 'sum',
-                'title' => 'Sum'
-            ],
-            [
-                'name' => 'vat',
-                'title' => 'VAT'
-            ],
-            [
-                'name' => 'document_type[
-                \'name\']',
-                'title' => 'Type'
-            ]
-        ];
-
+        $incomes = $client->documents()->where('document_type', '=', 1)->orderByDesc('document_date')->where('status', DocumentStatus::CONFIRMED);
 
         $invoices = $client->invoices();
 
@@ -84,10 +40,16 @@ class ReportController extends Controller
 
         $invoices = $invoices->get();
 
-        $incomes = $incomes->merge($invoices);
-        $incomes_without_vat = $incomes->where('vat', '<>', 0);
+        $incomes_with_vat = $incomes->where('vat', '<>', 0)->where('document_type_id', '<>', 3);
+        $incomes_without_vat = $incomes->where('vat', '=', 0)->where('document_type_id', '<>', 3);
 
+        $invoices_without_vat = $invoices->where('tax_percent', '=', 0)->where('document_type', '<>', 3);
+        $invoices_with_vat = $invoices->where('tax_percent', '<>', 0)->where('document_type', '<>', 3);
 
-        return view('reports.report1', compact('expenses', 'invoices', 'incomes', 'expenses_columns', 'income_columns', 'client'));
+        $acceptances = $invoices->where('document_type', '=', 3);
+        $document_acceptances = $incomes->where('document_type_id', '=', 3);
+        dump($invoices);
+
+        return view('reports.report1', compact('expenses', 'invoices', 'incomes', 'client', 'incomes_with_vat', 'incomes_without_vat', 'invoices_with_vat', 'invoices_without_vat', 'acceptances', 'document_acceptances'));
     }
 }

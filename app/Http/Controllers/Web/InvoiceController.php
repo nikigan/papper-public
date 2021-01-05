@@ -111,7 +111,7 @@ class InvoiceController extends Controller
      */
     public function show(Invoice $invoice)
     {
-        $document_name = $invoice->document_type()->first()->name;
+        $document_name = $invoice->dt->name;
         $currency = $invoice->currency;
         $have_tax = $invoice->creator->organization_type->have_tax;
         $tax_k = $invoice->include_tax ? 1 : -1;
