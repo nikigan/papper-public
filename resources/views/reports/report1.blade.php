@@ -47,7 +47,8 @@
         </div>
     </div>
 
-    <h2>@lang('Expense')</h2>
+    @if (count($expenses))
+    <h2>@lang('Expense') <small>({{count($expenses)}})</small></h2>
     <div class="card">
         <div class="card-body">
             {{--            @include('reports.partials.table', ['items' => $expenses, 'columns' => $expenses_columns, 'class' => 'text-danger'])--}}
@@ -63,7 +64,6 @@
                     </tr>
                     </thead>
                     <tbody>
-                    @if (count($expenses))
                         @foreach ($expenses as $item)
                             <tr class="text-danger">
                                 <td><a class="text-danger"
@@ -74,33 +74,29 @@
                                 <td>{{number_format($item->vat, 2)}}</td>
                             </tr>
                         @endforeach
-                    @else
-                        <tr>
-                            <td colspan="5"><em>@lang('No records found.')</em></td>
-                        </tr>
-                    @endif
                     </tbody>
                 </table>
             </div>
         </div>
     </div>
+    @endif
 
-    <h2>@lang('Income')</h2>
-    <div class="card">
-        <div class="card-body">
-            <div class="table-responsive">
-                <table class="table table-borderless table-striped">
-                    <thead>
-                    <tr>
-                        <th>@lang('#')</th>
-                        <th>@lang('Date')</th>
-                        <th>@lang('Type')</th>
-                        <th>@lang('Sum')</th>
-                        <th>@lang('VAT')</th>
-                    </tr>
-                    </thead>
-                    <tbody>
-                    @if (count($incomes_with_vat))
+    @if (count($incomes_with_vat) || count($invoices_with_vat))
+        <h2>@lang('Income') <small>({{count($incomes_with_vat) + count($invoices_with_vat)}})</small></h2>
+        <div class="card">
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table class="table table-borderless table-striped">
+                        <thead>
+                        <tr>
+                            <th>@lang('#')</th>
+                            <th>@lang('Date')</th>
+                            <th>@lang('Type')</th>
+                            <th>@lang('Sum')</th>
+                            <th>@lang('VAT')</th>
+                        </tr>
+                        </thead>
+                        <tbody>
                         @foreach ($incomes_with_vat as $item)
                             <tr class="text-success">
                                 <td><a class="text-success"
@@ -111,46 +107,41 @@
                                 <td>{{number_format($item->vat, 2)}}</td>
                             </tr>
                         @endforeach
-                        @if(count($invoices_with_vat))
-                            @foreach ($invoices_with_vat as $item)
-                                <tr class="text-success">
-                                    <td><a class="text-success"
-                                           href="{{ route('invoice.show', $item) }}">{{ $item->invoice_number }}</a>
-                                    </td>
-                                    <td>{{ $item->invoice_date }}</td>
-                                    <td>{{ $item->dt->name ?? 'Other' }}</td>
-                                    <td>{{ number_format($item->total_amount, 2) }}</td>
-                                    <td>{{ number_format($item->total_amount * $item->tax_percent / 100, 2) }}</td>
-                                </tr>
-                            @endforeach
-                        @endif
-                    @else
-                        <tr>
-                            <td colspan="5"><em>@lang('No records found.')</em></td>
-                        </tr>
-                    @endif
-                    </tbody>
-                </table>
+                        @foreach ($invoices_with_vat as $item)
+                            <tr class="text-success">
+                                <td><a class="text-success"
+                                       href="{{ route('invoice.show', $item) }}">{{ $item->invoice_number }}</a>
+                                </td>
+                                <td>{{ $item->invoice_date }}</td>
+                                <td>{{ $item->dt->name ?? 'Other' }}</td>
+                                <td>{{ number_format($item->total_amount, 2) }}</td>
+                                <td>{{ number_format($item->total_amount * $item->tax_percent / 100, 2) }}</td>
+                            </tr>
+                        @endforeach
+                        </tbody>
+                    </table>
+                </div>
             </div>
         </div>
-    </div>
+    @endif
 
-    <h2>@lang('Income without VAT')</h2>
-    <div class="card">
-        <div class="card-body">
-            <div class="table-responsive">
-                <table class="table table-borderless table-striped">
-                    <thead>
-                    <tr>
-                        <th>@lang('#')</th>
-                        <th>@lang('Date')</th>
-                        <th>@lang('Type')</th>
-                        <th>@lang('Sum')</th>
-                        <th>@lang('VAT')</th>
-                    </tr>
-                    </thead>
-                    <tbody>
-                    @if (count($incomes_without_vat))
+    @if (count($incomes_without_vat) || count($invoices_without_vat))
+        <h2>@lang('Income without VAT') <small>({{count($incomes_without_vat)+count($invoices_without_vat)}})</small>
+        </h2>
+        <div class="card">
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table class="table table-borderless table-striped">
+                        <thead>
+                        <tr>
+                            <th>@lang('#')</th>
+                            <th>@lang('Date')</th>
+                            <th>@lang('Type')</th>
+                            <th>@lang('Sum')</th>
+                            <th>@lang('VAT')</th>
+                        </tr>
+                        </thead>
+                        <tbody>
                         @foreach ($incomes_without_vat as $item)
                             <tr class="text-success">
                                 <td><a class="text-success"
@@ -161,46 +152,40 @@
                                 <td>{{number_format($item->vat, 2)}}</td>
                             </tr>
                         @endforeach
-                        @if(count($invoices_without_vat))
-                            @foreach ($invoices_without_vat as $item)
-                                <tr class="text-success">
-                                    <td><a class="text-success"
-                                           href="{{ route('invoice.show', $item) }}">{{ $item->invoice_number }}</a>
-                                    </td>
-                                    <td>{{ $item->invoice_date }}</td>
-                                    <td>{{ $item->dt ?? 'Other' }}</td>
-                                    <td>{{ number_format($item->total_amount, 2) }}</td>
-                                    <td>{{ number_format($item->total_amount * $item->tax_percent / 100, 2) }}</td>
-                                </tr>
-                            @endforeach
-                        @endif
-                    @else
-                        <tr>
-                            <td colspan="5"><em>@lang('No records found.')</em></td>
-                        </tr>
-                    @endif
-                    </tbody>
-                </table>
+                        @foreach ($invoices_without_vat as $item)
+                            <tr class="text-success">
+                                <td><a class="text-success"
+                                       href="{{ route('invoice.show', $item) }}">{{ $item->invoice_number }}</a>
+                                </td>
+                                <td>{{ $item->invoice_date }}</td>
+                                <td>{{ $item->dt ?? 'Other' }}</td>
+                                <td>{{ number_format($item->total_amount, 2) }}</td>
+                                <td>{{ number_format($item->total_amount * $item->tax_percent / 100, 2) }}</td>
+                            </tr>
+                        @endforeach
+                        </tbody>
+                    </table>
+                </div>
             </div>
         </div>
-    </div>
+    @endif
 
-    <h2>@lang('Income without taxes')</h2>
-    <div class="card">
-        <div class="card-body">
-            <div class="table-responsive">
-                <table class="table table-borderless table-striped">
-                    <thead>
-                    <tr>
-                        <th>@lang('#')</th>
-                        <th>@lang('Date')</th>
-                        <th>@lang('Type')</th>
-                        <th>@lang('Sum')</th>
-                        <th>@lang('VAT')</th>
-                    </tr>
-                    </thead>
-                    <tbody>
-                    @if (count($document_acceptances))
+    @if (count($document_acceptances) || count($acceptances))
+        <h2>@lang('Income without taxes') <small>({{count($document_acceptances) + count($acceptances)}})</small></h2>
+        <div class="card">
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table class="table table-borderless table-striped">
+                        <thead>
+                        <tr>
+                            <th>@lang('#')</th>
+                            <th>@lang('Date')</th>
+                            <th>@lang('Type')</th>
+                            <th>@lang('Sum')</th>
+                            <th>@lang('VAT')</th>
+                        </tr>
+                        </thead>
+                        <tbody>
                         @foreach ($document_acceptances as $item)
                             <tr class="text-success">
                                 <td><a class="text-success"
@@ -211,28 +196,23 @@
                                 <td>{{number_format($item->vat, 2)}}</td>
                             </tr>
                         @endforeach
-                        @if(count($acceptances))
-                            @foreach ($acceptances as $item)
-                                <tr class="text-success">
-                                    <td><a class="text-success"
-                                           href="{{ route('invoice.show', $item) }}">{{ $item->invoice_number }}</a>
-                                    </td>
-                                    <td>{{ $item->invoice_date }}</td>
-                                    <td>{{ $item->dt ?? 'Other' }}</td>
-                                    <td>{{ number_format($item->total_amount, 2) }}</td>
-                                    <td>{{ number_format($item->total_amount * $item->tax_percent / 100, 2) }}</td>
-                                </tr>
-                            @endforeach
-                        @endif
-                    @else
-                        <tr>
-                            <td colspan="5"><em>@lang('No records found.')</em></td>
-                        </tr>
-                    @endif
-                    </tbody>
-                </table>
+                        @foreach ($acceptances as $item)
+                            <tr class="text-success">
+                                <td><a class="text-success"
+                                       href="{{ route('invoice.show', $item) }}">{{ $item->invoice_number }}</a>
+                                </td>
+                                <td>{{ $item->invoice_date }}</td>
+                                <td>{{ $item->dt ?? 'Other' }}</td>
+                                <td>{{ number_format($item->total_amount, 2) }}</td>
+                                <td>{{ number_format($item->total_amount * $item->tax_percent / 100, 2) }}</td>
+                            </tr>
+                        @endforeach
+                        </tbody>
+                    </table>
+                </div>
             </div>
         </div>
-    </div>
+    @endif
+
 
 @endsection

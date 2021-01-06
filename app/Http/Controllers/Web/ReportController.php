@@ -48,7 +48,6 @@ class ReportController extends Controller
 
         $acceptances = $invoices->where('document_type', '=', 3);
         $document_acceptances = $incomes->where('document_type_id', '=', 3);
-        dump($invoices);
 
         return view('reports.report1', compact('expenses', 'invoices', 'incomes', 'client', 'incomes_with_vat', 'incomes_without_vat', 'invoices_with_vat', 'invoices_without_vat', 'acceptances', 'document_acceptances'));
     }
