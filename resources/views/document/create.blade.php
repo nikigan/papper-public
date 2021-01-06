@@ -123,10 +123,19 @@
                     <div class="form-group" id="expense_type_block">
                         <label for="expense_type">@lang("Expense type"):</label>
                         <select name='expense_type_id' class="form-control" id="expense_type">
-                            @foreach($expense_types as $type)
+                            <option value="">@lang('Other')</option>
+                        @foreach($expense_types as $type)
                                 <option value="{{$type->id}}">@lang($type->name)</option>
                             @endforeach
+                        </select>
+                    </div>
+                    <div class="form-group" id="document_type_block" style="display: none;">
+                        <label for="document_type">@lang("Document type"):</label>
+                        <select name='document_type_id' class="form-control" id="document_type">
                             <option value="">@lang('Other')</option>
+                        @foreach($document_types as $type)
+                                <option value="{{$type->id}}">@lang($type->name)</option>
+                            @endforeach
                         </select>
                     </div>
                 </div>
@@ -248,8 +257,10 @@
         $('input[name=\"document_type\"]').change(function(event) {
             if (event.target.value == 0) {
                 $('#expense_type_block').show();
+                $('#document_type_block').hide();
             } else {
                 $('#expense_type_block').hide();
+                $('#document_type_block').show();
             }
         })
     </script>

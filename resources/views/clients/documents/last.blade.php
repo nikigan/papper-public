@@ -34,11 +34,6 @@
         <div class="card-body">
             <div class="table-responsive" id="users-table-wrapper">
                 @include('document.partials.table')
-                @extends('document.partials.table')
-                @section('table-head')
-                    <h1>Hello world</h1>
-                    @stop
-
             </div>
         </div>
     </div>

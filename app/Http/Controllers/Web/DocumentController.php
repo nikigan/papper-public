@@ -9,6 +9,7 @@ use Maatwebsite\Excel\Facades\Excel;
 use Storage;
 use Vanguard\Currency;
 use Vanguard\Document;
+use Vanguard\DocumentType;
 use Vanguard\ExpenseType;
 use Vanguard\Http\Controllers\Controller;
 use Vanguard\Http\Filters\DocumentKeywordSearch;
@@ -172,7 +173,8 @@ class DocumentController extends Controller
         $currencies = Currency::all();
         $vendors = Vendor::all();
         $expense_types = ExpenseType::all();
-        return view('document.create', compact('currencies', 'vendors', 'expense_types'));
+        $document_types = DocumentType::all();
+        return view('document.create', compact('currencies', 'vendors', 'expense_types', 'document_types'));
     }
 
     public function manualStore(Request $request)

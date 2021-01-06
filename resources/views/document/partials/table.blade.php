@@ -8,7 +8,6 @@
             <th class="min-width-80">@lang('Status')</th>
             <th class="min-width-100">@lang('Sum')</th>
             <th class="min-width-100">@lang('VAT')</th>
-            @yield('table-head')
             <th class="text-center min-width-100">@lang('Action')</th>
         </tr>
         </thead>

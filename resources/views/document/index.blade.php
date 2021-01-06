@@ -61,18 +61,6 @@
     </div>
 
     <h1>@lang('List of uploaded documents')</h1>
-    {{-- <div class="row py-3">
-         @foreach($documents as $document)
-             <div class="col-lg-4">
-                 <a class="document-card">
-                     <i class="document-card__icon fas fa-file-alt"></i>
-                     <h5 class="document-card__title">{{ $document->user->username }}</h5>
-                     <p class="document-card__text">{!! nl2br($document->document_text) ?? '' !!}</p>
-                     <span class="document-card__date">{{ $document->getDate() }}</span>
-                 </a>
-             </div>
-         @endforeach
-     </div>--}}
     <div class="card">
         <div class="card-body">
             <div class="row my-3 flex-md-row flex-column-reverse">

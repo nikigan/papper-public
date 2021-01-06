@@ -31,7 +31,7 @@ class Document extends Model
 
     public function expense_type()
     {
-        return $this->belongsTo(ExpenseType::class);
+        return $this->belongsTo(ExpenseType::class, 'expense_type_id');
     }
 
     public function dt()
