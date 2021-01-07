@@ -44,7 +44,7 @@ Route::group(['middleware' => 'two-factor'], function () {
 Route::get('auth/{provider}/login', 'Auth\SocialAuthController@redirectToProvider')->name('social.login');
 Route::get('auth/{provider}/callback', 'Auth\SocialAuthController@handleProviderCallback');
 
-Route::group(['middleware' => ['auth', 'verified']], function () {
+Route::group(['middleware' => ['auth', 'verified', 'locale']], function () {
 
     /**
      * Impersonate Routes
@@ -123,6 +123,13 @@ Route::group(['middleware' => ['auth', 'verified']], function () {
         Route::resource('organization_types', 'OrganizationTypeController');
 
         Route::resource('expense_types', 'ExpenseTypeController');
+
+        Route::resource('expense_groups', 'ExpenseGroupController');
+
+        Route::resource('income_groups', 'IncomeGroupController');
+
+        Route::resource('income_types', 'IncomeTypeController');
+
 
         /**
          * Roles & Permissions

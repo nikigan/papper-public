@@ -34,6 +34,11 @@ class Document extends Model
         return $this->belongsTo(ExpenseType::class, 'expense_type_id');
     }
 
+    public function income_type()
+    {
+        return $this->belongsTo(IncomeType::class, 'income_type_id');
+    }
+
     public function dt()
     {
         return $this->belongsTo(DocumentType::class, 'document_type_id');

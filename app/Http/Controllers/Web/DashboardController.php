@@ -19,6 +19,10 @@ class DashboardController extends Controller
             session()->flash('success', __('E-Mail verified successfully.'));
         }
 
+        if (auth()->user()->hasRole('Admin')) {
+            \App::setLocale('en');
+        }
+
         return view('dashboard.index');
     }
 }

@@ -6,6 +6,8 @@ use Illuminate\Http\Request;
 use Vanguard\DocumentType;
 use Vanguard\ExpenseType;
 use Vanguard\Http\Controllers\Controller;
+use Vanguard\IncomeGroup;
+use Vanguard\IncomeType;
 use Vanguard\Support\Enum\DocumentStatus;
 use Vanguard\User;
 
@@ -59,17 +61,30 @@ class ReportController extends Controller
 
         $expenses = $client->documents()->with('expense_type')->where('document_type', '=', 0)->orderByDesc('document_date')->where('status', DocumentStatus::CONFIRMED);
 
+        $incomes = $client->documents()->where('document_type', '=', 1)->orderByDesc('document_date')->where('status', DocumentStatus::CONFIRMED)->with('income_type');
+
+        $invoices = $client->invoices()->with('income_type')->orderByDesc('invoice_date');
+
         if ($end_date) {
             $expenses = $expenses->where('document_date', '<=', $end_date);
+            $incomes = $incomes->where('document_date', '<=', $end_date);
+            $invoices = $invoices->where('invoice_date', '<=', $end_date);
         }
 
         if ($start_date) {
             $expenses = $expenses->where('document_date', '>=', $start_date);
+            $incomes = $incomes->where('document_date', '>=', $start_date);
+            $invoices = $invoices->where('invoice_date', '>=', $start_date);
         }
 
         $expense_groups = $expenses->get()->groupBy('expense_type.name');
+        $income_groups = $incomes->get()->groupBy('income_type.name');
+        $invoices_groups = $invoices->get()->groupBy('income_type.name');
 
-        return view('reports.report2', compact('expense_groups', 'client'));
+
+        $income_groups = $income_groups->mergeRecursive($invoices_groups);
+
+        return view('reports.report2', compact('expense_groups', 'client', 'income_groups'));
 
     }
 }

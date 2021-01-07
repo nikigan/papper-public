@@ -27,6 +27,7 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot()
     {
+
         Carbon::setLocale(config('app.locale'));
         config(['app.name' => setting('app_name')]);
         \Illuminate\Database\Schema\Builder::defaultStringLength(191);

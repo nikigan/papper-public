@@ -19,6 +19,7 @@ use Vanguard\Support\Plugins\Invoices;
 use Vanguard\Support\Plugins\RolesAndPermissions;
 use Vanguard\Support\Plugins\Search;
 use Vanguard\Support\Plugins\Reports;
+use Vanguard\Support\Plugins\Settings;
 use Vanguard\Support\Plugins\UnconfirmedDocuments;
 use Vanguard\Support\Plugins\UploadDocument;
 use Vanguard\Support\Plugins\Users;
@@ -49,6 +50,7 @@ class VanguardServiceProvider extends BaseVanguardServiceProvider
             UserActivity::class,
             RolesAndPermissions::class,
             Reports::class,
+            Settings::class,
             Announcements::class
         ];
     }

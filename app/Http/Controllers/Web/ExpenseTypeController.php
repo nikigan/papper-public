@@ -4,6 +4,7 @@ namespace Vanguard\Http\Controllers\Web;
 
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
+use Vanguard\ExpenseGroup;
 use Vanguard\ExpenseType;
 use Vanguard\Http\Controllers\Controller;
 
@@ -27,7 +28,9 @@ class ExpenseTypeController extends Controller
      */
     public function create()
     {
-        return view('expense_types.create');
+        $expense_groups = ExpenseGroup::all();
+
+        return view('expense_types.create', compact('expense_groups'));
     }
 
     /**
@@ -43,18 +46,8 @@ class ExpenseTypeController extends Controller
         ]);
 
         ExpenseType::create($request->all());
-        return redirect()->route('expense_types.index')->with('success', __('Expense type created successfully'));
-    }
 
-    /**
-     * Display the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function show(ExpenseType $expenseType)
-    {
-        return view('expense_types.edit', compact('expenseType'));
+        return redirect()->route('expense_types.index')->with('success', __('Expense type created successfully'));
     }
 
     /**
@@ -65,7 +58,9 @@ class ExpenseTypeController extends Controller
      */
     public function edit(ExpenseType $expenseType)
     {
-        return view('expense_types.edit', compact('expenseType'));
+        $expense_groups = ExpenseGroup::all();
+
+        return view('expense_types.edit', compact('expenseType', 'expense_groups'));
     }
 
     /**

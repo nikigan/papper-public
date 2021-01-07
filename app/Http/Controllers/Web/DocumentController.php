@@ -40,9 +40,9 @@ class DocumentController extends Controller
         $current_user = auth()->user();
         if ($current_user->hasRole('Auditor') || $current_user->hasRole('Admin') || $current_user->hasRole('Accountant')) {
             $documents = Document::query()
-                ->whereHas('user', function($q) use ($current_user) {
+                ->whereHas('user', function ($q) use ($current_user) {
                     $q->where('auditor_id', $current_user->id)
-                    ->orWhere('accountant_id', $current_user->id);
+                        ->orWhere('accountant_id', $current_user->id);
                 })
                 ->orderByDesc('document_date');
         } else {
@@ -199,7 +199,9 @@ class DocumentController extends Controller
         Document::create($request->except('file') + [
                 'file' => $file,
                 'sum_without_vat' => $sum_without_vat,
-                'user_id' => auth()->id()]);
+                'user_id' => auth()->id(),
+                'expense_type_id' => $request->get('expense_type_id'),
+                'income_type_id' => $request->get('income_type_id')]);
 
         return redirect()->route('documents.index')->withSuccess(__('Document created successfully'));
     }
@@ -207,7 +209,8 @@ class DocumentController extends Controller
     public function update(Request $request, Document $document)
     {
         $sum_without_vat = $request->sum - $request->vat;
-        $document->update($request->all() + ['sum_without_vat' => $sum_without_vat]);
+        $document->update($request->all() + ['sum_without_vat' => $sum_without_vat, 'expense_type_id' => $request->get('expense_type_id'),
+                'income_type_id' => $request->get('income_type_id')]);
         return redirect()->route('documents.show', $document)->withSuccess(__('Document updated successfully.'));
     }
 

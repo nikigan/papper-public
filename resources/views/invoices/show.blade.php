@@ -145,7 +145,7 @@
                                             <tr>
                                                 <th class="text-center">Grand Total ({{ $currency->ISO_code }})
                                                 </th>
-                                                <td class="text-center">{{ number_format($invoice->total_amount + ($tax_k * $invoice->total_amount * $invoice->tax_percent / 100), 2) }}</td>
+                                                <td class="text-center">{{ number_format($invoice->grand_total, 2) }}</td>
                                             </tr>
                                             </tbody>
                                         </table>

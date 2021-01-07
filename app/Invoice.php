@@ -39,6 +39,11 @@ class Invoice extends Model
         return $this->belongsTo(PaymentType::class, 'payment_type');
     }
 
+    public function income_type()
+    {
+        return $this->belongsTo(IncomeType::class);
+    }
+
     public function getTotalAmountAttribute()
     {
         $total_amount = 0;

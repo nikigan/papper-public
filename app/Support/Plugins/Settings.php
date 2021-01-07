@@ -54,8 +54,26 @@ class Settings extends Plugin
                 return $user->hasRole('Admin');
             });
 
-        $expense_types = Item::create(__('Expense types'))
-            ->route('expense_types.index')
+        $expense_types = Item::create(__('Expense'))
+            ->href('#expense-dropdown')
+            ->addChildren([
+                Item::create(__('Expense group'))
+                ->route('expense_groups.index'),
+                Item::create(__('Expense type'))
+                    ->route('expense_types.index')
+            ])
+            ->permissions(function (User $user) {
+                return $user->hasRole('Admin');
+            });
+
+        $income = Item::create(__('Income'))
+            ->href('#income-dropdown')
+            ->addChildren([
+                Item::create(__('Income group'))
+                    ->route('income_groups.index'),
+                Item::create(__('Income type'))
+                    ->route('income_types.index')
+            ])
             ->permissions(function (User $user) {
                 return $user->hasRole('Admin');
             });
@@ -70,6 +88,7 @@ class Settings extends Plugin
                 $payment_types,
                 $organization_types,
                 $expense_types,
+                $income,
                 $general,
                 $authAndRegistration,
                 $notifications
