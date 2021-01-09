@@ -3,11 +3,13 @@
 namespace Vanguard\Http\Controllers\Web;
 
 use Illuminate\Http\Request;
-use Vanguard\DocumentType;
-use Vanguard\ExpenseType;
+use Illuminate\Support\Facades\DB;
+use phpDocumentor\Reflection\Types\Object_;
+use Vanguard\Document;
 use Vanguard\Http\Controllers\Controller;
+use Vanguard\Http\Filters\DateSearch;
 use Vanguard\IncomeGroup;
-use Vanguard\IncomeType;
+use Vanguard\Invoice;
 use Vanguard\Support\Enum\DocumentStatus;
 use Vanguard\User;
 
@@ -55,7 +57,8 @@ class ReportController extends Controller
         return view('reports.report1', compact('expenses', 'invoices', 'incomes', 'client', 'incomes_with_vat', 'incomes_without_vat', 'invoices_with_vat', 'invoices_without_vat', 'acceptances', 'document_acceptances'));
     }
 
-    public function report2 (Request $request, User $client) {
+    public function report2(Request $request, User $client)
+    {
         $start_date = $request->get('start_date') ?? date('Y-m-d', strtotime(date('Y-m-d') . "-1 month"));
         $end_date = $request->get('end_date') ?? date('Y-m-d');
 
@@ -85,6 +88,145 @@ class ReportController extends Controller
         $income_groups = $income_groups->mergeRecursive($invoices_groups);
 
         return view('reports.report2', compact('expense_groups', 'client', 'income_groups'));
+
+    }
+
+    public function report3(Request $request, User $client)
+    {
+        $start_date = $request->get('start_date') ?? date('Y-m-d', strtotime(date('Y-m-d') . "-1 month"));
+        $end_date = $request->get('end_date') ?? date('Y-m-d');
+
+        $income_groups = $client->documents()->where('document_type', '=', 1)->where('status', DocumentStatus::CONFIRMED)->getQuery();
+
+        (new DateSearch)($income_groups, compact('end_date', 'start_date'), 'document_date');
+
+        $income_groups = $income_groups->leftJoin('income_types as it', 'documents.income_type_id', '=', 'it.id')->leftJoin('income_groups as ig', 'it.income_group_id', '=', 'ig.id')->select('ig.name', 'ig.id as group_id', 'it.name', DB::raw('SUM(documents.sum) as sum'))->groupBy('it.name', 'ig.name')->get();
+
+        $income_groups = $income_groups->groupBy('group_id');
+
+
+        $invoice_groups = $client->invoices()->with('income_type')->getQuery();
+
+        (new DateSearch)($invoice_groups, compact('end_date', 'start_date'), 'invoice_date');
+
+        $invoice_groups = $invoice_groups->select('ig.name', 'ig.id as group_id', 'it.name', DB::raw('sum(ii.price*ii.quantity) as sum'), DB::raw('sum((IF(invoices.include_tax = 1, -1, 1)) * ii.price* ii.quantity* invoices.tax_percent/ 100) as vat'))->leftJoin('invoices_items as ii', 'invoices.id', '=', 'ii.invoice_id')->leftJoin('income_types as it', 'invoices.income_type_id', '=', 'it.id')->leftJoin('income_groups as ig', 'it.income_group_id', '=', 'ig.id')->groupBy('ig.name', 'it.name')->get();
+
+        $invoice_groups = $invoice_groups->groupBy('group_id');
+
+        foreach ($invoice_groups as $key => $group) {
+            $ig = IncomeGroup::query()->find($key);
+            if ($ig) {
+                $invoice_groups[$ig->name] = $invoice_groups[$key];
+                unset($invoice_groups[$key]);
+            }
+        }
+
+        foreach ($income_groups as $key => $value) {
+
+            $ig = IncomeGroup::query()->find($key);
+            if ($ig) {
+                $income_groups[$ig->name] = $income_groups[$key];
+                unset($income_groups[$key]);
+            }
+        }
+
+        $income_groups = $income_groups->mergeRecursive($invoice_groups);
+
+        /*foreach ($income_groups as $key => $value) {
+            $sum = 0;
+            foreach ($value as $item) {
+                if (is_array($item)) {
+                    foreach ($item as $i) {
+                        if ($i instanceof Document) {
+                            $sum += $i->sum;
+                        } elseif ($i instanceof Invoice) {
+                            $sum += $i->sum;
+                        }
+                    }
+                } else {
+                    if ($item instanceof Document) {
+                        $sum += $item->sum;
+                    } elseif ($item instanceof Invoice) {
+                        $sum += $item->sum;
+                    }
+                }
+            }
+
+            if (is_array($value)) {
+                $value['total_sum'] = $sum;
+                $income_groups[$key] = $value;
+            } else {
+                $income_groups[$key]['total_sum'] = $sum;
+            }
+            foreach ($value as $k => $item) {
+                if ($item instanceof Document) {
+                    $value[$k]['percentage'] = $item->sum / $sum * 100;
+                }
+            }
+            foreach ($value as $k => $item) {
+                if (is_array($item)) {
+                    foreach ($item as $j => $i) {
+                        if ($i instanceof Document) {
+                            $value[$k][$j]['percentage'] = $i->sum / $sum * 100;
+                        } elseif ($i instanceof Invoice) {
+                            $value[$k][$j]['percentage'] = $i->sum / $sum * 100;
+                        }
+                    }
+                } else {
+                    if ($item instanceof Document) {
+                        $value[$k]['percentage'] = $item->sum / $sum * 100;
+                    } elseif ($item instanceof Invoice) {
+                        $value[$k]['percentage'] = $item->sum / $sum * 100;
+                    }
+                }
+            }
+        }*/
+        $groups = [];
+        foreach ($income_groups as $name => $group) {
+            foreach ($group as $item) {
+                if ($item instanceof Document || $item instanceof Invoice) {
+                    $groups['Other group']['subgroups']['Other']['sum'] = ($groups[$name]['subgroups']['Other']['sum'] ?? 0) + $item->sum;
+                    $groups['Other group']['sum'] = ($groups['Other group']['sum'] ?? 0) + $item->sum;
+                }
+                if (is_array($item)) {
+                    foreach ($item as $i) {
+                        $groups[$name]['subgroups'][$i->name]['sum'] = ($groups[$name]['subgroups'][$i->name]['sum'] ?? 0) + $i->sum;
+                        $groups[$name]['sum'] = ($groups[$name]['sum'] ?? 0) + $i->sum;
+
+                    }
+                }
+            }
+        }
+
+        foreach ($groups as $k => $group) {
+            foreach ($group['subgroups'] as $key => $subgroup) {
+                $groups[$k]['subgroups'][$key]['percentage'] = $subgroup['sum'] / $group['sum'] * 100;
+            }
+        }
+
+
+        $expense_groups = $client->documents()->where('document_type', '=', 0)->where('status', DocumentStatus::CONFIRMED)->getQuery();
+
+        (new DateSearch)($expense_groups, compact('end_date', 'start_date'), 'document_date');
+
+        $expense_groups = $expense_groups->select('eg.name as group', 'et.name as name', DB::raw('SUM(documents.sum) as sum'))->leftJoin('expense_types as et', 'documents.expense_type_id', '=', 'et.id')->leftJoin('expense_groups as eg', 'et.expense_group_id', '=', 'eg.id')->groupBy(['group', 'name'])->get()->groupBy(['group', 'name'])->toArray();
+
+        foreach ($expense_groups as $key => $expense_group) {
+            $sum = 0;
+            foreach ($expense_group as $subgroup) {
+                $sum += $subgroup[0]['sum'];
+            }
+            $expense_groups[$key]['sum'] = $sum;
+        }
+
+        foreach ($expense_groups as $k => $expense_group) {
+            foreach ($expense_group as $key => $subgroup) {
+                if ($key != 'sum')
+                    $expense_groups[$k][$key][0]['percentage'] = $subgroup[0]['sum'] / $expense_groups[$k]['sum'] * 100;
+            }
+        }
+
+        return view('reports.report3', compact('client', 'groups', 'expense_groups'));
 
     }
 }

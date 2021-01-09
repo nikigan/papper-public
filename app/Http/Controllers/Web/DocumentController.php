@@ -12,7 +12,7 @@ use Vanguard\Document;
 use Vanguard\DocumentType;
 use Vanguard\ExpenseType;
 use Vanguard\Http\Controllers\Controller;
-use Vanguard\Http\Filters\DocumentKeywordSearch;
+use Vanguard\Http\Filters\DateSearch;
 use Vanguard\Jobs\ProcessDocument;
 use Vanguard\Repositories\Document\DocumentRepository;
 use Vanguard\Services\YandexVision;
@@ -53,7 +53,7 @@ class DocumentController extends Controller
         }
 
         if ($request->get('query')) {
-            (new DocumentKeywordSearch)($documents, $request->get('query'));
+            (new DateSearch)($documents, $request->get('query'));
         }
 
         $start_date = $request->get('start_date') ?? false;
@@ -79,7 +79,7 @@ class DocumentController extends Controller
         $end_date = $request->get('end_date') ?? false;
 
         if ($request->get('query')) {
-            (new DocumentKeywordSearch)($documents, $request->get('query'));
+            (new DateSearch)($documents, $request->get('query'));
         }
         if ($start_date) {
             $documents = $documents->whereDate('document_date', '>=', $start_date);

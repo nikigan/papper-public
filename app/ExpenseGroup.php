@@ -12,4 +12,9 @@ class ExpenseGroup extends Model
     {
         return $this->hasMany(ExpenseType::class);
     }
+
+    public function documents()
+    {
+        return $this->hasManyThrough(Document::class, ExpenseType::class);
+    }
 }

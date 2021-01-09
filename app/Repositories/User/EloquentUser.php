@@ -2,7 +2,7 @@
 
 namespace Vanguard\Repositories\User;
 
-use Vanguard\Http\Filters\DocumentKeywordSearch;
+use Vanguard\Http\Filters\DateSearch;
 use Vanguard\Repositories\Role\RoleRepository;
 use Vanguard\Role;
 use Vanguard\Services\Auth\Social\ManagesSocialAvatarSize;
@@ -105,7 +105,7 @@ class EloquentUser implements UserRepository
         }
 
         if ($search) {
-            (new DocumentKeywordSearch)($query, $search);
+            (new DateSearch)($query, $search);
         }
 
         $result = $query->orderBy('id', 'desc')

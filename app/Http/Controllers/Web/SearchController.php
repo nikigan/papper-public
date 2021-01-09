@@ -4,7 +4,7 @@ namespace Vanguard\Http\Controllers\Web;
 
 use Illuminate\Http\Request;
 use Vanguard\Http\Controllers\Controller;
-use Vanguard\Http\Filters\DocumentKeywordSearch;
+use Vanguard\Http\Filters\DateSearch;
 use Vanguard\Http\Filters\InvoiceSearch;
 use Vanguard\Http\Filters\UserKeywordSearch;
 use Vanguard\Invoice;
@@ -38,7 +38,7 @@ class SearchController extends Controller
         $clients = $clients->paginate(10, ['*'], 'client_page');
 
         $documents = $this->documents->documentsAuditor();
-        (new DocumentKeywordSearch)($documents, $query);
+        (new DateSearch)($documents, $query);
 
         $invoices = Invoice::query()->whereHas('creator', function($q){
             $q->where('auditor_id', auth()->id())

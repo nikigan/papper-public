@@ -34,6 +34,11 @@ class Document extends Model
         return $this->belongsTo(ExpenseType::class, 'expense_type_id');
     }
 
+    public function expense_group()
+    {
+        return $this->belongsTo(ExpenseGroup::class);
+    }
+
     public function income_type()
     {
         return $this->belongsTo(IncomeType::class, 'income_type_id');
