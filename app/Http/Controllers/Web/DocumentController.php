@@ -97,8 +97,9 @@ class DocumentController extends Controller
 
     }
 
-    public function show(Document $document)
+    public function show($id)
     {
+        $document = Document::query()->findOrFail($id);
         $currencies = Currency::all();
         $vendors = Vendor::all();
         $isPdf = false;
@@ -107,7 +108,15 @@ class DocumentController extends Controller
         }
         $statuses = DocumentStatus::lists();
         $expense_types = ExpenseType::all();
-        return view('document.show', ['document' => $document, 'isPdf' => $isPdf, 'statuses' => $statuses, 'currencies' => $currencies, 'vendors' => $vendors, 'expense_types' => $expense_types]);
+        $current_user = auth()->user();
+
+        if ($current_user->hasRole('Auditor') || $current_user->hasRole('Accountant')) {
+            $documents = $this->documentRepository->documentsAuditor()->get();
+            $next = $documents->where('id', '<', $id)->first();
+            $prev = $documents->where('id', '>', $id)->first();
+        }
+
+        return view('document.show', ['document' => $document, 'isPdf' => $isPdf, 'statuses' => $statuses, 'currencies' => $currencies, 'vendors' => $vendors, 'expense_types' => $expense_types] + compact('prev', 'next'));
     }
 
     public function upload()

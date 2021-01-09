@@ -46,8 +46,8 @@ class ViewProvider extends ServiceProvider
             foreach ($documents as $document) {
                 if ($document->status == 'Confirmed') {
                     $k = $document->document_type ? 1 : -1;
-                    $sum += $k * $document->sum;
-                    $vat += $k * $document->vat;
+                    $sum += $k * $document->sum / $document->currency->value;
+                    $vat += $k * $document->vat / $document->currency->value;
                 }
             }
             $sum_class = $sum > 0 ? 'text-success' : 'text-danger';

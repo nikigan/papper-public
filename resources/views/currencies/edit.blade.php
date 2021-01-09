@@ -1,14 +1,14 @@
 @extends('layouts.app')
 
-@section('page-title', __('Edit Document Type'))
-@section('page-heading', __('Edit Document Type'))
+@section('page-title', __('Edit Currency'))
+@section('page-heading', __('Edit Currency'))
 
 @section('breadcrumbs')
     <li class="breadcrumb-item">
-        <a href="{{ route('document_types.index') }}">@lang('Document Types')</a>
+        <a href="{{ route('currency.index') }}">@lang('Currencies')</a>
     </li>
     <li class="breadcrumb-item active">
-        <a>@lang($documentType->name)</a>
+        <a>@lang($currency->ISO)</a>
     </li>
 @stop
 

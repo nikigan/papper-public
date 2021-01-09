@@ -138,8 +138,8 @@ class ClientController extends Controller
 
                     if ($doc->status == 'Confirmed') {
                         $k = $doc->document_type ? 1 : -1;
-                        $sum += $k * $doc->sum;
-                        $vat += $k * $doc->vat;
+                        $sum += $k * $doc->getConvertedSum();
+                        $vat += $k * $doc->getConvertedVat();
                     }
                 }
                 $total_sum += $sum;

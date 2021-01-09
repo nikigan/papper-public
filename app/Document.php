@@ -63,4 +63,14 @@ class Document extends Model
     {
         return Carbon::parse($value)->format(config('app.date_format'));
     }
+
+    public function getConvertedVat()
+    {
+        return $this->vat / $this->currency->value;
+    }
+
+    public function getConvertedSum()
+    {
+        return $this->sum / $this->currency->value;
+    }
 }

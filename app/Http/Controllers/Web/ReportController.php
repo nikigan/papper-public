@@ -100,7 +100,7 @@ class ReportController extends Controller
 
         (new DateSearch)($income_groups, compact('end_date', 'start_date'), 'document_date');
 
-        $income_groups = $income_groups->leftJoin('income_types as it', 'documents.income_type_id', '=', 'it.id')->leftJoin('income_groups as ig', 'it.income_group_id', '=', 'ig.id')->select('ig.name', 'ig.id as group_id', 'it.name', DB::raw('SUM(documents.sum) as sum'))->groupBy('it.name', 'ig.name')->get();
+        $income_groups = $income_groups->leftJoin('currencies as c', 'documents.currency_id', '=', 'c.id')->leftJoin('income_types as it', 'documents.income_type_id', '=', 'it.id')->leftJoin('income_groups as ig', 'it.income_group_id', '=', 'ig.id')->select('ig.name', 'ig.id as group_id', 'it.name', DB::raw('SUM(documents.sum / c.value) as sum'))->groupBy('it.name', 'ig.name')->get();
 
         $income_groups = $income_groups->groupBy('group_id');
 
@@ -109,7 +109,7 @@ class ReportController extends Controller
 
         (new DateSearch)($invoice_groups, compact('end_date', 'start_date'), 'invoice_date');
 
-        $invoice_groups = $invoice_groups->select('ig.name', 'ig.id as group_id', 'it.name', DB::raw('sum(ii.price*ii.quantity) as sum'), DB::raw('sum((IF(invoices.include_tax = 1, -1, 1)) * ii.price* ii.quantity* invoices.tax_percent/ 100) as vat'))->leftJoin('invoices_items as ii', 'invoices.id', '=', 'ii.invoice_id')->leftJoin('income_types as it', 'invoices.income_type_id', '=', 'it.id')->leftJoin('income_groups as ig', 'it.income_group_id', '=', 'ig.id')->groupBy('ig.name', 'it.name')->get();
+        $invoice_groups = $invoice_groups->leftJoin('currencies as c', 'invoices.currency_id', '=', 'c.id')->select('ig.name', 'ig.id as group_id', 'it.name', DB::raw('sum(ii.price*ii.quantity / c.value) as sum'), DB::raw('sum((IF(invoices.include_tax = 1, -1, 1)) * ii.price * ii.quantity * invoices.tax_percent / 100 / c.value) as vat'))->leftJoin('invoices_items as ii', 'invoices.id', '=', 'ii.invoice_id')->leftJoin('income_types as it', 'invoices.income_type_id', '=', 'it.id')->leftJoin('income_groups as ig', 'it.income_group_id', '=', 'ig.id')->groupBy('ig.name', 'it.name')->get();
 
         $invoice_groups = $invoice_groups->groupBy('group_id');
 
@@ -209,7 +209,7 @@ class ReportController extends Controller
 
         (new DateSearch)($expense_groups, compact('end_date', 'start_date'), 'document_date');
 
-        $expense_groups = $expense_groups->select('eg.name as group', 'et.name as name', DB::raw('SUM(documents.sum) as sum'))->leftJoin('expense_types as et', 'documents.expense_type_id', '=', 'et.id')->leftJoin('expense_groups as eg', 'et.expense_group_id', '=', 'eg.id')->groupBy(['group', 'name'])->get()->groupBy(['group', 'name'])->toArray();
+        $expense_groups = $expense_groups->leftJoin('currencies as c', 'documents.currency_id', '=', 'c.id')->select('eg.name as group', 'et.name as name', DB::raw('SUM(documents.sum / c.value) as sum'))->leftJoin('expense_types as et', 'documents.expense_type_id', '=', 'et.id')->leftJoin('expense_groups as eg', 'et.expense_group_id', '=', 'eg.id')->groupBy(['group', 'name'])->get()->groupBy(['group', 'name'])->toArray();
 
         foreach ($expense_groups as $key => $expense_group) {
             $sum = 0;
@@ -227,6 +227,19 @@ class ReportController extends Controller
         }
 
         return view('reports.report3', compact('client', 'groups', 'expense_groups'));
+    }
 
+    public function report_vendors(Request $request, User $client)
+    {
+        $start_date = $request->get('start_date') ?? date('Y-m-d', strtotime(date('Y-m-d') . "-1 month"));
+        $end_date = $request->get('end_date') ?? date('Y-m-d');
+
+        $expenses = $client->documents()->where('document_type', '=', 0)->where('status', DocumentStatus::CONFIRMED)->getQuery();
+
+        (new DateSearch)($expenses, compact('end_date', 'start_date'), 'document_date');
+
+        $vendor_groups = $expenses->leftJoin('currencies as c', 'documents.currency_id', '=', 'c.id')->leftJoin('vendors as v', 'documents.vendor_id', '=', 'v.id')->groupBy(['v.name', 'v.vat_number'])->select('v.name', 'v.vat_number', DB::raw('count(*) as amount'), DB::raw('sum(documents.sum / c.value) as sum'), DB::raw('AVG(sum) as avg'))->get();
+
+        return view('reports.report_vendors', compact('client', 'vendor_groups'));
     }
 }
