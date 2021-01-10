@@ -49,7 +49,7 @@
 
     @if (count($expense_groups))
         @foreach($expense_groups as $name => $group)
-            <h2>@lang($name != "" ? $name : "Other") <small>({{count($group)}})</small></h2>
+            <h2>@lang($name != "" ? $name : "Other") <small>({{count(reset($group))}})</small></h2>
             <div class="card">
                 <div class="card-body">
                     <div class="table-responsive">
@@ -86,7 +86,7 @@
 
     @if (count($income_groups))
         @foreach($income_groups as $name => $group)
-            <h2>@lang($name != "" ? $name : "Other") <small>({{count($group)}})</small></h2>
+            <h2>@lang($name != "" ? $name : "Other") <small>({{count(reset($group))}})</small></h2>
             <div class="card">
                 <div class="card-body">
                     <div class="table-responsive">

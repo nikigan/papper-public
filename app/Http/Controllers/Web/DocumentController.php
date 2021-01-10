@@ -13,6 +13,7 @@ use Vanguard\DocumentType;
 use Vanguard\ExpenseType;
 use Vanguard\Http\Controllers\Controller;
 use Vanguard\Http\Filters\DateSearch;
+use Vanguard\IncomeType;
 use Vanguard\Jobs\ProcessDocument;
 use Vanguard\Repositories\Document\DocumentRepository;
 use Vanguard\Services\YandexVision;
@@ -107,16 +108,27 @@ class DocumentController extends Controller
             $isPdf = mime_content_type($document->file) == 'application/pdf';
         }
         $statuses = DocumentStatus::lists();
+        $creator = $document->user;
         $expense_types = ExpenseType::all();
+        $income_types = IncomeType::all();
+        $document_types = $creator->organization_type->document_types;
         $current_user = auth()->user();
 
         if ($current_user->hasRole('Auditor') || $current_user->hasRole('Accountant')) {
             $documents = $this->documentRepository->documentsAuditor()->get();
             $next = $documents->where('id', '<', $id)->first();
             $prev = $documents->where('id', '>', $id)->first();
+        } else {
+            $documents = Document::query()
+                ->with('user')
+                ->where('user_id', '=', $current_user->id)
+                ->orderByDesc('created_at')
+                ->get();
+            $next = $documents->where('id', '<', $id)->first();
+            $prev = $documents->where('id', '>', $id)->first();
         }
 
-        return view('document.show', ['document' => $document, 'isPdf' => $isPdf, 'statuses' => $statuses, 'currencies' => $currencies, 'vendors' => $vendors, 'expense_types' => $expense_types] + compact('prev', 'next'));
+        return view('document.show', ['document' => $document, 'isPdf' => $isPdf, 'statuses' => $statuses, 'currencies' => $currencies, 'vendors' => $vendors, 'expense_types' => $expense_types] + compact('prev', 'next', 'document_types', 'income_types'));
     }
 
     public function upload()
@@ -180,10 +192,11 @@ class DocumentController extends Controller
     public function create()
     {
         $currencies = Currency::all();
-        $vendors = Vendor::all();
+        $vendors = Vendor::query()->where('creator_id', auth()->id())->get();
         $expense_types = ExpenseType::all();
-        $document_types = DocumentType::all();
-        return view('document.create', compact('currencies', 'vendors', 'expense_types', 'document_types'));
+        $income_types = IncomeType::all();
+        $document_types = auth()->user()->organization_type->document_types;
+        return view('document.create', compact('currencies', 'vendors', 'expense_types', 'document_types', 'income_types'));
     }
 
     public function manualStore(Request $request)
@@ -195,6 +208,8 @@ class DocumentController extends Controller
             'file' => 'file'
         ]);
 
+
+
         $sum_without_vat = $request->sum - $request->vat;
 
         $file = null;
@@ -205,12 +220,13 @@ class DocumentController extends Controller
             $file = $request->file('file')->store("upload/documents/{$folder}/{$date}", 'public');
         }
 
-        Document::create($request->except('file') + [
-                'file' => $file,
-                'sum_without_vat' => $sum_without_vat,
-                'user_id' => auth()->id(),
-                'expense_type_id' => $request->get('expense_type_id'),
-                'income_type_id' => $request->get('income_type_id')]);
+        Document::query()
+            ->create($request->except(['file', 'expense_type_id', 'income_type_id']) + [
+                    'file' => $file,
+                    'sum_without_vat' => $sum_without_vat,
+                    'user_id' => auth()->id(),
+                    'expense_type_id' => $request->get('document_type') == 0 ? $request->get('expense_type_id') : null,
+                    'income_type_id' => $request->get('document_type') == 1 ? $request->get('income_type_id') : null]);
 
         return redirect()->route('documents.index')->withSuccess(__('Document created successfully'));
     }
@@ -218,8 +234,12 @@ class DocumentController extends Controller
     public function update(Request $request, Document $document)
     {
         $sum_without_vat = $request->sum - $request->vat;
-        $document->update($request->all() + ['sum_without_vat' => $sum_without_vat, 'expense_type_id' => $request->get('expense_type_id'),
-                'income_type_id' => $request->get('income_type_id')]);
+
+        $document->update($request->all() + [
+                'sum_without_vat' => $sum_without_vat,
+                'expense_type_id' => $request->get('document_type') == 0 ? $request->get('expense_type_id') : null,
+                'income_type_id' => $request->get('document_type') == 1 ? $request->get('income_type_id') : null]);
+
         return redirect()->route('documents.show', $document)->withSuccess(__('Document updated successfully.'));
     }
 

@@ -129,11 +129,25 @@
                             @endforeach
                         </select>
                     </div>
+                    <div class="form-group" id="income_type_block" style="display: none">
+                        <label for="income_type">@lang("Income type"):</label>
+                        <select name='income_type_id' class="form-control" id="income_type">
+                            <option value="">@lang('Other')</option>
+                            @foreach($income_types as $type)
+                                <option value="{{$type->id}}">@lang($type->name)</option>
+                            @endforeach
+                        </select>
+                    </div>
+                </div>
+            </div>
+            <div class="form-row">
+                <div class="col-md-6"></div>
+                <div class="col-md-6">
                     <div class="form-group" id="document_type_block" style="display: none;">
                         <label for="document_type">@lang("Document type"):</label>
                         <select name='document_type_id' class="form-control" id="document_type">
                             <option value="">@lang('Other')</option>
-                        @foreach($document_types as $type)
+                            @foreach($document_types as $type)
                                 <option value="{{$type->id}}">@lang($type->name)</option>
                             @endforeach
                         </select>
@@ -258,9 +272,11 @@
             if (event.target.value == 0) {
                 $('#expense_type_block').show();
                 $('#document_type_block').hide();
+                $('#income_type_block').hide();
             } else {
                 $('#expense_type_block').hide();
                 $('#document_type_block').show();
+                $('#income_type_block').show();
             }
         })
     </script>

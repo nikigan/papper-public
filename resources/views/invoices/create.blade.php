@@ -71,6 +71,15 @@
                                         @endforeach
                                     </select>
                                 </div>
+                                <div class="form-group" id="income_type_block">
+                                    <label for="income_type">@lang("Income type"):</label>
+                                    <select name='invoice[income_type_id]' class="form-control" id="income_type">
+                                        <option value="">@lang('Other')</option>
+                                        @foreach($income_types as $type)
+                                            <option value="{{$type->id}}">@lang($type->name)</option>
+                                        @endforeach
+                                    </select>
+                                </div>
                             </div>
                         </div>
 

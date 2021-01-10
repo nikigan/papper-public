@@ -14,32 +14,6 @@
 
 @section('content')
     @include('partials.messages')
-    {{-- @if(auth()->user()->hasPermission('document.edit'))
-         <div class="row my-3">
-             <form class="d-flex" method="POST" action="{{route('documents.update', $document)}}">
-                 @method("PUT")
-                 @csrf
-                 {!! Form::select('status', $statuses,  $document->status,
-                     ['class' => 'form-control input-solid', 'id' => 'status']) !!}
-                 --}}{{--            <select name="status" id="status" class="form-control input-solid"></select>--}}{{--
-                 <button type="submit" class="btn btn-primary flex-shrink-0 mx-3" id="update-details-btn">
-                     <i class="fa fa-refresh"></i>
-                     @lang('Update Details')
-                 </button>
-             </form>
-
-             <div class="col-md-2 mt-2 mt-md-0">
-                 --}}{{--{!!
-                     Form::select(
-                         'status',
-                         $statuses,
-                         Request::get('status'),
-                         ['id' => 'status', 'class' => 'form-control input-solid']
-                     )
-                 !!}--}}{{--
-             </div>
-         </div>
-     @endif--}}
     <nav>
         <ul class="pagination justify-content-end">
             @if($prev)
@@ -118,7 +92,8 @@
                         <div class="col-md-6">
                             <div class="form-group">
                                 <label for="currency">@lang("Currency"):</label>
-                                <select name='currency_id' class="form-control" id="currency" disabled>
+                                <select name='currency_id' class="form-control" id="currency" @nopermission('document.edit')
+                                disabled @endpermission>
                                     @foreach($currencies as $currency)
                                         <option value="{{$currency->id}}"
                                                 data-currency="{{$currency->ISO_code}}"
@@ -144,41 +119,69 @@
                                 </select>
                             </div>
                         </div>
-                        @if($document->document_type == 0)
+                        <div class="col-md-6">
+                            <div class="form-group" id="expense_type_block"
+                                 @if($document->document_type != 0) style="display:none;" @endif>
+                                <label for="expense_type">@lang("Expense type"):</label>
+                                <select name='expense_type_id' class="form-control" id="expense_type"
+                                        @nopermission('document.edit') disabled @endpermission>
+                                    <option value="">@lang('Other')</option>
+                                @foreach($expense_types as $type)
+                                        <option value="{{$type->id}}"
+                                                @if($document->expense_type_id == $type->id) selected @endif
+                                        >@lang($type->name)</option>
+                                    @endforeach
+                                </select>
+                            </div>
+                            <div class="form-group" id="income_type_block"
+                                 @if($document->document_type != 1) style="display: none" @endif>
+                                <label for="income_type">@lang("Income type"):</label>
+                                <select name='income_type_id' class="form-control" id="income_type">
+                                    <option value="">@lang('Other')</option>
+                                    @foreach($income_types as $type)
+                                        <option value="{{$type->id}}"
+                                                @if($document->income_type_id == $type->id) selected @endif
+                                        >@lang($type->name)</option>
+                                    @endforeach
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="my-3">
+                        <div class="form-row align-items-center">
                             <div class="col-md-6">
-                                <div class="form-group">
-                                    <label for="expense_type">@lang("Expense type"):</label>
-                                    <select name='expense_type_id' class="form-control" id="expense_type"
-                                            @nopermission('document.edit') disabled @endpermission>
-                                        @foreach($expense_types as $type)
-                                            <option value="{{$type->id}}">@lang($type->name)</option>
-                                        @endforeach
+                                <div class="custom-control custom-radio custom-control-inline">
+                                    <input type="radio" id="document_type_0" name="document_type"
+                                           class="custom-control-input"
+                                           value="0"
+                                           @unless($document->document_type) checked @endunless"
+                                    @nopermission('document.edit') disabled @endpermission>
+                                    <label class="custom-control-label"
+                                           for="document_type_0">@lang('Expense')</label>
+                                </div>
+                                <div class="custom-control custom-radio custom-control-inline">
+                                    <input type="radio" id="document_type_1" name="document_type"
+                                           class="custom-control-input"
+                                           value="1"
+                                           @if($document->document_type) checked @endif
+                                           @nopermission('document.edit') disabled @endpermission>
+                                    <label class="custom-control-label"
+                                           for="document_type_1">@lang('Income')</label>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group" id="document_type_block"
+                                     @if($document->document_type != 1) style="display: none;" @endif>
+                                    <label for="document_type">@lang("Document type"):</label>
+                                    <select name='document_type_id' class="form-control" id="document_type">
                                         <option value="">@lang('Other')</option>
+                                        @foreach($document_types as $type)
+                                            <option value="{{$type->id}}"
+                                                    @if($document->document_type_id == $type->id) selected @endif>@lang($type->name)</option>
+                                        @endforeach
                                     </select>
                                 </div>
                             </div>
-                        @endif
-                    </div>
-                    <div class="my-3">
-                        <div class="custom-control custom-radio custom-control-inline">
-                            <input type="radio" id="document_type_0" name="document_type"
-                                   class="custom-control-input"
-                                   value="0"
-                                   readonly
-                                   @unless($document->document_type) checked @endunless"
-                            @nopermission('document.edit') disabled @endpermission>
-                            <label class="custom-control-label"
-                                   for="document_type_0">@lang('Expense')</label>
-                        </div>
-                        <div class="custom-control custom-radio custom-control-inline">
-                            <input type="radio" id="document_type_1" name="document_type"
-                                   class="custom-control-input"
-                                   value="1"
-                                   readonly
-                                   @if($document->document_type) checked @endif
-                                   @nopermission('document.edit') disabled @endpermission>
-                            <label class="custom-control-label"
-                                   for="document_type_1">@lang('Income')</label>
                         </div>
                     </div>
                     {{--<div class="form-group">
@@ -231,6 +234,18 @@
                 url: '{{ asset($document->file) }}',
                 magnify: 0.5
             });
+
+            $('input[name=\"document_type\"]').change(function (event) {
+                if (event.target.value == 0) {
+                    $('#expense_type_block').show();
+                    $('#document_type_block').hide();
+                    $('#income_type_block').hide();
+                } else {
+                    $('#expense_type_block').hide();
+                    $('#document_type_block').show();
+                    $('#income_type_block').show();
+                }
+            })
         });
     </script>
 @stop

@@ -11,11 +11,13 @@
 
 <div class="form-group">
     <label for="username">@lang('Username')</label>
-    <input type="text"
+    <input id="username"
+           autocapitalize="off"
+           autocomplete="off"
            class="form-control input-solid"
-           id="username"
-           placeholder="(@lang('optional'))"
            name="username"
+           placeholder="(@lang('optional'))"
+           type="text"
            value="{{ $edit ? $user->username : '' }}">
 </div>
 
@@ -25,6 +27,7 @@
            class="form-control input-solid"
            id="password"
            name="password"
+           autocomplete="off"
            required
            @if ($edit) placeholder="@lang("Leave field blank if you don't want to change it")" @endif>
 </div>

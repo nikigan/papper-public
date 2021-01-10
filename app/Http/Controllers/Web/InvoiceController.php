@@ -10,6 +10,7 @@ use Vanguard\Currency;
 use Vanguard\Customer;
 use Vanguard\DocumentType;
 use Vanguard\Http\Controllers\Controller;
+use Vanguard\IncomeType;
 use Vanguard\Invoice;
 use Vanguard\InvoicesItem;
 use Vanguard\PaymentType;
@@ -49,9 +50,10 @@ class InvoiceController extends Controller
         $currencies = Currency::all();
         $customers = Customer::query()->where('creator_id', $user->id)->get();
         $payment_types = PaymentType::all();
+        $income_types = IncomeType::all();
         $have_tax = $organization_type->have_tax;
 
-        return view('invoices.create', compact('tax', 'user', 'customers', 'id', 'document_types', 'currencies', 'payment_types', 'have_tax'));
+        return view('invoices.create', compact('tax', 'user', 'customers', 'id', 'document_types', 'currencies', 'payment_types', 'have_tax', 'income_types'));
     }
 
     /**

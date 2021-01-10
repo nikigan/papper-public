@@ -256,6 +256,7 @@ Route::group(['middleware' => ['auth', 'verified', 'locale']], function () {
             Route::get('/last', 'ClientController@last')->name('clients.last');
             Route::get('/waiting', 'ClientController@waiting')->name('clients.waiting');
             Route::get('/info', 'ClientController@info')->name('clients.info');
+            Route::put('/update', 'ClientController@update')->name('clients.update');
             Route::group(['prefix' => 'reports', 'middleware' => 'permission:reports.general'], function () {
                 Route::get('report1', 'ReportController@report1')->name('reports.report1.index');
                 Route::get('report2', 'ReportController@report2')->name('reports.report2.index');

@@ -24,6 +24,9 @@
         <li class="nav-item">
             <a class="nav-link" href="{{route('clients.waiting', ['client' => $user])}}">@lang('Waiting')</a>
         </li>
+        <li class="nav-item">
+            <a class="nav-link" href="{{route('clients.info', ['client' => $user])}}">@lang('Info')</a>
+        </li>
     </ul>
 
     <div class="card">

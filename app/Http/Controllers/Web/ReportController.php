@@ -242,4 +242,12 @@ class ReportController extends Controller
 
         return view('reports.report_vendors', compact('client', 'vendor_groups'));
     }
+
+    public function report_customers(Request $request, User $client)
+    {
+        $start_date = $request->get('start_date') ?? date('Y-m-d', strtotime(date('Y-m-d') . "-1 month"));
+        $end_date = $request->get('end_date') ?? date('Y-m-d');
+
+
+    }
 }

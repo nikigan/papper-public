@@ -29,7 +29,7 @@
                     </p>
                 </div>
                 <div class="col-md-9">
-                    @include('accountants.partials.details', ['edit' => false, 'profile' => false])
+                    @include('clients.partials.details', ['edit' => false, 'profile' => false])
                 </div>
             </div>
         </div>

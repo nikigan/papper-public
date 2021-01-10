@@ -10,6 +10,7 @@ use Password;
 use Vanguard\Document;
 use Vanguard\Http\Controllers\Controller;
 use Vanguard\Invoice;
+use Vanguard\OrganizationType;
 use Vanguard\Repositories\Country\CountryRepository;
 use Vanguard\Repositories\Role\RoleRepository;
 use Vanguard\Repositories\User\UserRepository;
@@ -55,11 +56,13 @@ class ClientController extends Controller
 
     public function create(CountryRepository $countryRepository, RoleRepository $roleRepository)
     {
+        $organization_types = OrganizationType::all()->pluck('name', 'id');
+
         return view('clients.add', [
             'countries' => $this->parseCountries($countryRepository),
             'roles' => [2 => 'User'],
             'statuses' => UserStatus::lists()
-        ]);
+        ] + compact('organization_types'));
     }
 
     /**
@@ -75,6 +78,7 @@ class ClientController extends Controller
             'username' => 'nullable',
             'password' => 'required|min:6|confirmed',
             'birthday' => 'nullable|date',
+            'passport' => 'unique:users|nullable|numeric',
             'verified' => 'boolean'
         ]);
 
@@ -178,7 +182,8 @@ class ClientController extends Controller
 
 
     public function info(User $client) {
-        return view('clients.info', compact('client'));
+        $organization_types = OrganizationType::all()->pluck('name', 'id');
+        return view('clients.info', compact('client', 'organization_types'));
     }
 
     public function documents(Request $request, User $client)
@@ -241,11 +246,13 @@ class ClientController extends Controller
      *
      * @param \Illuminate\Http\Request $request
      * @param int $id
-     * @return \Illuminate\Http\Response
+     * @return \Illuminate\Http\RedirectResponse
      */
-    public function update(Request $request, $id)
+    public function update(Request $request, int $id)
     {
-        //
+        $this->users->update($id, $request->except('role_id', 'status'));
+
+        return redirect()->route('clients.show', $id)->with('success', __('Client`s info updated successfully.'));
     }
 
     /**

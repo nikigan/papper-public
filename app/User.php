@@ -48,7 +48,7 @@ class User extends Authenticatable implements TwoFactorAuthenticatableContract, 
         'email', 'password', 'username', 'first_name', 'last_name', 'phone', 'avatar',
         'address', 'country_id', 'birthday', 'last_login', 'confirmation_token', 'status',
         'remember_token', 'role_id', 'email_verified_at', 'accountant_id', 'auditor_id',
-        'organization_type_id', 'vat_number'
+        'organization_type_id', 'vat_number', 'passport'
     ];
 
     /**
