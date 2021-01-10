@@ -46,7 +46,7 @@
         </div>
     </div>
 
-    @if (count($customer_groups))
+    @if (count($customers))
         <div class="card">
             <div class="card-body">
                 <div class="table-responsive">
@@ -61,13 +61,13 @@
                         </tr>
                         </thead>
                         <tbody>
-                        @foreach ($customer_groups as $customer)
+                        @foreach ($customers as $customer)
                             <tr>
-                                <td>{{ $customer->name ?? 'N/A'}}
-                                <td>{{ $customer->vat_number ?? 'N/A'}}</td>
-                                <td>{{ $customer->amount ?? 'N/A'}}</td>
-                                <td>{{ number_format($customer->sum, 2) ?? 'N/A'}}</td>
-                                <td>{{ number_format($customer->avg, 2) ?? 'N/A'}}</td>
+                                <td>{{ $customer['name'] ?? 'N/A'}}
+                                <td>{{ $customer['vat_number'] ?? 'N/A'}}</td>
+                                <td>{{ $customer['amount'] ?? 'N/A'}}</td>
+                                <td>{{ number_format($customer['sum'], 2) ?? 'N/A'}}</td>
+                                <td>{{ number_format($customer['avg'], 2) ?? 'N/A'}}</td>
                             </tr>
                         @endforeach
                         </tbody>

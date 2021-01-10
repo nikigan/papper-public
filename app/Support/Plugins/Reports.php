@@ -28,6 +28,10 @@ class Reports extends Plugin
                 ->permissions('reports.report_vendors')
                 ->href(route('reports.report_vendors.index', $client));
 
+            $report_customers = Item::create(__('Report') . ' ' . __('Customers'))
+                ->permissions('reports.report_customers')
+                ->href(route('reports.report_customers.index', $client));
+
             return Item::create(__('Reports'))
                 ->href('#reports-dropdown')
                 ->icon('fas fa-document')
@@ -36,7 +40,8 @@ class Reports extends Plugin
                     $report1,
                     $report2,
                     $report3,
-                    $report_vendors
+                    $report_vendors,
+                    $report_customers
                 ]);
         } else {
             return false;

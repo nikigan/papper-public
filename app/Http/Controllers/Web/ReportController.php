@@ -248,6 +248,36 @@ class ReportController extends Controller
         $start_date = $request->get('start_date') ?? date('Y-m-d', strtotime(date('Y-m-d') . "-1 month"));
         $end_date = $request->get('end_date') ?? date('Y-m-d');
 
+        $income_groups = $client->documents()->where('document_type', '=', 1)->where('status', DocumentStatus::CONFIRMED)->getQuery();
+
+        (new DateSearch)($income_groups, compact('end_date', 'start_date'), 'document_date');
+
+        $income_customers = $income_groups->leftJoin('currencies as c', 'documents.currency_id', '=', 'c.id')->leftJoin('customers as cu', 'documents.customer_id', '=', 'cu.id')->groupBy(['cu.name', 'cu.vat_number'])->select('cu.name', 'cu.vat_number', DB::raw('count(*) as amount'), DB::raw('sum(documents.sum / c.value) as sum'), DB::raw('AVG(sum) as avg'))->get()->groupBy(['name'])->toArray();
+
+        $invoice_customers = $client->invoices()->getQuery();
+
+        (new DateSearch)($invoice_customers, compact('end_date', 'start_date'), 'invoice_date');
+
+        $invoice_customers = $invoice_customers->leftJoin('currencies as c', 'invoices.currency_id', '=', 'c.id')->leftJoin('customers as cu', 'invoices.customer_id', '=', 'cu.id')->groupBy(['cu.name', 'cu.vat_number'])->leftJoin('invoices_items as ii', 'invoices.id', '=', 'ii.invoice_id')->select('cu.name', 'cu.vat_number', DB::raw('count(*) as amount'), DB::raw('sum(ii.price*ii.quantity / c.value) as sum'))->get()->groupBy(['name'])->toArray();
+
+        $customers = array_merge_recursive($invoice_customers, $income_customers);
+
+        $result = [];
+        foreach ($customers as $name => $customer) {
+            foreach ($customer as $item) {
+                $result[$name]['name'] = $item['name'];
+                $result[$name]['vat_number'] = $item['vat_number'];
+                $result[$name]['sum'] = ($result[$name]['sum'] ?? 0) + $item['sum'];
+                $result[$name]['amount'] = ($result[$name]['amount'] ?? 0) + $item['amount'];
+
+            }
+        }
+
+        foreach ($customers as $name => $customer) {
+            $result[$name]['avg'] = $result[$name]['sum'] / $result[$name]['amount'];
+        }
+
+        return view('reports.report_customers', ['customers' => $result, 'client' => $client]);
 
     }
 }

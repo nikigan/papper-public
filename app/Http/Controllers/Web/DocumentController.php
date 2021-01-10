@@ -8,6 +8,7 @@ use Imagick;
 use Maatwebsite\Excel\Facades\Excel;
 use Storage;
 use Vanguard\Currency;
+use Vanguard\Customer;
 use Vanguard\Document;
 use Vanguard\DocumentType;
 use Vanguard\ExpenseType;
@@ -102,7 +103,8 @@ class DocumentController extends Controller
     {
         $document = Document::query()->findOrFail($id);
         $currencies = Currency::all();
-        $vendors = Vendor::all();
+        $vendors = Vendor::query()->where('creator_id', $document->user->id)->get();
+        $customers = Customer::query()->where('creator_id', $document->user->id)->get();
         $isPdf = false;
         if ($document->file) {
             $isPdf = mime_content_type($document->file) == 'application/pdf';
@@ -128,7 +130,7 @@ class DocumentController extends Controller
             $prev = $documents->where('id', '>', $id)->first();
         }
 
-        return view('document.show', ['document' => $document, 'isPdf' => $isPdf, 'statuses' => $statuses, 'currencies' => $currencies, 'vendors' => $vendors, 'expense_types' => $expense_types] + compact('prev', 'next', 'document_types', 'income_types'));
+        return view('document.show', ['document' => $document, 'isPdf' => $isPdf, 'statuses' => $statuses, 'currencies' => $currencies, 'vendors' => $vendors, 'expense_types' => $expense_types] + compact('prev', 'next', 'document_types', 'income_types', 'customers'));
     }
 
     public function upload()
@@ -193,10 +195,11 @@ class DocumentController extends Controller
     {
         $currencies = Currency::all();
         $vendors = Vendor::query()->where('creator_id', auth()->id())->get();
+        $customers = Customer::query()->where('creator_id', auth()->id())->get();
         $expense_types = ExpenseType::all();
         $income_types = IncomeType::all();
         $document_types = auth()->user()->organization_type->document_types;
-        return view('document.create', compact('currencies', 'vendors', 'expense_types', 'document_types', 'income_types'));
+        return view('document.create', compact('currencies', 'vendors', 'expense_types', 'document_types', 'income_types', 'customers'));
     }
 
     public function manualStore(Request $request)
@@ -207,8 +210,6 @@ class DocumentController extends Controller
             'vat' => 'required|numeric',
             'file' => 'file'
         ]);
-
-
 
         $sum_without_vat = $request->sum - $request->vat;
 
@@ -221,10 +222,12 @@ class DocumentController extends Controller
         }
 
         Document::query()
-            ->create($request->except(['file', 'expense_type_id', 'income_type_id']) + [
+            ->create($request->except(['file', 'expense_type_id', 'income_type_id', 'customer_id', 'vendor_id']) + [
                     'file' => $file,
                     'sum_without_vat' => $sum_without_vat,
                     'user_id' => auth()->id(),
+                    'vendor_id' => $request->get('document_type') == 0 ? $request->get('vendor_id') : null,
+                    'customer_id' => $request->get('document_type') == 1 ? $request->get('customer_id') : null,
                     'expense_type_id' => $request->get('document_type') == 0 ? $request->get('expense_type_id') : null,
                     'income_type_id' => $request->get('document_type') == 1 ? $request->get('income_type_id') : null]);
 
@@ -237,6 +240,8 @@ class DocumentController extends Controller
 
         $document->update($request->all() + [
                 'sum_without_vat' => $sum_without_vat,
+                'vendor_id' => $request->get('document_type') == 0 ? $request->get('vendor_id') : null,
+                'customer_id' => $request->get('document_type') == 1 ? $request->get('customer_id') : null,
                 'expense_type_id' => $request->get('document_type') == 0 ? $request->get('expense_type_id') : null,
                 'income_type_id' => $request->get('document_type') == 1 ? $request->get('income_type_id') : null]);
 

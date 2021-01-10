@@ -29,6 +29,7 @@
             flex-flow: column;
             justify-content: center;
         }
+
         #drop-area label {
             display: block;
             padding: 200px 20px;
@@ -41,12 +42,15 @@
         #drop-area.highlight {
             border-color: purple;
         }
+
         p {
             margin-top: 0;
         }
+
         .my-form {
             margin-bottom: 10px;
         }
+
         #gallery {
             display: flex;
             align-items: center;
@@ -61,10 +65,12 @@
             z-index: 0;
             text-align: center;
         }
+
         #gallery img {
             max-height: 300px;
             max-width: 100%;
         }
+
         .button {
             display: inline-block;
             padding: 10px;
@@ -73,9 +79,11 @@
             border-radius: 5px;
             border: 1px solid #ccc;
         }
+
         .button:hover {
             background: #ddd;
         }
+
         #file {
             display: none;
         }
@@ -88,7 +96,8 @@
                 <div class="col-lg-12">
                     <div class="form-group">
                         <label for="document_number">@lang('Document number')</label>
-                        <input type="text" class="form-control" name="document_number" id="document_number" required value="{{old('document_number')}}">
+                        <input type="text" class="form-control" name="document_number" id="document_number" required
+                               value="{{old('document_number')}}">
                     </div>
                 </div>
             </div>
@@ -124,7 +133,7 @@
                         <label for="expense_type">@lang("Expense type"):</label>
                         <select name='expense_type_id' class="form-control" id="expense_type">
                             <option value="">@lang('Other')</option>
-                        @foreach($expense_types as $type)
+                            @foreach($expense_types as $type)
                                 <option value="{{$type->id}}">@lang($type->name)</option>
                             @endforeach
                         </select>
@@ -158,7 +167,8 @@
                 <div class="col-md-6">
                     <div class="form-group">
                         <label for="document_date">@lang('Document date')</label>
-                        <input type="date" max="{{ date('Y-m-d') }}" value="{{ date('Y-m-d') }}" class="form-control" id="document_date" name="document_date" required>
+                        <input type="date" max="{{ date('Y-m-d') }}" value="{{ date('Y-m-d') }}" class="form-control"
+                               id="document_date" name="document_date" required>
                     </div>
                 </div>
                 <div class="col-md-6">
@@ -175,17 +185,27 @@
             </div>
             <div class="form-row">
                 <div class="col-md-6">
-                    <div class="form-group">
-                        <label for="vendor">@lang("Vendor"):</label>
-                        <select name='vendor_id' class="form-control" id="vendor">
-                            @foreach($vendors as $vendor)
-                                <option value="{{$vendor->id}}">@lang($vendor->name)</option>
-                            @endforeach
-                        </select>
-                    </div>
-                    <a href="{{route('vendors.create')}}">@lang('Add a new vendor')</a>
+                    <div id="vendors-block">
+                        <div class="form-group">
+                            <label for="vendor">@lang("Vendor"):</label>
+                            <select name='vendor_id' class="form-control" id="vendor">
+                                @foreach($vendors as $vendor)
+                                    <option value="{{$vendor->id}}">@lang($vendor->name)</option>
+                                @endforeach
+                            </select>
+                        </div>
+                        <a href="{{route('vendors.create')}}">@lang('Add a new vendor')</a></div>
+                    <div id="customers-block" style="display: none;">
+                        <div class="form-group">
+                            <label for="customer">@lang("Customer"):</label>
+                            <select name='customer_id' class="form-control" id="customer">
+                                @foreach($customers as $customer)
+                                    <option value="{{$customer->id}}">@lang($customer->name)</option>
+                                @endforeach
+                            </select>
+                        </div>
+                        <a href="{{route('customers.create')}}">@lang('Add a new customer')</a></div>
                 </div>
-
             </div>
             <div class="col-lg-6" id="drop-area">
                 <label for="file" id="file-label">@lang('Upload file')</label>
@@ -219,7 +239,7 @@
             dropArea.addEventListener(eventName, preventDefaults, false)
         });
 
-        function preventDefaults (e) {
+        function preventDefaults(e) {
             e.preventDefault()
             e.stopPropagation()
         }
@@ -235,6 +255,7 @@
         function highlight(e) {
             dropArea.classList.add('highlight')
         }
+
         function unhighlight(e) {
             dropArea.classList.remove('highlight')
         }
@@ -251,10 +272,11 @@
         fileInput.addEventListener('change', function (e) {
             previewFile(e.target.files[0]);
         })
+
         function previewFile(file) {
             let reader = new FileReader()
             reader.readAsDataURL(file)
-            reader.onloadend = function() {
+            reader.onloadend = function () {
                 if (file.type == 'application/pdf') {
                     document.getElementById('file-label').innerText = file.name;
                 } else {
@@ -268,17 +290,21 @@
             }
         }
 
-        $('input[name=\"document_type\"]').change(function(event) {
+        $('input[name=\"document_type\"]').change(function (event) {
             if (event.target.value == 0) {
                 $('#expense_type_block').show();
+                $('#vendors-block').show();
+                $('#customers-block').hide();
                 $('#document_type_block').hide();
                 $('#income_type_block').hide();
             } else {
                 $('#expense_type_block').hide();
+                $('#vendors-block').hide();
+                $('#customers-block').show();
                 $('#document_type_block').show();
                 $('#income_type_block').show();
             }
         })
     </script>
-    @stop
+@stop
 

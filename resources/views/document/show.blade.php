@@ -92,8 +92,9 @@
                         <div class="col-md-6">
                             <div class="form-group">
                                 <label for="currency">@lang("Currency"):</label>
-                                <select name='currency_id' class="form-control" id="currency" @nopermission('document.edit')
-                                disabled @endpermission>
+                                <select name='currency_id' class="form-control" id="currency"
+                                        @nopermission('document.edit')
+                                        disabled @endpermission>
                                     @foreach($currencies as $currency)
                                         <option value="{{$currency->id}}"
                                                 data-currency="{{$currency->ISO_code}}"
@@ -105,7 +106,8 @@
                     </div>
                     <div class="form-row">
                         <div class="col-md-6">
-                            <div class="form-group">
+                            <div id="vendor-block" class="form-group"
+                                 @if($document->document_type != 0) style="display:none;" @endif>
                                 <label for="vendor">@lang("Vendor"):</label>
                                 <select name='vendor_id' class="form-control" id="vendor" @nopermission('document.edit')
                                 disabled @endpermission>
@@ -118,6 +120,21 @@
                                     @endforeach
                                 </select>
                             </div>
+                            <div id="customer-block" class="form-group"
+                                 @if($document->document_type != 1) style="display:none;" @endif>
+                                <label for="customer">@lang("Customer"):</label>
+                                <select name='customer_id' class="form-control" id="customer">
+                                    <option value="">@lang('N/A')</option>
+                                    @foreach($customers as $customer)
+                                        <option value="{{$customer->id}}"
+                                                @isset($document->customer)
+                                                @if($document->customer->id == $customer->id) selected @endif
+                                            @endisset
+                                        >@lang($customer->name)
+                                        </option>
+                                    @endforeach
+                                </select>
+                            </div>
                         </div>
                         <div class="col-md-6">
                             <div class="form-group" id="expense_type_block"
@@ -126,7 +143,7 @@
                                 <select name='expense_type_id' class="form-control" id="expense_type"
                                         @nopermission('document.edit') disabled @endpermission>
                                     <option value="">@lang('Other')</option>
-                                @foreach($expense_types as $type)
+                                    @foreach($expense_types as $type)
                                         <option value="{{$type->id}}"
                                                 @if($document->expense_type_id == $type->id) selected @endif
                                         >@lang($type->name)</option>
