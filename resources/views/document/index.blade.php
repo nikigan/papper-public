@@ -1,7 +1,7 @@
 @extends('layouts.app')
 
-@section('page-title', 'Uploaded documents')
-@section('page-heading', 'Uploaded documents')
+@section('page-title', __('Documents'))
+@section('page-heading', __('Uploaded documents'))
 
 @section('breadcrumbs')
     <li class="breadcrumb-item active">

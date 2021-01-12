@@ -38,7 +38,7 @@ class SearchController extends Controller
         $clients = $clients->paginate(10, ['*'], 'client_page');
 
         $documents = $this->documents->documentsAuditor();
-        (new DateSearch)($documents, $query);
+        (new DateSearch)($documents, compact('end_date', 'start_date'), 'document_date');
 
         $invoices = Invoice::query()->whereHas('creator', function($q){
             $q->where('auditor_id', auth()->id())

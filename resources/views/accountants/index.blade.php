@@ -1,7 +1,7 @@
 @extends('layouts.app')
 
-@section('page-title', 'Accountants')
-@section('page-heading', 'Accountants')
+@section('page-title', __('Accountants'))
+@section('page-heading', __('Accountants'))
 
 @section('breadcrumbs')
     <li class="breadcrumb-item active">
@@ -21,7 +21,7 @@
                 </div>
                 <div class="col-md-6">
                     @permission('client.assign')
-                        <a href="{{ route('accountants.create') }}" class="btn btn-primary btn-rounded float-right">
+                        <a href="{{ route('accountants.create') }}" class="btn btn-primary btn-rounded float-left">
                             <i class="fas fa-plus mr-2"></i>
                             @lang('Create Accountant')
                         </a>

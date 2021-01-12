@@ -1,7 +1,7 @@
 @extends('layouts.app')
 
-@section('page-title', 'Search')
-@section('page-heading', 'Search')
+@section('page-title', __('Search'))
+@section('page-heading', __('Search'))
 
 @section('breadcrumbs')
     <li class="breadcrumb-item active">

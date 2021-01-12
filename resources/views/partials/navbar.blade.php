@@ -58,7 +58,7 @@
                 </li>
             @endif
 
-            @hook('navbar:items')
+{{--            @hook('navbar:items')--}}
 
             <li class="nav-item dropdown">
                 <a class="nav-link dropdown-toggle"
@@ -79,14 +79,14 @@
                         @lang('My Profile')
                     </a>
 
-                    @if (config('session.driver') == 'database')
+                    {{--@if (config('session.driver') == 'database')
                         <a href="{{ route('profile.sessions') }}" class="dropdown-item py-2">
                             <i class="fas fa-list text-muted mr-2"></i>
                             @lang('Active Sessions')
                         </a>
                     @endif
 
-                    @hook('navbar:dropdown')
+                    @hook('navbar:dropdown')--}}
 
                     <div class="dropdown-divider m-0"></div>
 

@@ -2,8 +2,8 @@
 
 return [
     'status' => [
-        'Confirmed' => 'מאושרים',
-        'Unconfirmed' => 'לא מאושרים',
-        'Rejected' => 'Rejected'
+        'Confirmed' => 'מאושר',
+        'Unconfirmed' => 'לא מאושר',
+        "Rejected" => "מסמך לא רלוונטי"
     ]
 ];
