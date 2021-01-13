@@ -155,8 +155,8 @@ class ClientController extends Controller
                 $sum = 0;
                 $vat = 0;
                 foreach ($month as $invoice) {
-                    $tax = $invoice->total_amount * $invoice->tax_percent / 100;
-                    $sum += $invoice->total_amount + ($invoice->include_tax ? 0 : -1 * $tax);
+                    $tax = ($invoice->total_amount * $invoice->tax_percent / 100) / $invoice->currency->value;
+                    $sum += $invoice->total_amount + ($invoice->include_tax ? 0 : -1 * $tax) / $invoice->currency->value;
                     $vat += $tax;
                 }
                 $total_sum += $sum;

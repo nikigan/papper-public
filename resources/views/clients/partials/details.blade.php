@@ -10,6 +10,11 @@
             <input type="text" class="form-control input-solid" id="last_name"
                    name="last_name" placeholder="@lang('Last Name')" value="{{ $edit ? $user->last_name : '' }}">
         </div>
+        <div class="form-group">
+            <label for="tax">@lang('Tax Percent')</label>
+            <input type="number" step="0.1" min="0" max="1" class="form-control input-solid" id="tax"
+                   name="tax_percent" placeholder="@lang('Tax Percent')" value="{{ $edit ? $user->tax_percent : '' }}">
+        </div>
     </div>
 
     <div class="col-md-6">

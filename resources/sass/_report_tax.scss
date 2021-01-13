@@ -1,0 +1,12 @@
+.tax-block {
+    &__title {
+
+    }
+}
+
+.tax-column {
+    @media (min-width: 992px) {
+        display: flex;
+        justify-content: space-between;
+    }
+}

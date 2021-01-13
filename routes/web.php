@@ -263,6 +263,8 @@ Route::group(['middleware' => ['auth', 'verified', 'locale']], function () {
                 Route::get('report3', 'ReportController@report3')->name('reports.report3.index');
                 Route::get('report_vendors', 'ReportController@report_vendors')->name('reports.report_vendors.index');
                 Route::get('report_customers', 'ReportController@report_customers')->name('reports.report_customers.index');
+                Route::get('report_tax', 'ReportController@report_tax')->name('reports.report_tax.index');
+
 
             });
         });
