@@ -71,6 +71,12 @@
                     </div>
                 </div>
             </div>
+            <div class="row">
+                <div class="tax-block">
+                    <span class="tax-block__title">@lang('VAT Number')</span>
+                    <h3>{{$client->vat_number}}</h3>
+                </div>
+            </div>
         </div>
     </div>
 
@@ -84,19 +90,57 @@
                         <h3 class="font-weight-bold">{{$in_sum}}</h3>
                     </div>
                 </div>
-                <div class="col-lg-9 tax-column">
+                <div class="col-lg-4 tax-column">
                     <div class="tax-block">
                         <span class="tax-block__title">@lang('Income Tax')</span>
                         <h3 class="text-success">{{$in_tax}}</h3>
                     </div>
-<!--                    <div class="tax-block">
-                        <span class="tax-block__title">@lang('Expense VAT')</span>
-                        <h3 class="text-danger">{{$exp_vat}}</h3>
+                    <div class="tax-block">
+                        <span class="tax-block__title">@lang('Tax Percent')</span>
+                        <h3>{{$client->tax_percent}}%</h3>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-lg-12 tax-column">
+                    <div class="tax-block">
+                        <span class="tax-block__title">@lang('VAT Number')</span>
+                        <h3>{{$client->vat_number}}</h3>
                     </div>
                     <div class="tax-block">
-                        <span class="tax-block__title">@lang('VAT to pay')</span>
-                        <h3 class="font-weight-bold">{{$diff_vat}}</h3>
-                    </div>-->
+                        <span class="tax-block__title">@lang('MH deductions book')</span>
+                        <h3>{{$client->mh_deductions}}</h3>
+                    </div>
+                    <div class="tax-block">
+                        <span class="tax-block__title">@lang('Book of MH Advances')</span>
+                        <h3>{{$client->mh_advances}}</h3>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <h2>@lang('Social Security')</h2>
+    <div class="card">
+        <div class="card-body">
+            <div class="row">
+                <div class="col-lg-12 tax-column">
+                    <div class="tax-block">
+                        <span class="tax-block__title">@lang('Social Security Payment')</span>
+                        <h3 class="text-success">{{$client->social_security}}</h3>
+                    </div>
+                    <div class="tax-block">
+                        <span class="tax-block__title">@lang('Social Security register')</span>
+                        <h3>{{$client->social_security_number}}</h3>
+                    </div>
+                    <div class="tax-block">
+                        <span class="tax-block__title">@lang('Employed insurance portfolio')</span>
+                        <h3>{{$client->portfolio}}</h3>
+                    </div>
+                    <div class="tax-block">
+                        <span class="tax-block__title">@lang('VAT Number')</span>
+                        <h3>{{$client->vat_number}}</h3>
+                    </div>
                 </div>
             </div>
         </div>

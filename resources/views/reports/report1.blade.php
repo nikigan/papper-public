@@ -69,7 +69,7 @@
                                 <td><a class="text-danger"
                                        href="{{ route('documents.show', $item) }}">{{ $item->document_number }}</a></td>
                                 <td>{{ $item->document_date }}</td>
-                                <td>{{ $item->expense_type->name ?? 'Other' }}</td>
+                                <td>{{ $item->expense_type->name ?? __('Other Expense') }}</td>
                                 <td>{{ number_format($item->sum, 2) }}</td>
                                 <td>{{number_format($item->vat, 2)}}</td>
                             </tr>
@@ -102,7 +102,7 @@
                                 <td><a class="text-success"
                                        href="{{ route('documents.show', $item) }}">{{ $item->document_number }}</a></td>
                                 <td>{{ $item->document_date }}</td>
-                                <td>{{ $item->dt->name ?? 'Other' }}</td>
+                                <td>{{ $item->dt->name ?? __('Other Income') }}</td>
                                 <td>{{ number_format($item->sum, 2) }}</td>
                                 <td>{{number_format($item->vat, 2)}}</td>
                             </tr>
@@ -113,7 +113,7 @@
                                        href="{{ route('invoice.show', $item) }}">{{ $item->invoice_number }}</a>
                                 </td>
                                 <td>{{ $item->invoice_date }}</td>
-                                <td>{{ $item->dt->name ?? 'Other' }}</td>
+                                <td>{{ $item->dt->name ?? __('Other Income') }}</td>
                                 <td>{{ number_format($item->total_amount, 2) }}</td>
                                 <td>{{ number_format($item->total_amount * $item->tax_percent / 100, 2) }}</td>
                             </tr>
@@ -147,7 +147,7 @@
                                 <td><a class="text-success"
                                        href="{{ route('documents.show', $item) }}">{{ $item->document_number }}</a></td>
                                 <td>{{ $item->document_date }}</td>
-                                <td>{{ $item->dt->name ?? 'Other' }}</td>
+                                <td>{{ $item->dt->name ?? __('Other Income') }}</td>
                                 <td>{{ number_format($item->sum, 2) }}</td>
                                 <td>{{number_format($item->vat, 2)}}</td>
                             </tr>
@@ -158,7 +158,7 @@
                                        href="{{ route('invoice.show', $item) }}">{{ $item->invoice_number }}</a>
                                 </td>
                                 <td>{{ $item->invoice_date }}</td>
-                                <td>{{ $item->dt ?? 'Other' }}</td>
+                                <td>{{ $item->dt ?? __('Other Income') }}</td>
                                 <td>{{ number_format($item->total_amount, 2) }}</td>
                                 <td>{{ number_format($item->total_amount * $item->tax_percent / 100, 2) }}</td>
                             </tr>
@@ -191,7 +191,7 @@
                                 <td><a class="text-success"
                                        href="{{ route('documents.show', $item) }}">{{ $item->document_number }}</a></td>
                                 <td>{{ $item->document_date }}</td>
-                                <td>{{ $item->dt->name ?? 'Other' }}</td>
+                                <td>{{ $item->dt->name ?? __('Other Income') }}</td>
                                 <td>{{ number_format($item->sum, 2) }}</td>
                                 <td>{{number_format($item->vat, 2)}}</td>
                             </tr>
@@ -202,7 +202,7 @@
                                        href="{{ route('invoice.show', $item) }}">{{ $item->invoice_number }}</a>
                                 </td>
                                 <td>{{ $item->invoice_date }}</td>
-                                <td>{{ $item->dt ?? 'Other' }}</td>
+                                <td>{{ $item->dt ?? __('Other Income') }}</td>
                                 <td>{{ number_format($item->total_amount, 2) }}</td>
                                 <td>{{ number_format($item->total_amount * $item->tax_percent / 100, 2) }}</td>
                             </tr>

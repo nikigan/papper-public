@@ -12,15 +12,15 @@ class Reports extends Plugin
     {
         $client = \Route::current()->parameter('client');
         if ($client) {
-            $report1 = Item::create(__('Report') . ' ' . 1)
+            $report1 = Item::create(__('Report 1'))
                 ->permissions('reports.report1')
                 ->href(route('reports.report1.index', $client));
 
-            $report2 = Item::create(__('Report') . ' ' . 2)
+            $report2 = Item::create(__('Report 2'))
                 ->permissions('reports.report2')
                 ->href(route('reports.report2.index', $client));
 
-            $report3 = Item::create(__('Report') . ' ' . 3)
+            $report3 = Item::create(__('Report 3'))
                 ->permissions('reports.report3')
                 ->href(route('reports.report3.index', $client));
 
@@ -32,6 +32,10 @@ class Reports extends Plugin
                 ->permissions('reports.report_customers')
                 ->href(route('reports.report_customers.index', $client));
 
+            $report_tax = Item::create(__('Report Tax'))
+                ->permissions('reports.report_tax')
+                ->href(route('reports.report_tax.index', $client));
+
             return Item::create(__('Reports'))
                 ->href('#reports-dropdown')
                 ->icon('fas fa-document')
@@ -41,7 +45,8 @@ class Reports extends Plugin
                     $report2,
                     $report3,
                     $report_vendors,
-                    $report_customers
+                    $report_customers,
+                    $report_tax
                 ]);
         } else {
             return false;

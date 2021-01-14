@@ -49,7 +49,7 @@
 
     @if (count($expense_groups))
         @foreach($expense_groups as $name => $group)
-            <h2>@lang($name != "" ? $name : "Other") <small>({{count(reset($group))}})</small></h2>
+            <h2>@lang($name != "" ? $name : __("Other Expense")) <small>({{count(reset($group))}})</small></h2>
             <div class="card">
                 <div class="card-body">
                     <div class="table-responsive">
@@ -86,7 +86,7 @@
 
     @if (count($income_groups))
         @foreach($income_groups as $name => $group)
-            <h2>@lang($name != "" ? $name : "Other") <small>({{count(reset($group))}})</small></h2>
+            <h2>@lang($name != "" ? $name : __("Other Income")) <small>({{count(reset($group))}})</small></h2>
             <div class="card">
                 <div class="card-body">
                     <div class="table-responsive">
@@ -109,14 +109,14 @@
                                         <td><a href="{{route('documents.show', $item)}}"
                                                class="text-success">{{ $item->document_number }}</a></td>
                                         <td>{{ $item->document_date }}</td>
-                                        <td>{{ $item->income_type->name ?? 'Other' }}</td>
+                                        <td>{{ $item->income_type->name ?? __('Other Income') }}</td>
                                         <td>{{ number_format($item->sum, 2) }}</td>
                                         <td>{{number_format($item->vat, 2)}}</td>
                                     @elseif($item instanceof \Vanguard\Invoice)
                                         <td><a href="{{route('invoice.show', $item)}}"
                                                class="text-success">{{ $item->invoice_number }}</a></td>
                                         <td>{{ $item->invoice_date }}</td>
-                                        <td>{{ $item->income_type->name ?? 'Other' }}</td>
+                                        <td>{{ $item->income_type->name ?? __('Other Income') }}</td>
                                         <td>{{ number_format($item->grand_total, 2) }}</td>
                                         <td>{{ number_format($item->total_amount * $item->tax_percent / 100, 2) }}</td>
                                     @endif
@@ -128,14 +128,14 @@
                                             <td><a href="{{route('documents.show', $items)}}"
                                                    class="text-success">{{ $items->document_number }}</a></td>
                                             <td>{{ $items->document_date }}</td>
-                                            <td>{{ $items->income_type->name ?? 'Other' }}</td>
+                                            <td>{{ $items->income_type->name ?? __('Other Income') }}</td>
                                             <td>{{ number_format($items->sum, 2) }}</td>
                                             <td>{{number_format($items->vat, 2)}}</td>
                                         @elseif($item instanceof \Vanguard\Invoice)
                                             <td><a href="{{route('invoice.show', $items)}}"
                                                    class="text-success">{{ $items->invoice_number }}</a></td>
                                             <td>{{ $items->invoice_date }}</td>
-                                            <td>{{ $items->income_type->name ?? 'Other' }}</td>
+                                            <td>{{ $items->income_type->name ?? __('Other Income') }}</td>
                                             <td>{{ number_format($items->grand_total, 2) }}</td>
                                             <td>{{ number_format($items->total_amount * $items->tax_percent / 100, 2) }}</td>
                                         @endif

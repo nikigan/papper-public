@@ -28,13 +28,13 @@
             @endif
 
             @if ($invoice->customer->phone != '')
-                <br/><br/><b>Phone</b>: {{ $invoice->customer->phone }}
+                <br/><br/><b>@lang('Phone')</b>: {{ $invoice->customer->phone }}
             @endif
             @if ($invoice->customer->email != '')
-                <br/><br/><b>Email</b>: {{ $invoice->customer->email }}
+                <br/><br/><b>@lang('Email')</b>: {{ $invoice->customer->email }}
             @endif
             @if ($invoice->customer->vat_number != '')
-                <br/><br/><b>VAT number</b>: {{ $invoice->customer->vat_number }}
+                <br/><br/><b>@lang('VAT number')</b>: {{ $invoice->customer->vat_number }}
             @endif
 
             @if ($invoice->customer->customer_fields)
@@ -45,19 +45,13 @@
         </div>
 
         <div class="float-right">
-            <b>From</b>: {{ $invoice->creator->present()->name() }}
+            <b>@lang('From')</b>: {{ $invoice->creator->present()->name() }}
             <br/><br/>
             @if ($invoice->creator->address)
-                <b>Address</b>: {{ $invoice->creator->address }}
+                <b>@lang('Address')</b>: {{ $invoice->creator->address }}
                 <br/><br/>
             @endif
-            <b>Email</b>: {{ $invoice->creator->email }}
-            {{--@if (is_array(config('invoices.seller.additional_info')))
-                @foreach (config('invoices.seller.additional_info') as $key => $value)
-                    <br /><br />
-                    <b>{{ $key }}</b>: {{ $value }}
-                @endforeach
-            @endif--}}
+            <b>@lang('Email')</b>: {{ $invoice->creator->email }}
         </div>
     </div>
 
@@ -66,10 +60,10 @@
             <thead>
             <tr>
                 <th class="text-center"> #</th>
-                <th> Product</th>
-                <th class="text-center"> Qty</th>
-                <th class="text-center"> Price ({{ $currency->ISO_code }})</th>
-                <th class="text-center"> Total ({{ $currency->ISO_code }})</th>
+                <th>@lang('Product')</th>
+                <th class="text-center">@lang('Qty')</th>
+                <th class="text-center">@lang('Price') ({{ $currency->ISO_code }})</th>
+                <th class="text-center">@lang('Total') ({{ $currency->ISO_code }})</th>
             </tr>
             </thead>
             <tbody>
@@ -97,25 +91,25 @@
             <tbody>
             @if ($invoice->tax_percent > 0)
                 <tr>
-                    <th class="text-right">Sub Total ({{ $currency->ISO_code  }}):</th>
+                    <th class="text-right">@lang('Sub Total') ({{ $currency->ISO_code  }}):</th>
                     <td class="text-left">
                         {{ number_format($invoice->total_amount, 2) }}
                     </td>
                 </tr>
                 <tr>
-                    <th class="text-right">Tax:</th>
+                    <th class="text-right">@lang('Tax'):</th>
                     <td class="text-left">
                         {{ $invoice->tax_percent }}%
                 </tr>
                 <tr>
-                    <th class="text-right">Tax Amount ({{ $currency->ISO_code  }}):</th>
+                    <th class="text-right">@lang('Tax Amount') ({{ $currency->ISO_code  }}):</th>
                     <td class="text-left">
                         {{ number_format($invoice->total_amount * $invoice->tax_percent / 100, 2) }}
                     </td>
                 </tr>
             @endif
             <tr>
-                <th class="text-right">Grand Total ({{ $currency->ISO_code  }}):</th>
+                <th class="text-right">@lang('Grand Total') ({{ $currency->ISO_code  }}):</th>
                 <td class="text-left">
                     @if ($invoice->tax_percent > 0)
                         {{ number_format($invoice->total_amount + ($tax_k * $invoice->total_amount * $invoice->tax_percent / 100), 2) }}

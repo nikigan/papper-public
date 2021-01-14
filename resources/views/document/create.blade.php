@@ -132,7 +132,7 @@
                     <div class="form-group" id="expense_type_block">
                         <label for="expense_type">@lang("Expense type"):</label>
                         <select name='expense_type_id' class="form-control" id="expense_type">
-                            <option value="">@lang('Other')</option>
+                            <option value="">@lang('Other Expense')</option>
                             @foreach($expense_types as $type)
                                 <option value="{{$type->id}}">@lang($type->name)</option>
                             @endforeach
@@ -141,7 +141,7 @@
                     <div class="form-group" id="income_type_block" style="display: none">
                         <label for="income_type">@lang("Income type"):</label>
                         <select name='income_type_id' class="form-control" id="income_type">
-                            <option value="">@lang('Other')</option>
+                            <option value="">@lang('Other Income')</option>
                             @foreach($income_types as $type)
                                 <option value="{{$type->id}}"
                                 @if(auth()->user()->default_income_type_id == $type->id) selected @endif>@lang($type->name)</option>
@@ -156,7 +156,7 @@
                     <div class="form-group" id="document_type_block" style="display: none;">
                         <label for="document_type">@lang("Document type"):</label>
                         <select name='document_type_id' class="form-control" id="document_type">
-                            <option value="">@lang('Other')</option>
+                            <option value="">@lang('Other type')</option>
                             @foreach($document_types as $type)
                                 <option value="{{$type->id}}">@lang($type->name)</option>
                             @endforeach

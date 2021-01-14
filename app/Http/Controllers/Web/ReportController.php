@@ -132,61 +132,12 @@ class ReportController extends Controller
 
         $income_groups = $income_groups->mergeRecursive($invoice_groups);
 
-        /*foreach ($income_groups as $key => $value) {
-            $sum = 0;
-            foreach ($value as $item) {
-                if (is_array($item)) {
-                    foreach ($item as $i) {
-                        if ($i instanceof Document) {
-                            $sum += $i->sum;
-                        } elseif ($i instanceof Invoice) {
-                            $sum += $i->sum;
-                        }
-                    }
-                } else {
-                    if ($item instanceof Document) {
-                        $sum += $item->sum;
-                    } elseif ($item instanceof Invoice) {
-                        $sum += $item->sum;
-                    }
-                }
-            }
-
-            if (is_array($value)) {
-                $value['total_sum'] = $sum;
-                $income_groups[$key] = $value;
-            } else {
-                $income_groups[$key]['total_sum'] = $sum;
-            }
-            foreach ($value as $k => $item) {
-                if ($item instanceof Document) {
-                    $value[$k]['percentage'] = $item->sum / $sum * 100;
-                }
-            }
-            foreach ($value as $k => $item) {
-                if (is_array($item)) {
-                    foreach ($item as $j => $i) {
-                        if ($i instanceof Document) {
-                            $value[$k][$j]['percentage'] = $i->sum / $sum * 100;
-                        } elseif ($i instanceof Invoice) {
-                            $value[$k][$j]['percentage'] = $i->sum / $sum * 100;
-                        }
-                    }
-                } else {
-                    if ($item instanceof Document) {
-                        $value[$k]['percentage'] = $item->sum / $sum * 100;
-                    } elseif ($item instanceof Invoice) {
-                        $value[$k]['percentage'] = $item->sum / $sum * 100;
-                    }
-                }
-            }
-        }*/
         $groups = [];
         foreach ($income_groups as $name => $group) {
             foreach ($group as $item) {
                 if ($item instanceof Document || $item instanceof Invoice) {
-                    $groups['Other group']['subgroups']['Other']['sum'] = ($groups[$name]['subgroups']['Other']['sum'] ?? 0) + $item->sum;
-                    $groups['Other group']['sum'] = ($groups['Other group']['sum'] ?? 0) + $item->sum;
+                    $groups['Other Income Group']['subgroups']['Other']['sum'] = ($groups[$name]['subgroups']['Other']['sum'] ?? 0) + $item->sum;
+                    $groups['Other Income Group']['sum'] = ($groups['Other Income Group']['sum'] ?? 0) + $item->sum;
                 }
                 if (is_array($item)) {
                     foreach ($item as $i) {

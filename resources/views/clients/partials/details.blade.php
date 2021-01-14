@@ -24,6 +24,16 @@
             <label for="report_period">@lang('Report Period')</label>
             {!! Form::select('report_period', [1 => __('One Month'), 2 => __('Two Months')], $edit ? $user->report_period : 1, ['id' => 'report_period','class' => 'form-control input-solid']) !!}
         </div>
+        <div class="form-group">
+            <label for="mh_advances">@lang('Book of MH Advances')</label>
+            <input type="text" class="form-control input-solid" id="mh_advances"
+                   name="mh_advances" placeholder="@lang('Book of MH Advances')" value="{{ $edit ? $user->mh_advances : '' }}">
+        </div>
+        <div class="form-group">
+            <label for="mh_deductions">@lang('Book of MH Deductions')</label>
+            <input type="text" class="form-control input-solid" id="mh_deductions"
+                   name="mh_deductions" placeholder="@lang('Book of MH Deductions')" value="{{ $edit ? $user->mh_deductions : '' }}">
+        </div>
     </div>
 
     <div class="col-md-6">
@@ -52,6 +62,11 @@
             <label for="social_security_number">@lang('Social Security Number')</label>
             <input type="text" class="form-control input-solid" id="social_security_number"
                    name="social_security_number" placeholder="@lang('Social Security Number')" value="{{ $edit ? $user->social_security_number : '' }}">
+        </div>
+        <div class="form-group">
+            <label for="portfolio">@lang('Portfolio of employed persons')</label>
+            <input type="text" class="form-control input-solid" id="portfolio"
+                   name="portfolio" placeholder="@lang('Portfolio of employed persons')" value="{{ $edit ? $user->portfolio : '' }}">
         </div>
         <div class="form-group">
             <label for="organization_type">@lang('Organization Type')</label>
