@@ -3,8 +3,10 @@
 namespace Vanguard\Http\Controllers\Web;
 
 use Illuminate\Http\Request;
+use PhpOffice\PhpSpreadsheet\Document\Security;
 use Vanguard\Http\Controllers\Controller;
 use Vanguard\Http\Filters\DateSearch;
+use Vanguard\Http\Filters\DocumentKeywordSearch;
 use Vanguard\Http\Filters\InvoiceSearch;
 use Vanguard\Http\Filters\UserKeywordSearch;
 use Vanguard\Invoice;
@@ -38,6 +40,9 @@ class SearchController extends Controller
         $clients = $clients->paginate(10, ['*'], 'client_page');
 
         $documents = $this->documents->documentsAuditor();
+
+        (new DocumentKeywordSearch)($documents, $query);
+
         (new DateSearch)($documents, compact('end_date', 'start_date'), 'document_date');
 
         $invoices = Invoice::query()->whereHas('creator', function($q){
