@@ -17,7 +17,7 @@
 
 @section('content')
     @include('partials.messages')
-    <h1>@lang('Report') @lang('Tax')</h1>
+    <h1>@lang('Report Taxes') {{$client->present()->name}}</h1>
     <div class="card">
         <div class="card-body">
             <div class="col-md-6">
@@ -80,7 +80,7 @@
         </div>
     </div>
 
-    <h2>@lang('Tax')</h2>
+    <h2>@lang('Taxes')</h2>
     <div class="card">
         <div class="card-body">
             <div class="row">

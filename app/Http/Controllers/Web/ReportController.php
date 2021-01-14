@@ -54,6 +54,7 @@ class ReportController extends Controller
         $acceptances = $invoices->where('document_type', '=', 3);
         $document_acceptances = $incomes->where('document_type_id', '=', 3);
 
+
         return view('reports.report1', compact('expenses', 'invoices', 'incomes', 'client', 'incomes_with_vat', 'incomes_without_vat', 'invoices_with_vat', 'invoices_without_vat', 'acceptances', 'document_acceptances'));
     }
 
@@ -250,6 +251,18 @@ class ReportController extends Controller
 
         $invoices_vat = $invoices->leftJoin('currencies as c', 'invoices.currency_id', '=', 'c.id')->leftJoin('invoices_items as ii', 'invoices.id', 'ii.invoice_id')->select(DB::raw('sum(ii.price*ii.quantity / c.value) as sum'), DB::raw('sum(ii.price*ii.quantity / c.value) * invoices.tax_percent / 100 as vat'), 'invoices.id')->groupBy('invoices.id')->get();
 
+        if (!count($document_vat)) {
+            $document_vat = [
+                0 => [
+                    'vat' => 0,
+                    'sum' => 0
+                ],
+                1 => [
+                    'vat' => 0,
+                    'sum' => 0
+                ]
+            ];
+        }
         $in_vat = $document_vat[1]['vat'] + $invoices_vat->sum('vat');
         $exp_vat = $document_vat[0]['vat'];
         $diff_vat = $in_vat - $exp_vat;
@@ -263,6 +276,7 @@ class ReportController extends Controller
 
         $in_sum = number_format($in_sum, 2);
         $in_tax = number_format($in_tax, 2);
+
 
         return view('reports.report_tax', compact('in_vat', 'exp_vat', 'diff_vat', 'client', 'in_tax', 'in_sum'));
     }

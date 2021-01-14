@@ -1,7 +1,7 @@
 @extends('layouts.app')
 
-@section('page-title', __('Report') . '1')
-@section('page-heading', __('Report') . '1')
+@section('page-title', __('Report 1'))
+@section('page-heading', __('Report 1'))
 
 @section('breadcrumbs')
     <li class="breadcrumb-item">
@@ -11,13 +11,13 @@
         <a href="{{route('clients.show', $client)}}">{{ $client->present()->name ?? $client->email }}</a>
     </li>
     <li class="breadcrumb-item active">
-        <a>@lang('Report') 1</a>
+        <a>@lang('Report 1')</a>
     </li>
 @stop
 
 @section('content')
     @include('partials.messages')
-    <h1>@lang('Report') 1</h1>
+    <h1>@lang('Report 1')</h1>
     <div class="card">
         <div class="card-body">
             <div class="col-md-6">
@@ -51,7 +51,6 @@
     <h2>@lang('Expense') <small>({{count($expenses)}})</small></h2>
     <div class="card">
         <div class="card-body">
-            {{--            @include('reports.partials.table', ['items' => $expenses, 'columns' => $expenses_columns, 'class' => 'text-danger'])--}}
             <div class="table-responsive">
                 <table class="table table-borderless table-striped">
                     <thead>
@@ -70,8 +69,8 @@
                                        href="{{ route('documents.show', $item) }}">{{ $item->document_number }}</a></td>
                                 <td>{{ $item->document_date }}</td>
                                 <td>{{ $item->expense_type->name ?? __('Other Expense') }}</td>
-                                <td>{{ number_format($item->sum, 2) }}</td>
-                                <td>{{number_format($item->vat, 2)}}</td>
+                                <td>{{ number_format($item->sum / $item->currency->value, 2) }}</td>
+                                <td>{{number_format($item->vat / $item->currency->value, 2)}}</td>
                             </tr>
                         @endforeach
                     </tbody>
@@ -103,8 +102,8 @@
                                        href="{{ route('documents.show', $item) }}">{{ $item->document_number }}</a></td>
                                 <td>{{ $item->document_date }}</td>
                                 <td>{{ $item->dt->name ?? __('Other Income') }}</td>
-                                <td>{{ number_format($item->sum, 2) }}</td>
-                                <td>{{number_format($item->vat, 2)}}</td>
+                                <td>{{ number_format($item->sum / $item->currency->value, 2) }}</td>
+                                <td>{{number_format($item->vat / $item->currency->value, 2)}}</td>
                             </tr>
                         @endforeach
                         @foreach ($invoices_with_vat as $item)
@@ -114,8 +113,8 @@
                                 </td>
                                 <td>{{ $item->invoice_date }}</td>
                                 <td>{{ $item->dt->name ?? __('Other Income') }}</td>
-                                <td>{{ number_format($item->total_amount, 2) }}</td>
-                                <td>{{ number_format($item->total_amount * $item->tax_percent / 100, 2) }}</td>
+                                <td>{{ number_format($item->total_amount / $item->currency->value, 2) }}</td>
+                                <td>{{ number_format($item->total_amount / $item->currency->value * $item->tax_percent / 100, 2) }}</td>
                             </tr>
                         @endforeach
                         </tbody>
@@ -148,8 +147,8 @@
                                        href="{{ route('documents.show', $item) }}">{{ $item->document_number }}</a></td>
                                 <td>{{ $item->document_date }}</td>
                                 <td>{{ $item->dt->name ?? __('Other Income') }}</td>
-                                <td>{{ number_format($item->sum, 2) }}</td>
-                                <td>{{number_format($item->vat, 2)}}</td>
+                                <td>{{ number_format($item->sum / $item->currency->value, 2) }}</td>
+                                <td>{{number_format($item->vat / $item->currency->value, 2)}}</td>
                             </tr>
                         @endforeach
                         @foreach ($invoices_without_vat as $item)
@@ -158,9 +157,9 @@
                                        href="{{ route('invoice.show', $item) }}">{{ $item->invoice_number }}</a>
                                 </td>
                                 <td>{{ $item->invoice_date }}</td>
-                                <td>{{ $item->dt ?? __('Other Income') }}</td>
-                                <td>{{ number_format($item->total_amount, 2) }}</td>
-                                <td>{{ number_format($item->total_amount * $item->tax_percent / 100, 2) }}</td>
+                                <td>{{ $item->dt->name ?? __('Other Income') }}</td>
+                                <td>{{ number_format($item->total_amount / $item->currency->value, 2) }}</td>
+                                <td>{{ number_format($item->total_amount / $item->currency->value * $item->tax_percent / 100, 2) }}</td>
                             </tr>
                         @endforeach
                         </tbody>
@@ -192,8 +191,8 @@
                                        href="{{ route('documents.show', $item) }}">{{ $item->document_number }}</a></td>
                                 <td>{{ $item->document_date }}</td>
                                 <td>{{ $item->dt->name ?? __('Other Income') }}</td>
-                                <td>{{ number_format($item->sum, 2) }}</td>
-                                <td>{{number_format($item->vat, 2)}}</td>
+                                <td>{{ number_format($item->sum / $item->currency->value, 2) }}</td>
+                                <td>{{number_format($item->vat / $item->currency->value, 2)}}</td>
                             </tr>
                         @endforeach
                         @foreach ($acceptances as $item)
@@ -202,9 +201,9 @@
                                        href="{{ route('invoice.show', $item) }}">{{ $item->invoice_number }}</a>
                                 </td>
                                 <td>{{ $item->invoice_date }}</td>
-                                <td>{{ $item->dt ?? __('Other Income') }}</td>
-                                <td>{{ number_format($item->total_amount, 2) }}</td>
-                                <td>{{ number_format($item->total_amount * $item->tax_percent / 100, 2) }}</td>
+                                <td>{{ $item->dt->name ?? __('Other Income') }}</td>
+                                <td>{{ number_format($item->total_amount / $item->currency->value, 2) }}</td>
+                                <td>{{ number_format($item->total_amount  / $item->currency->value * $item->tax_percent / 100, 2) }}</td>
                             </tr>
                         @endforeach
                         </tbody>

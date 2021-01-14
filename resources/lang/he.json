@@ -345,5 +345,20 @@
     "Including tax": "כולל מע״מ",
     "Tax Amount": "סה״כ חייב במ״מ",
     "Grand Total": "סה״כ לתשלום",
-    "Save Invoice": "הפק"
+    "Save Invoice": "הפק",
+    "Report Tax": "דיווח",
+    "Report Taxes": "פירוט דיווחים עבור",
+    "Taxes": "מס הכנסה",
+    "Social Security": "ביטוח לאומי",
+    "Total Income": "ס״הכ הכנסות",
+    "Income VAT": "ס״הכ מס הסקאות",
+    "Expense VAT": "סה״כ מעמ תשומות",
+    "VAT to pay": "סך תשלום מעמ",
+    "Tax Percent": "אחוז מקדמות",
+    "MH deductions book": "פנקס מ\"ה ניכויים",
+    "Book of MH Advances": "פנקס מ\"ה מקדמות",
+    "Income Tax": "המחזור העסקי בש״ח",
+    "Social Security Payment": "תשלום ביטוח לאומי",
+    "Social Security register": "פנקס ביטוח לאומי",
+    "Employed insurance portfolio": "תיק ביטוח מועסקים"
 }

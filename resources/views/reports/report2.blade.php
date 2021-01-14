@@ -70,9 +70,8 @@
                                            href="{{ route('documents.show', $item) }}">{{ $item->document_number }}</a>
                                     </td>
                                     <td>{{ $item->document_date }}</td>
-                                    {{--                                    <td>{{ $item->expense_type->name ?? 'Other' }}</td>--}}
-                                    <td>{{ number_format($item->sum, 2) }}</td>
-                                    <td>{{number_format($item->vat, 2)}}</td>
+                                    <td>{{ number_format($item->sum  / $item->currency->value, 2) }}</td>
+                                    <td>{{number_format($item->vat / $item->currency->value, 2)}}</td>
                                 </tr>
                             @endforeach
                             </tbody>
@@ -110,15 +109,15 @@
                                                class="text-success">{{ $item->document_number }}</a></td>
                                         <td>{{ $item->document_date }}</td>
                                         <td>{{ $item->income_type->name ?? __('Other Income') }}</td>
-                                        <td>{{ number_format($item->sum, 2) }}</td>
-                                        <td>{{number_format($item->vat, 2)}}</td>
+                                        <td>{{ number_format($item->sum / $item->currency->value, 2) }}</td>
+                                        <td>{{number_format($item->vat / $item->currency->value, 2)}}</td>
                                     @elseif($item instanceof \Vanguard\Invoice)
                                         <td><a href="{{route('invoice.show', $item)}}"
                                                class="text-success">{{ $item->invoice_number }}</a></td>
                                         <td>{{ $item->invoice_date }}</td>
                                         <td>{{ $item->income_type->name ?? __('Other Income') }}</td>
-                                        <td>{{ number_format($item->grand_total, 2) }}</td>
-                                        <td>{{ number_format($item->total_amount * $item->tax_percent / 100, 2) }}</td>
+                                        <td>{{ number_format($item->grand_total / $item->currency->value, 2) }}</td>
+                                        <td>{{ number_format($item->grand_total / $item->currency->value * $item->tax_percent / 100, 2) }}</td>
                                     @endif
                                 </tr>
                                 @endforeach
@@ -129,15 +128,15 @@
                                                    class="text-success">{{ $items->document_number }}</a></td>
                                             <td>{{ $items->document_date }}</td>
                                             <td>{{ $items->income_type->name ?? __('Other Income') }}</td>
-                                            <td>{{ number_format($items->sum, 2) }}</td>
-                                            <td>{{number_format($items->vat, 2)}}</td>
-                                        @elseif($item instanceof \Vanguard\Invoice)
+                                            <td>{{ number_format($items->sum / $items->currency->value, 2) }}</td>
+                                            <td>{{number_format($items->vat / $items->currency->value, 2)}}</td>
+                                        @elseif($items instanceof \Vanguard\Invoice)
                                             <td><a href="{{route('invoice.show', $items)}}"
                                                    class="text-success">{{ $items->invoice_number }}</a></td>
                                             <td>{{ $items->invoice_date }}</td>
                                             <td>{{ $items->income_type->name ?? __('Other Income') }}</td>
-                                            <td>{{ number_format($items->grand_total, 2) }}</td>
-                                            <td>{{ number_format($items->total_amount * $items->tax_percent / 100, 2) }}</td>
+                                            <td>{{ number_format($items->grand_total / $items->currency->value, 2) }}</td>
+                                            <td>{{ number_format($items->grand_total / $items->currency->value * $items->tax_percent / 100, 2) }}</td>
                                         @endif
                                     </tr>
                                     @endif
