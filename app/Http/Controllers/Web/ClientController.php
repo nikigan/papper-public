@@ -9,6 +9,7 @@ use Illuminate\Support\Facades\Hash;
 use Password;
 use Vanguard\Document;
 use Vanguard\Http\Controllers\Controller;
+use Vanguard\IncomeType;
 use Vanguard\Invoice;
 use Vanguard\OrganizationType;
 use Vanguard\Repositories\Country\CountryRepository;
@@ -57,12 +58,13 @@ class ClientController extends Controller
     public function create(CountryRepository $countryRepository, RoleRepository $roleRepository)
     {
         $organization_types = OrganizationType::all()->pluck('name', 'id');
+        $income_types = IncomeType::all()->pluck('name', 'id');
 
         return view('clients.add', [
             'countries' => $this->parseCountries($countryRepository),
             'roles' => [2 => 'User'],
             'statuses' => UserStatus::lists()
-        ] + compact('organization_types'));
+        ] + compact('organization_types', 'income_types'));
     }
 
     /**
@@ -183,7 +185,9 @@ class ClientController extends Controller
 
     public function info(User $client) {
         $organization_types = OrganizationType::all()->pluck('name', 'id');
-        return view('clients.info', compact('client', 'organization_types'));
+        $income_types = IncomeType::all()->pluck('name', 'id');
+
+        return view('clients.info', compact('client', 'organization_types', 'income_types'));
     }
 
     public function documents(Request $request, User $client)

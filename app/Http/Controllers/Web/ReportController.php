@@ -18,7 +18,7 @@ class ReportController extends Controller
     public function report1(Request $request, User $client)
     {
 
-        $start_date = $request->get('start_date') ?? date('Y-m-d', strtotime(date('Y-m-d') . "-1 month"));
+        $start_date = $request->get('start_date') ?? date('Y-m-d', strtotime(date('Y-m-d') . "-{$client->report_period} month"));
         $end_date = $request->get('end_date') ?? date('Y-m-d');
 
         $expenses = $client->documents()->where('document_type', '=', 0)->orderByDesc('document_date')->where('status', DocumentStatus::CONFIRMED);
@@ -59,7 +59,7 @@ class ReportController extends Controller
 
     public function report2(Request $request, User $client)
     {
-        $start_date = $request->get('start_date') ?? date('Y-m-d', strtotime(date('Y-m-d') . "-1 month"));
+        $start_date = $request->get('start_date') ?? date('Y-m-d', strtotime(date('Y-m-d') . "-{$client->report_period} month"));
         $end_date = $request->get('end_date') ?? date('Y-m-d');
 
         $expenses = $client->documents()->with('expense_type')->where('document_type', '=', 0)->orderByDesc('document_date')->where('status', DocumentStatus::CONFIRMED);
@@ -93,7 +93,7 @@ class ReportController extends Controller
 
     public function report3(Request $request, User $client)
     {
-        $start_date = $request->get('start_date') ?? date('Y-m-d', strtotime(date('Y-m-d') . "-1 month"));
+        $start_date = $request->get('start_date') ?? date('Y-m-d', strtotime(date('Y-m-d') . "-{$client->report_period} month"));
         $end_date = $request->get('end_date') ?? date('Y-m-d');
 
         $income_groups = $client->documents()->where('document_type', '=', 1)->where('status', DocumentStatus::CONFIRMED)->getQuery();
@@ -231,7 +231,7 @@ class ReportController extends Controller
 
     public function report_vendors(Request $request, User $client)
     {
-        $start_date = $request->get('start_date') ?? date('Y-m-d', strtotime(date('Y-m-d') . "-1 month"));
+        $start_date = $request->get('start_date') ?? date('Y-m-d', strtotime(date('Y-m-d') . "-{$client->report_period} month"));
         $end_date = $request->get('end_date') ?? date('Y-m-d');
 
         $expenses = $client->documents()->where('document_type', '=', 0)->where('status', DocumentStatus::CONFIRMED)->getQuery();
@@ -245,7 +245,7 @@ class ReportController extends Controller
 
     public function report_customers(Request $request, User $client)
     {
-        $start_date = $request->get('start_date') ?? date('Y-m-d', strtotime(date('Y-m-d') . "-1 month"));
+        $start_date = $request->get('start_date') ?? date('Y-m-d', strtotime(date('Y-m-d') . "-{$client->report_period} month"));
         $end_date = $request->get('end_date') ?? date('Y-m-d');
 
         $income_groups = $client->documents()->where('document_type', '=', 1)->where('status', DocumentStatus::CONFIRMED)->getQuery();
@@ -283,7 +283,7 @@ class ReportController extends Controller
 
     public function report_tax(Request $request, User $client)
     {
-        $start_date = $request->get('start_date') ?? date('Y-m-d', strtotime(date('Y-m-d') . "-1 month"));
+        $start_date = $request->get('start_date') ?? date('Y-m-d', strtotime(date('Y-m-d') . "-{$client->report_period} month"));
         $end_date = $request->get('end_date') ?? date('Y-m-d');
 
         $income = $client->documents()->where('status', DocumentStatus::CONFIRMED)->getQuery();

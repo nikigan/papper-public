@@ -2,12 +2,8 @@
 
 @section('content')
     <div class="clearfix">
-        {{--<div class="text-center">
-            <img src="{{ asset('assets/img/vanguard-logo-no-text.png') }}"/>
-        </div>
---}}
         <div class="text-center">
-            <b>{{$document_name}} {{ $invoice->invoice_number }}</b>
+            <b>{{__($document_name)}} {{ $invoice->invoice_number }}</b>
             <br>
             {{ $invoice->invoice_date }}
         </div>
@@ -15,11 +11,11 @@
 
     <div class="clearfix mt-3">
         <div class="float-left">
-            <b>To</b>:
+            <b>@lang('To')</b>:
             {{ $invoice->customer->name }}
             <br/><br/>
 
-            <b>Address</b>:
+            <b>@lang('Address')</b>:
             {{ $invoice->customer->address }}
             @if ($invoice->customer->postcode != '')
                 ,

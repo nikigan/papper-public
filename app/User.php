@@ -44,12 +44,14 @@ class User extends Authenticatable implements TwoFactorAuthenticatableContract, 
      *
      * @var array
      */
-    protected $fillable = [
+    /*protected $fillable = [
         'email', 'password', 'username', 'first_name', 'last_name', 'phone', 'avatar',
         'address', 'country_id', 'birthday', 'last_login', 'confirmation_token', 'status',
         'remember_token', 'role_id', 'email_verified_at', 'accountant_id', 'auditor_id',
-        'organization_type_id', 'vat_number', 'passport'
-    ];
+        'organization_type_id', 'vat_number', 'passport', 'report_period', 'tax_percent', 'social_security', 'social_security_number',
+
+    ];*/
+    protected $guarded = ['status', 'role_id'];
 
     /**
      * The attributes excluded from the model's JSON form.

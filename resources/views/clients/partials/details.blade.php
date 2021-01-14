@@ -12,8 +12,17 @@
         </div>
         <div class="form-group">
             <label for="tax">@lang('Tax Percent')</label>
-            <input type="number" step="0.1" min="0" max="1" class="form-control input-solid" id="tax"
+            <input type="number" step="0.1" min="0" max="100" class="form-control input-solid" id="tax"
                    name="tax_percent" placeholder="@lang('Tax Percent')" value="{{ $edit ? $user->tax_percent : '' }}">
+        </div>
+        <div class="form-group">
+            <label for="social_security">@lang('Social Security')</label>
+            <input type="number" step="0.1" min="0" class="form-control input-solid" id="social_security"
+                   name="social_security" placeholder="@lang('Social Security')" value="{{ $edit ? $user->social_security : '' }}">
+        </div>
+        <div class="form-group">
+            <label for="report_period">@lang('Report Period')</label>
+            {!! Form::select('report_period', [1 => __('One Month'), 2 => __('Two Months')], $edit ? $user->report_period : 1, ['id' => 'report_period','class' => 'form-control input-solid']) !!}
         </div>
     </div>
 
@@ -40,9 +49,19 @@
                    name="passport" placeholder="@lang('Passport')" value="{{ $edit ? $user->passport : '' }}">
         </div>
         <div class="form-group">
+            <label for="social_security_number">@lang('Social Security Number')</label>
+            <input type="text" class="form-control input-solid" id="social_security_number"
+                   name="social_security_number" placeholder="@lang('Social Security Number')" value="{{ $edit ? $user->social_security_number : '' }}">
+        </div>
+        <div class="form-group">
             <label for="organization_type">@lang('Organization Type')</label>
             {!! Form::select('organization_type_id', $organization_types, $edit ? $user->organization_type->id : '',
             ['class' => 'form-control input-solid', 'id' => 'organization_type_id']) !!}
+        </div>
+        <div class="form-group">
+            <label for="default_income_type_id">@lang('Default Income Type')</label>
+            {!! Form::select('default_income_type_id', $income_types, $edit ? $user->default_income_type_id : 1,
+            ['class' => 'form-control input-solid', 'id' => 'default_income_type_id']) !!}
         </div>
     </div>
 

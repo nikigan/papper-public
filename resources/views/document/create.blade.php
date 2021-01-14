@@ -143,7 +143,8 @@
                         <select name='income_type_id' class="form-control" id="income_type">
                             <option value="">@lang('Other')</option>
                             @foreach($income_types as $type)
-                                <option value="{{$type->id}}">@lang($type->name)</option>
+                                <option value="{{$type->id}}"
+                                @if(auth()->user()->default_income_type_id == $type->id) selected @endif>@lang($type->name)</option>
                             @endforeach
                         </select>
                     </div>

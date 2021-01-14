@@ -15,7 +15,7 @@ $factory->define(Document::class, function (Faker $faker) {
 
     return [
         'user_id' => $faker->randomElement($clients->pluck('id')->toArray()),
-        'status' => \Vanguard\Support\Enum\DocumentStatus::CONFIRMED,
+        'status' => \Vanguard\Support\Enum\ReportPeriod::CONFIRMED,
         'document_number' => $faker->unique()->numberBetween(10000, 1000000),
         'document_type' => $faker->numberBetween(0, 1),
         'document_date' => $faker->dateTimeBetween('-1 years', 'now'),

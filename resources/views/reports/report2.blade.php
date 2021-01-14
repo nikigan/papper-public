@@ -1,7 +1,7 @@
 @extends('layouts.app')
 
-@section('page-title', __('Report') . '2')
-@section('page-heading', __('Report') . '2')
+@section('page-title', __('Report 2'))
+@section('page-heading', __('Report 2'))
 
 @section('breadcrumbs')
     <li class="breadcrumb-item">
@@ -11,13 +11,13 @@
         <a href="{{route('clients.show', $client)}}">{{ $client->present()->name ?? $client->email }}</a>
     </li>
     <li class="breadcrumb-item active">
-        <a>@lang('Report') 2</a>
+        <a>@lang('Report 2')</a>
     </li>
 @stop
 
 @section('content')
     @include('partials.messages')
-    <h1>@lang('Report') 2</h1>
+    <h1>@lang('Report 2')</h1>
     <div class="card">
         <div class="card-body">
             <div class="col-md-6">
@@ -28,7 +28,7 @@
                             <div class="form-group">
                                 <label for="startDate">@lang('From'):</label>
                                 <input type="date" name="start_date" class="form-control datechk" id="startDate"
-                                       value="{{Request::get('start_date') ?? date('Y-m-d', strtotime(date('Y-m-d') . "-1 month"))}}">
+                                       value="{{Request::get('start_date') ?? date('Y-m-d', strtotime(date('Y-m-d') . "-{$client->report_period} month"))}}">
                             </div>
                         </div>
                         <div class="col">
