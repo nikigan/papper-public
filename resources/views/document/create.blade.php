@@ -156,7 +156,7 @@
                     <div class="form-group" id="document_type_block" style="display: none;">
                         <label for="document_type">@lang("Document type"):</label>
                         <select name='document_type_id' class="form-control" id="document_type">
-                            <option value="">@lang('Other type')</option>
+                            <option value="">@lang('Other Type')</option>
                             @foreach($document_types as $type)
                                 <option value="{{$type->id}}">@lang($type->name)</option>
                             @endforeach

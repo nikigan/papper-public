@@ -22,6 +22,7 @@
 
     <link media="all" type="text/css" rel="stylesheet" href="{{ url(mix('assets/css/vendor.css')) }}">
     <link media="all" type="text/css" rel="stylesheet" href="{{ url(mix('assets/css/app.css')) }}">
+    <link rel="stylesheet" href="{{asset('vendor/Chart.min.css')}}">
 
     @yield('styles')
 
@@ -94,6 +95,8 @@
 
     <script src="{{ url(mix('assets/js/vendor.js')) }}"></script>
     <script src="{{ url('assets/js/as/app.js') }}"></script>
+    <script src="{{asset('vendor/Chart.bundle.min.js')}}"></script>
+    <script src="{{asset('vendor/chartjs-plugin-datalabels.min.js')}}"></script>
     <script src="{{ url('assets/js/custom.js') }}"></script>
     @yield('scripts')
 

@@ -69,31 +69,7 @@
                                            aria-haspopup="true" aria-expanded="false">
                                             <i class="fas fa-ellipsis-h"></i>
                                         </a>
-
-                                        {{-- <div class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownMenuLink">
-                                             <a href="{{ route('documents.show', $document) }}" class="dropdown-item text-gray-500">
-                                                 <i class="fas fa-eye mr-2"></i>
-                                                 @lang('View Document')
-                                             </a>
-                                         </div>--}}
                                     </div>
-
-
-                                    {{--<a href="{{ route('documents.show', $document) }}"
-                                       class="btn btn-icon"
-                                       title="@lang('View Document')"
-                                       data-toggle="tooltip"
-                                       data-placement="top">
-                                        <i class="fas fa-eye mr-2"></i>
-                                    </a>--}}
-                                    {{--@if($current_user->hasPermission('document.edit'))
-                                        <a href="- route('documents.edit', $document) -"
-                                           class="btn btn-icon edit"
-                                           title="@lang('Edit document')"
-                                           data-toggle="tooltip" data-placement="top">
-                                            <i class="fas fa-edit"></i>
-                                        </a>
-                                    @endif--}}
                                 </td>
                             </tr>
                         @endforeach
@@ -111,6 +87,11 @@
                     </tbody>
                 </table>
             </div>
+        </div>
+    </div>
+    <div class="card">
+        <div class="card-body">
+            @include('clients.partials.chart', $monthly_docs)
         </div>
     </div>
     <h4>@lang('Documents')</h4>

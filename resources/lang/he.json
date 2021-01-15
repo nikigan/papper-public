@@ -268,7 +268,7 @@
     "Are you sure that you want to delete this document?": "האם את/ה בטוח/ה שברצונך למחוק מסמך זה?",
     "Are you sure that you want to delete this vendor?": "האם את/ה בטוח/ה שברצונך למחוק ספק זה?",
     "Are you sure that you want to delete this customer?": "האם את/ה בטוח/ה שברצונך למחוק לקוח זה?",
-    "Expense": "הוצאות אחרות",
+    "Expense": "הוצאה",
     "View": "הצג",
     "Delete": "מחק",
     "Upload document": "העלאת מסמך",
@@ -305,7 +305,7 @@
     "List of created invoices": "ארכיון הכנסות",
     "Invoices": "הכנסות",
     "Uploaded documents": "מסמכים שהועלו",
-    "Income": "הכנסות אחרות",
+    "Income": "הכנסה",
     "Invoice Date": "תאריך",
     "Invoice Number": "אסמכתא",
     "Total Amount": "סה״כ",
@@ -360,5 +360,7 @@
     "Income Tax": "המחזור העסקי בש״ח",
     "Social Security Payment": "תשלום ביטוח לאומי",
     "Social Security register": "פנקס ביטוח לאומי",
-    "Employed insurance portfolio": "תיק ביטוח מועסקים"
+    "Employed insurance portfolio": "תיק ביטוח מועסקים",
+    "Other Income": "הכנסות אחרות",
+    "Other Expense": "הוצאות אחרות"
 }

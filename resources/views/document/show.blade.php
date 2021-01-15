@@ -142,7 +142,7 @@
                                 <label for="expense_type">@lang("Expense type"):</label>
                                 <select name='expense_type_id' class="form-control" id="expense_type"
                                         @nopermission('document.edit') disabled @endpermission>
-                                    <option value="">@lang('Other')</option>
+                                    <option value="">@lang('Other Expense')</option>
                                     @foreach($expense_types as $type)
                                         <option value="{{$type->id}}"
                                                 @if($document->expense_type_id == $type->id) selected @endif
@@ -154,7 +154,7 @@
                                  @if($document->document_type != 1) style="display: none" @endif>
                                 <label for="income_type">@lang("Income type"):</label>
                                 <select name='income_type_id' class="form-control" id="income_type">
-                                    <option value="">@lang('Other')</option>
+                                    <option value="">@lang('Other Income')</option>
                                     @foreach($income_types as $type)
                                         <option value="{{$type->id}}"
                                                 @if($document->income_type_id == $type->id) selected @endif
@@ -191,7 +191,7 @@
                                      @if($document->document_type != 1) style="display: none;" @endif>
                                     <label for="document_type">@lang("Document type"):</label>
                                     <select name='document_type_id' class="form-control" id="document_type">
-                                        <option value="">@lang('Other')</option>
+                                        <option value="">@lang('Other Type')</option>
                                         @foreach($document_types as $type)
                                             <option value="{{$type->id}}"
                                                     @if($document->document_type_id == $type->id) selected @endif>@lang($type->name)</option>
