@@ -1,4 +1,4 @@
-@extends('layouts.app')
+@extends('layouts.main')
 
 @section('page-title', __('Documents'))
 @section('page-heading', __('Uploaded documents'))
@@ -60,7 +60,7 @@
         </div>
     </div>
 
-    <h1>@lang('List of uploaded documents')</h1>
+    <h2>@lang('List of uploaded documents')</h2>
     <div class="card">
         <div class="card-body">
             <div class="row my-3 flex-md-row flex-column-reverse">

@@ -19,7 +19,7 @@ class UploadDocument extends Plugin
         return Item::create(__('Documents'))
             ->route('documents.index')
             ->icon('fas fa-file')
-            ->active('document.index');
+            ->active('documents');
     }
 
 }

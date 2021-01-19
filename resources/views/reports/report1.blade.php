@@ -1,4 +1,4 @@
-@extends('layouts.app')
+@extends('layouts.main')
 
 @section('page-title', __('Report 1'))
 @section('page-heading', __('Report 1'))
@@ -18,51 +18,24 @@
 @section('content')
     @include('partials.messages')
     <h1>@lang('Report 1')</h1>
-    <div class="card">
-        <div class="card-body">
-            <div class="col-md-6">
-                <form action="" method="GET" class="mb-0" id="search-form">
-
-                    <div class="form-row align-items-center">
-                        <div class="col">
-                            <div class="form-group">
-                                <label for="startDate">@lang('From'):</label>
-                                <input type="date" name="start_date" class="form-control datechk" id="startDate"
-                                       value="{{Request::get('start_date') ?? date('Y-m-d', strtotime(date('Y-m-d') . "-{$client->report_period} month"))}}">
-                            </div>
-                        </div>
-                        <div class="col">
-                            <div class="form-group">
-                                <label for="endDate">@lang('To'):</label>
-                                <input type="date" name="end_date" class="form-control datechk" id="endDate"
-                                       value="{{ Request::get('end_date') ?? date('Y-m-d') }}">
-                            </div>
-                        </div>
-                        <div class="col">
-                            <button class="btn btn-primary" type="submit">{{ __('Make report')}}</button>
-                        </div>
-                    </div>
-                </form>
-            </div>
-        </div>
-    </div>
+    @include('reports.partials.header', ['route' => 'reports.report1'])
 
     @if (count($expenses))
-    <h2>@lang('Expense') <small>({{count($expenses)}})</small></h2>
-    <div class="card">
-        <div class="card-body">
-            <div class="table-responsive">
-                <table class="table table-borderless table-striped">
-                    <thead>
-                    <tr>
-                        <th>@lang('#')</th>
-                        <th>@lang('Date')</th>
-                        <th>@lang('Type')</th>
-                        <th>@lang('Sum')</th>
-                        <th>@lang('VAT')</th>
-                    </tr>
-                    </thead>
-                    <tbody>
+        <h2>@lang('Expense') <small>({{count($expenses)}})</small></h2>
+        <div class="card">
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table class="table table-borderless table-striped">
+                        <thead>
+                        <tr>
+                            <th>@lang('#')</th>
+                            <th>@lang('Date')</th>
+                            <th>@lang('Type')</th>
+                            <th>@lang('Sum')</th>
+                            <th>@lang('VAT')</th>
+                        </tr>
+                        </thead>
+                        <tbody>
                         @foreach ($expenses as $item)
                             <tr class="text-danger">
                                 <td><a class="text-danger"
@@ -73,11 +46,11 @@
                                 <td>{{number_format($item->vat / $item->currency->value, 2)}}</td>
                             </tr>
                         @endforeach
-                    </tbody>
-                </table>
+                        </tbody>
+                    </table>
+                </div>
             </div>
         </div>
-    </div>
     @endif
 
     @if (count($incomes_with_vat) || count($invoices_with_vat))

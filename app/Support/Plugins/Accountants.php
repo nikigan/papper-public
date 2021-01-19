@@ -12,7 +12,7 @@ class Accountants extends Plugin
         return Item::create(__('Accountants'))
             ->route('accountants.index')
             ->icon('fas fa-user-tie')
-            ->active("accountants")
+            ->active("accountants*")
             ->permissions('client.assign');
     }
 }

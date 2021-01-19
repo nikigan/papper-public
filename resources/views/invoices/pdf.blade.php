@@ -121,8 +121,4 @@
             </tbody>
         </table>
     </div>
-
-    <div class="clearfix mt-3">
-        {{ config('invoices.footer_text') }}
-    </div>
 @endsection

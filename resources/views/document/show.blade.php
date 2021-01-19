@@ -247,10 +247,14 @@
     <script src="{{asset('assets/plugins/zoom-master/jquery.zoom.min.js')}}"></script>
     <script>
         $(document).ready(function () {
+            const img = document.querySelector('.document-image');
+
+            const ratio = img.naturalHeight / img.naturalWidth;
             $('.document-image-zoom').zoom({
-                url: '{{ asset($document->file) }}',
-                magnify: 0.5
+                url: '{{asset($document->file)}}',
+                magnify: ratio
             });
+
 
             $('input[name=\"document_type\"]').change(function (event) {
                 if (event.target.value == 0) {

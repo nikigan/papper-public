@@ -21,7 +21,7 @@
         <a href="{{ route('accountants.show', $user->id) }}" class="btn btn-icon edit"
            title="@lang('View Accountant')"
            data-toggle="tooltip" data-placement="top">
-            <i class="fas fa-eye mr-2"></i>
+            <i class="fas fa-eye"></i>
         </a>
     </td>
 </tr>

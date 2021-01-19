@@ -47,7 +47,7 @@ class VanguardServiceProvider extends BaseVanguardServiceProvider
             Clients::class,
             Accountants::class,
             Users::class,
-            UserActivity::class,
+//            UserActivity::class,
             RolesAndPermissions::class,
             Reports::class,
             Settings::class,

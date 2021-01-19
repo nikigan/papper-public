@@ -1,4 +1,4 @@
-@extends('layouts.app')
+@extends('layouts.main')
 
 @section('page-title', __('My Profile'))
 @section('page-heading', __('My Profile'))

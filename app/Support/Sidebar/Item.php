@@ -49,6 +49,7 @@ class Item
     public function route($route)
     {
         $this->route = $route;
+        $this->activePath = $route;
 
         return $this;
     }

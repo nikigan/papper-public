@@ -1,4 +1,4 @@
-@extends('layouts.app')
+@extends('layouts.main')
 
 @section('page-title', __('Report 3'))
 @section('page-heading', __('Report 3'))
@@ -18,34 +18,7 @@
 @section('content')
     @include('partials.messages')
     <h1>@lang('Report 3')</h1>
-    <div class="card">
-        <div class="card-body">
-            <div class="col-md-6">
-                <form action="" method="GET" class="mb-0" id="search-form">
-
-                    <div class="form-row align-items-center">
-                        <div class="col">
-                            <div class="form-group">
-                                <label for="startDate">@lang('From'):</label>
-                                <input type="date" name="start_date" class="form-control datechk" id="startDate"
-                                       value="{{Request::get('start_date') ?? date('Y-m-d', strtotime(date('Y-m-d') . "-{$client->report_period} month"))}}">
-                            </div>
-                        </div>
-                        <div class="col">
-                            <div class="form-group">
-                                <label for="endDate">@lang('To'):</label>
-                                <input type="date" name="end_date" class="form-control datechk" id="endDate"
-                                       value="{{ Request::get('end_date') ?? date('Y-m-d') }}">
-                            </div>
-                        </div>
-                        <div class="col">
-                            <button class="btn btn-primary" type="submit">{{ __('Make report')}}</button>
-                        </div>
-                    </div>
-                </form>
-            </div>
-        </div>
-    </div>
+    @include('reports.partials.header', ['route' => 'reports.report3'])
 
     @if (count($groups))
         <div class="card">
@@ -62,7 +35,7 @@
                         <tbody class="text-success">
                         @foreach ($groups as $name => $group)
                             <tr style="font-weight: bold">
-                                <td>{{$name != "" && $name != null ? $name : 'Other Income Group'}}</td>
+                                <td>{{$name != "" && $name != null ? $name : __('Other Income Group')}}</td>
                                 <td>{{number_format($group['sum'], 2) ?? 'N/A'}}</td>
                                 <td>100%</td>
                             </tr>

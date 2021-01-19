@@ -21,8 +21,8 @@ class UnconfirmedDocuments extends Plugin
         return Item::create(__('Waiting documents'))
             ->route('documents.waiting')
             ->icon('fas fa-file')
-            ->count($count)
-            ->active('document.waiting');
+            ->count($count);
+//            ->active('documents.waiting');
     }
 
 }

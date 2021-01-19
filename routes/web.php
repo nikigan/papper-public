@@ -259,13 +259,26 @@ Route::group(['middleware' => ['auth', 'verified', 'locale']], function () {
             Route::put('/update', 'ClientController@update')->name('clients.update');
             Route::group(['prefix' => 'reports', 'middleware' => 'permission:reports.general'], function () {
                 Route::get('report1', 'ReportController@report1')->name('reports.report1.index');
+                Route::get('report1/excel', 'ReportController@report1_excel')->name('reports.report1.excel');
+                Route::get('report1/pdf', 'ReportController@report1_pdf')->name('reports.report1.pdf');
+
                 Route::get('report2', 'ReportController@report2')->name('reports.report2.index');
+                Route::get('report2/excel', 'ReportController@report2_excel')->name('reports.report2.excel');
+                Route::get('report2/pdf', 'ReportController@report2_pdf')->name('reports.report2.pdf');
+
                 Route::get('report3', 'ReportController@report3')->name('reports.report3.index');
+                Route::get('report3/excel', 'ReportController@report3_excel')->name('reports.report3.excel');
+                Route::get('report3/pdf', 'ReportController@report3_pdf')->name('reports.report3.pdf');
+
                 Route::get('report_vendors', 'ReportController@report_vendors')->name('reports.report_vendors.index');
+                Route::get('report_vendors/excel', 'ReportController@report_vendors_excel')->name('reports.report_vendors.excel');
+                Route::get('report_vendors/pdf', 'ReportController@report_vendors_pdf')->name('reports.report_vendors.pdf');
+
                 Route::get('report_customers', 'ReportController@report_customers')->name('reports.report_customers.index');
+                Route::get('report_customers/excel', 'ReportController@report_customers_excel')->name('reports.report_customers.excel');
+                Route::get('report_customers/pdf', 'ReportController@report_customers_pdf')->name('reports.report_customers.pdf');
+
                 Route::get('report_tax', 'ReportController@report_tax')->name('reports.report_tax.index');
-
-
             });
         });
     });

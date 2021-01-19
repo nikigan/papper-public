@@ -33,6 +33,8 @@ mix.styles([
 
 mix.sass('resources/sass/app.scss', 'public/assets/css');
 
+mix.sass('resources/sass/custom.scss', 'public/assets/css');
+
 // mix.browserSync('papper.loc');
 
 if (mix.inProduction()) {

@@ -119,7 +119,7 @@ class DocumentController extends Controller
         if ($current_user->hasRole('Auditor') || $current_user->hasRole('Accountant')) {
             $documents = $this->documentRepository->documentsAuditor()->get();
             $next = $documents->where('id', '<', $id)->first();
-            $prev = $documents->where('id', '>', $id)->first();
+            $prev = $documents->where('id', '>', $id)->last();
         } else {
             $documents = Document::query()
                 ->with('user')
@@ -127,7 +127,7 @@ class DocumentController extends Controller
                 ->orderByDesc('created_at')
                 ->get();
             $next = $documents->where('id', '<', $id)->first();
-            $prev = $documents->where('id', '>', $id)->first();
+            $prev = $documents->where('id', '>', $id)->last();
         }
 
         return view('document.show', ['document' => $document, 'isPdf' => $isPdf, 'statuses' => $statuses, 'currencies' => $currencies, 'vendors' => $vendors, 'expense_types' => $expense_types] + compact('prev', 'next', 'document_types', 'income_types', 'customers'));

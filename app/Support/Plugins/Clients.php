@@ -12,7 +12,7 @@ class Clients extends Plugin
         return Item::create(__('Clients'))
             ->route('clients.index')
             ->icon('fas fa-user-tie')
-            ->active("clients")
+            ->active("clients*")
             ->permissions('clients.manage');
     }
 }

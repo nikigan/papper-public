@@ -13,6 +13,6 @@ class Invoices extends Plugin
             ->route('invoice.index')
             ->permissions('invoices.manage')
             ->icon('fas fa-file-alt')
-            ->active("invoices*");
+            ->active("invoice*");
     }
 }

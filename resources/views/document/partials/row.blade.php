@@ -49,7 +49,7 @@
             title="@lang('View Document')"
             data-toggle="tooltip"
             data-placement="top">
-            <i class="fas fa-eye mr-2"></i>
+            <i class="fas fa-eye"></i>
         </a>
         {{--@if($current_user->hasPermission('document.edit'))
             <a href="--}}{{--- route('documents.edit', $document) ---}}{{--"

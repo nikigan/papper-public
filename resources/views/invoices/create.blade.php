@@ -1,4 +1,4 @@
-@extends('layouts.app')
+@extends('layouts.main')
 
 @section('page-title', 'Create invoice')
 @section('page-heading', 'Create invoice')

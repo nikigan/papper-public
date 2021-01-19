@@ -26,7 +26,7 @@ class AdminPluginsProvider extends BaseVanguardServiceProvider
     {
         return [
             Users::class,
-            UserActivity::class,
+//            UserActivity::class,
             RolesAndPermissions::class,
             Reports::class,
             Announcements::class

@@ -25,13 +25,13 @@
     <td class="text-center align-middle">
         @isset($add)
             @if($add)
-                <form action="{{ route('clients.edit.accountant', ['client' => $user->id, 'accountant' => $accountant->id]) }}" method="POST">
+                <form class="d-inline-block" action="{{ route('clients.edit.accountant', ['client' => $user->id, 'accountant' => $accountant->id]) }}" method="POST">
                     @csrf
                     @method('PUT')
                     <button type="submit" class="btn btn-icon edit"
                             title="@lang('Add Client')"
                             data-toggle="tooltip" data-placement="top">
-                        <i class="fas fa-plus mr-2"></i>
+                        <i class="fas fa-plus"></i>
                     </button>
                 </form>
             @endif
@@ -39,7 +39,7 @@
         <a href="{{ route('clients.show', $user->id) }}" class="btn btn-icon edit"
            title="@lang('View Client')"
            data-toggle="tooltip" data-placement="top">
-            <i class="fas fa-eye mr-2"></i>
+            <i class="fas fa-eye"></i>
         </a>
 
     </td>

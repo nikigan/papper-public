@@ -1,4 +1,4 @@
-@extends('layouts.app')
+@extends('layouts.main')
 
 @section('page-title', __('Last documents'))
 @section('page-heading', __('Last documents'))
@@ -26,6 +26,9 @@
         </li>
         <li class="nav-item">
             <a class="nav-link @if($waiting) active @endif" href="{{route('clients.waiting', ['client' => $user])}}">@lang('Waiting')</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" href="{{route('clients.info', ['client' => $user])}}">@lang('Info')</a>
         </li>
     </ul>
 

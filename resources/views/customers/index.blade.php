@@ -1,4 +1,4 @@
-@extends('layouts.app')
+@extends('layouts.main')
 
 @section('page-title', 'Customers')
 @section('page-heading', 'Customers')
@@ -20,7 +20,7 @@
                 <div class="col-md-2 mt-2 mt-md-0">
                 </div>
                 <div class="col-md-6">
-                    <a href="{{ route('customers.create') }}" class="btn btn-primary btn-rounded float-right">
+                    <a href="{{ route('customers.create') }}" class="btn btn-primary btn-rounded float-left">
                         <i class="fas fa-plus mr-2"></i>
                         @lang('Create Customer')
                     </a>

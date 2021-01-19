@@ -4,8 +4,10 @@ namespace Vanguard\Http\Controllers\Web;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
-use phpDocumentor\Reflection\Types\Object_;
+use Illuminate\Support\Facades\Response;
+use Maatwebsite\Excel\Facades\Excel;
 use Vanguard\Document;
+use Vanguard\Exports\ExcelReport;
 use Vanguard\Http\Controllers\Controller;
 use Vanguard\Http\Filters\DateSearch;
 use Vanguard\IncomeGroup;
@@ -15,9 +17,9 @@ use Vanguard\User;
 
 class ReportController extends Controller
 {
-    public function report1(Request $request, User $client)
-    {
 
+    private function report1_data(Request $request, User $client): array
+    {
         $start_date = $request->get('start_date') ?? date('Y-m-d', strtotime(date('Y-m-d') . "-{$client->report_period} month"));
         $end_date = $request->get('end_date') ?? date('Y-m-d');
 
@@ -55,10 +57,34 @@ class ReportController extends Controller
         $document_acceptances = $incomes->where('document_type_id', '=', 3);
 
 
-        return view('reports.report1', compact('expenses', 'invoices', 'incomes', 'client', 'incomes_with_vat', 'incomes_without_vat', 'invoices_with_vat', 'invoices_without_vat', 'acceptances', 'document_acceptances'));
+        return compact('expenses', 'invoices', 'incomes', 'client', 'incomes_with_vat', 'incomes_without_vat', 'invoices_with_vat', 'invoices_without_vat', 'acceptances', 'document_acceptances');
     }
 
-    public function report2(Request $request, User $client)
+    public function report1(Request $request, User $client)
+    {
+        $data = $this->report1_data($request, $client);
+
+        return view('reports.report1', $data);
+    }
+
+    public function report1_excel(Request $request, User $client)
+    {
+        $date = date('Y-m-d');
+        $data = $this->report1_data($request, $client);
+        return Excel::download(new ExcelReport($data, 'reports.excel.report1'), "report1-{$client->present()->name}-{$date}.xlsx");
+    }
+
+    public function report1_pdf(Request $request, User $client)
+    {
+        $date = date('Y-m-d');
+        $data = $this->report1_data($request, $client);
+
+        $pdf = \PDF::loadView('reports.excel.report1', $data);
+
+        return $pdf->download("report1-{$client->present()->name}-{$date}.pdf");
+    }
+
+    private function report2_data(Request $request, User $client): array
     {
         $start_date = $request->get('start_date') ?? date('Y-m-d', strtotime(date('Y-m-d') . "-{$client->report_period} month"));
         $end_date = $request->get('end_date') ?? date('Y-m-d');
@@ -88,11 +114,34 @@ class ReportController extends Controller
 
         $income_groups = $income_groups->mergeRecursive($invoices_groups);
 
-        return view('reports.report2', compact('expense_groups', 'client', 'income_groups'));
+        return compact('expense_groups', 'client', 'income_groups');
+    }
+
+    public function report2(Request $request, User $client)
+    {
+        $data = $this->report2_data($request, $client);
+        return view('reports.report2', $data);
+    }
+
+    public function report2_excel(Request $request, User $client)
+    {
+        $date = date('Y-m-d');
+        $data = $this->report2_data($request, $client);
+        return Excel::download(new ExcelReport($data, 'reports.excel.report2'), "report2-{$client->present()->name}-{$date}.xlsx");
+    }
+
+    public function report2_pdf(Request $request, User $client)
+    {
+        $date = date('Y-m-d');
+        $data = $this->report2_data($request, $client);
+
+        $pdf = \PDF::loadView('reports.excel.report2', $data);
+
+        return $pdf->download("report2-{$client->present()->name}-{$date}.pdf");
 
     }
 
-    public function report3(Request $request, User $client)
+    private function report3_data(Request $request, User $client)
     {
         $start_date = $request->get('start_date') ?? date('Y-m-d', strtotime(date('Y-m-d') . "-{$client->report_period} month"));
         $end_date = $request->get('end_date') ?? date('Y-m-d');
@@ -178,10 +227,33 @@ class ReportController extends Controller
             }
         }
 
-        return view('reports.report3', compact('client', 'groups', 'expense_groups'));
+        return compact('client', 'groups', 'expense_groups');
     }
 
-    public function report_vendors(Request $request, User $client)
+    public function report3(Request $request, User $client)
+    {
+        $data = $this->report3_data($request, $client);
+        return view('reports.report3', $data);
+    }
+
+    public function report3_excel(Request $request, User $client)
+    {
+        $date = date('Y-m-d');
+        $data = $this->report3_data($request, $client);
+        return Excel::download(new ExcelReport($data, 'reports.excel.report3'), "report3-{$client->present()->name}-{$date}.xlsx");
+    }
+
+    public function report3_pdf(Request $request, User $client)
+    {
+        $date = date('Y-m-d');
+        $data = $this->report3_data($request, $client);
+
+        $pdf = \PDF::loadView('reports.excel.report3', $data);
+
+        return $pdf->download("report3-{$client->present()->name}-{$date}.pdf");
+    }
+
+    private function report_vendors_data(Request $request, User $client): array
     {
         $start_date = $request->get('start_date') ?? date('Y-m-d', strtotime(date('Y-m-d') . "-{$client->report_period} month"));
         $end_date = $request->get('end_date') ?? date('Y-m-d');
@@ -192,10 +264,33 @@ class ReportController extends Controller
 
         $vendor_groups = $expenses->leftJoin('currencies as c', 'documents.currency_id', '=', 'c.id')->leftJoin('vendors as v', 'documents.vendor_id', '=', 'v.id')->groupBy(['v.name', 'v.vat_number'])->select('v.name', 'v.vat_number', DB::raw('count(*) as amount'), DB::raw('sum(documents.sum / c.value) as sum'), DB::raw('AVG(sum) as avg'))->get();
 
-        return view('reports.report_vendors', compact('client', 'vendor_groups'));
+        return compact('client', 'vendor_groups');
     }
 
-    public function report_customers(Request $request, User $client)
+    public function report_vendors(Request $request, User $client)
+    {
+        $data = $this->report_vendors_data($request, $client);
+        return view('reports.report_vendors', $data);
+    }
+
+    public function report_vendors_excel(Request $request, User $client)
+    {
+        $date = date('Y-m-d');
+        $data = $this->report_vendors_data($request, $client);
+        return Excel::download(new ExcelReport($data, 'reports.excel.report_vendors'), "report_vendors-{$client->present()->name}-{$date}.xlsx");
+    }
+
+    public function report_vendors_pdf(Request $request, User $client)
+    {
+        $date = date('Y-m-d');
+        $data = $this->report_vendors_data($request, $client);
+
+        $pdf = \PDF::loadView('reports.excel.report_vendors', $data);
+
+        return $pdf->download("report_vendors-{$client->present()->name}-{$date}.pdf");
+    }
+
+    private function report_customers_data(Request $request, User $client)
     {
         $start_date = $request->get('start_date') ?? date('Y-m-d', strtotime(date('Y-m-d') . "-{$client->report_period} month"));
         $end_date = $request->get('end_date') ?? date('Y-m-d');
@@ -229,9 +324,34 @@ class ReportController extends Controller
             $result[$name]['avg'] = $result[$name]['sum'] / $result[$name]['amount'];
         }
 
-        return view('reports.report_customers', ['customers' => $result, 'client' => $client]);
+        return ['customers' => $result, 'client' => $client];
+    }
+
+    public function report_customers(Request $request, User $client)
+    {
+        $data = $this->report_customers_data($request, $client);
+        return view('reports.report_customers', $data);
+    }
+
+    public function report_customers_excel(Request $request, User $client)
+    {
+        $date = date('Y-m-d');
+        $data = $this->report_customers_data($request, $client);
+        return Excel::download(new ExcelReport($data, 'reports.excel.report_customers'), "report_customers-{$client->present()->name}-{$date}.xlsx");
+    }
+
+    public function report_customers_pdf(Request $request, User $client)
+    {
+        $date = date('Y-m-d');
+        $data = $this->report_customers_data($request, $client);
+
+        $pdf = \PDF::loadView('reports.excel.report_customers', $data);
+
+        return $pdf->download("report_customers-{$client->present()->name}-{$date}.pdf");
 
     }
+
+
 
     public function report_tax(Request $request, User $client)
     {

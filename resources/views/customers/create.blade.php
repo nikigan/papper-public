@@ -1,4 +1,4 @@
-@extends('layouts.app')
+@extends('layouts.main')
 
 @section('page-title', __('Add Customer'))
 @section('page-heading', __('Create New Customer'))
