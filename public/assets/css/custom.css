@@ -110,3 +110,8 @@ a:hover {
   font-weight: 900;
 }
 
+.block-footer a:hover {
+  text-decoration: none;
+  color: #fff;
+}
+

@@ -9,12 +9,16 @@ use Vanguard\Support\Plugins\Clients;
 use Vanguard\Support\Plugins\Customers;
 use Vanguard\Support\Plugins\Dashboard\Dashboard;
 use Vanguard\Support\Plugins\Dashboard\Widgets\BannedUsers;
+use Vanguard\Support\Plugins\Dashboard\Widgets\Expense;
+use Vanguard\Support\Plugins\Dashboard\Widgets\Income;
 use Vanguard\Support\Plugins\Dashboard\Widgets\LatestRegistrations;
 use Vanguard\Support\Plugins\Dashboard\Widgets\NewUsers;
 use Vanguard\Support\Plugins\Dashboard\Widgets\RegistrationHistory;
+use Vanguard\Support\Plugins\Dashboard\Widgets\TotalClients;
 use Vanguard\Support\Plugins\Dashboard\Widgets\TotalUsers;
 use Vanguard\Support\Plugins\Dashboard\Widgets\UnconfirmedUsers;
 use Vanguard\Support\Plugins\Dashboard\Widgets\UserActions;
+use Vanguard\Support\Plugins\Dashboard\Widgets\WaitingDocuments;
 use Vanguard\Support\Plugins\Invoices;
 use Vanguard\Support\Plugins\RolesAndPermissions;
 use Vanguard\Support\Plugins\Search;
@@ -37,7 +41,7 @@ class VanguardServiceProvider extends BaseVanguardServiceProvider
     protected function plugins()
     {
         return [
-//            Dashboard::class,
+            Dashboard::class,
             Search::class,
             UploadDocument::class,
             UnconfirmedDocuments::class,
@@ -70,6 +74,10 @@ class VanguardServiceProvider extends BaseVanguardServiceProvider
             UnconfirmedUsers::class,
             RegistrationHistory::class,
             LatestRegistrations::class,
+            TotalClients::class,
+            WaitingDocuments::class,
+            Income::class,
+            Expense::class
 //            ActivityWidget::class,
         ];
     }

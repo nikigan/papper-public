@@ -362,7 +362,6 @@ class ReportController extends Controller
 
         (new DateSearch)($income, compact('start_date', 'end_date'), 'document_date');
 
-
         $document_vat = $income->leftJoin('currencies as c', 'documents.currency_id', '=', 'c.id')->select(DB::raw('SUM(vat/c.value) as vat, SUM(sum/c.value) as sum, document_type'))->groupBy('document_type')->get()->toArray();
 
         $invoices = $client->invoices()->getQuery();

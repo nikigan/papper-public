@@ -12,7 +12,23 @@
 @section('content')
     @include('partials.messages')
 
-<div class="row">
+    <div class="block-wrapper pt-30">
+        <div class="content-full container">
+            <div class="row">
+                @foreach (\Vanguard\Plugins\Vanguard::availableWidgets(auth()->user()) as $widget)
+                    @if ($widget->width)
+                        <div class="col-lg-{{ $widget->width }}">
+                            @endif
+                            {!! app()->call([$widget, 'render']) !!}
+                            @if($widget->width)
+                        </div>
+                    @endif
+                @endforeach
+            </div>
+        </div>
+    </div>
+
+{{--<div class="row">
     @foreach (\Vanguard\Plugins\Vanguard::availableWidgets(auth()->user()) as $widget)
         @if ($widget->width)
             <div class="col-md-{{ $widget->width }}">
@@ -21,7 +37,7 @@
         @if($widget->width)
             </div>
         @endif
-    @endforeach
+    @endforeach--}}
 </div>
 
 @stop
