@@ -51,7 +51,7 @@ class User extends Authenticatable implements TwoFactorAuthenticatableContract, 
         'organization_type_id', 'vat_number', 'passport', 'report_period', 'tax_percent', 'social_security', 'social_security_number',
 
     ];*/
-    protected $guarded = ['status', 'role_id'];
+    protected $guarded = [];
 
     /**
      * The attributes excluded from the model's JSON form.

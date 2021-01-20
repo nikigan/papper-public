@@ -6,6 +6,7 @@ use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Crypt;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Str;
 use Password;
 use Vanguard\Document;
 use Vanguard\Http\Controllers\Controller;
@@ -78,7 +79,6 @@ class ClientController extends Controller
         $request->validate([
             'email' => 'required|email|unique:users,email',
             'username' => 'nullable',
-            'password' => 'required|min:6|confirmed',
             'birthday' => 'nullable|date',
             'passport' => 'unique:users|nullable|numeric',
             'verified' => 'boolean'
@@ -88,7 +88,8 @@ class ClientController extends Controller
                 'status' => UserStatus::ACTIVE,
                 'email_verified_at' => now(),
                 'auditor_id' => auth()->id(),
-                'role_id' => $this->roles->findByName('User')->id
+                'role_id' => $this->roles->findByName('User')->id,
+                'password' => Hash::make(Str::random())
             ];
 
         if (!data_get($data, 'country_id')) {
