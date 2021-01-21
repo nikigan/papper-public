@@ -1,4 +1,4 @@
-@extends('layouts.main')
+@extends($user->hasRole('Admin') ? 'layouts.app' : 'layouts.main')
 
 @section('page-title', __('My Profile'))
 @section('page-heading', __('My Profile'))

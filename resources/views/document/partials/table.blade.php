@@ -33,5 +33,5 @@
     </table>
 </div>
 @if($documents instanceof \Illuminate\Pagination\LengthAwarePaginator)
-    {{ $documents->withQueryString()->links() }}
+    {{ $documents->onEachSide(0)->withQueryString()->links() }}
 @endif

@@ -14,6 +14,7 @@ use Vanguard\Support\Plugins\Dashboard\Widgets\Income;
 use Vanguard\Support\Plugins\Dashboard\Widgets\LatestRegistrations;
 use Vanguard\Support\Plugins\Dashboard\Widgets\NewUsers;
 use Vanguard\Support\Plugins\Dashboard\Widgets\RegistrationHistory;
+use Vanguard\Support\Plugins\Dashboard\Widgets\Taxes;
 use Vanguard\Support\Plugins\Dashboard\Widgets\TotalClients;
 use Vanguard\Support\Plugins\Dashboard\Widgets\TotalUsers;
 use Vanguard\Support\Plugins\Dashboard\Widgets\UnconfirmedUsers;
@@ -67,7 +68,10 @@ class VanguardServiceProvider extends BaseVanguardServiceProvider
     protected function widgets()
     {
         return [
-            UserActions::class,
+            Income::class,
+            Expense::class,
+            Taxes::class,
+//            UserActions::class,
             TotalUsers::class,
             NewUsers::class,
             BannedUsers::class,
@@ -75,9 +79,7 @@ class VanguardServiceProvider extends BaseVanguardServiceProvider
             RegistrationHistory::class,
             LatestRegistrations::class,
             TotalClients::class,
-            WaitingDocuments::class,
-            Income::class,
-            Expense::class
+            WaitingDocuments::class
 //            ActivityWidget::class,
         ];
     }

@@ -47,7 +47,30 @@
                     </p>
                 </div>
                 <div class="col-md-9">
-                    @include('user.partials.auth', ['edit' => false])
+
+                    {{ $edit = false }}
+                    <div class="form-group">
+                        <label for="email">@lang('Email')</label>
+                        <input type="email"
+                               class="form-control input-solid"
+                               id="email"
+                               name="email"
+                               placeholder="@lang('Email')"
+                               required
+                               value="{{ $edit ? $user->email : old('email') }}">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="username">@lang('Username')</label>
+                        <input id="username"
+                               autocapitalize="off"
+                               autocomplete="off"
+                               class="form-control input-solid"
+                               name="username"
+                               placeholder="(@lang('optional'))"
+                               type="text"
+                               value="{{ $edit ? $user->username : old('username') }}">
+                    </div>
                 </div>
             </div>
         </div>

@@ -1,4 +1,4 @@
-@extends('layouts.app')
+@extends('layouts.main')
 
 @section('page-title', __('Add Document'))
 @section('page-heading', __('Create New Document'))

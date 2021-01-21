@@ -1,7 +1,7 @@
 <header id="header" class="header pr-280">
     <div class="content-header container">
         <div class="d-flex align-items-center">
-            <button class="btn btn-sm d-lg-inline-block"><i class="fa fa-fw fa-ellipsis-v"></i></button>
+            <button id="menuBtn" class="btn btn-sm d-lg-inline-block"><i class="fa fa-fw fa-ellipsis-v"></i></button>
             <h1>@yield('page-title')</h1>
         </div>
         <ul class="navbar-nav @if(config('app.dir') == 'ltr') ml-auto @else mr-auto @endif pr-3 flex-row">

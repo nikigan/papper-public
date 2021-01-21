@@ -72,6 +72,18 @@ class Expense extends Widget
                 ]
             ];
         }
+        if (!isset($document_vat[1])) {
+            $document_vat[1] = [
+                'vat' => 0,
+                'sum' => 0
+            ];
+        }
+        if (!isset($document_vat[0])) {
+            $document_vat[0] = [
+                'vat' => 0,
+                'sum' => 0
+            ];
+        }
 
         $in_sum = $document_vat[1]['sum'] + $invoices_vat->sum('sum');
         $exp_sum = $document_vat[0]['sum'];
@@ -107,10 +119,26 @@ class Expense extends Widget
                 ]
             ];
         }
+        if (!isset($document_vat[1])) {
+            $document_vat[1] = [
+                'vat' => 0,
+                'sum' => 0
+            ];
+        }
+        if (!isset($document_vat[0])) {
+            $document_vat[0] = [
+                'vat' => 0,
+                'sum' => 0
+            ];
+        }
 
         $exp_sum_prev = $document_vat[0]['sum'];
 
-        $diff = ($exp_sum - $exp_sum_prev)/$exp_sum * 100;
+        if ($exp_sum != 0) {
+            $diff = ($exp_sum - $exp_sum_prev) / $exp_sum * 100;
+        } else {
+            $diff = 0;
+        }
 
         $exp_sum_prev = number_format($exp_sum_prev, 2);
         $diff = number_format($diff);

@@ -49,7 +49,7 @@ Route::group(['middleware' => ['auth', 'verified', 'locale']], function () {
     /**
      * Impersonate Routes
      */
-    Route::impersonate();
+//    Route::impersonate();
 
     /**
      * Dashboard

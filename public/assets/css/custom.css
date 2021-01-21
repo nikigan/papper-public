@@ -115,3 +115,25 @@ a:hover {
   color: #fff;
 }
 
+.pr-280 {
+  transition: padding-right 0.3s ease-in-out;
+}
+
+@media (max-width: 576px) {
+  .pr-280 {
+    padding-right: 0 !important;
+  }
+}
+
+.sidebar-hidden .pr-280 {
+  padding-right: 0 !important;
+}
+
+.sidebar-hidden #sidebar {
+  transform: translateX(200%);
+}
+
+.block-item {
+  margin-bottom: 30px;
+}
+

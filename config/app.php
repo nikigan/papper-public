@@ -200,6 +200,7 @@ return [
         Jenssegers\Agent\AgentServiceProvider::class,
         \Maatwebsite\Excel\ExcelServiceProvider::class,
         niklasravnsborg\LaravelPdf\PdfServiceProvider::class,
+        Barryvdh\Snappy\ServiceProvider::class,
 
         /*
          * Application Service Providers...
@@ -274,7 +275,8 @@ return [
         'Authy' => Vanguard\Services\Auth\TwoFactor\Facade::class,
         'JWTAuth' => Tymon\JWTAuth\Facades\JWTAuth::class,
         'Agent' => Jenssegers\Agent\Facades\Agent::class,
-        'PDF' => niklasravnsborg\LaravelPdf\Facades\Pdf::class
+        'PDF' => niklasravnsborg\LaravelPdf\Facades\Pdf::class,
+        'SPDF' => \Barryvdh\Snappy\Facades\SnappyPdf::class
 
     ],
 

@@ -21,6 +21,8 @@ class DashboardController extends Controller
 
         if (auth()->user()->hasRole('Admin')) {
             \App::setLocale('en');
+
+            return view('admin.dashboard.index');
         }
 
         return view('dashboard.index');

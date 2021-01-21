@@ -9,8 +9,8 @@
         </div>
     </div>
 
-    <div class="clearfix mt-3">
-        <div class="float-left">
+    <div class="clearfix mt-3" style="display: flex">
+        <div class="float-left" style="float: left">
             <b>@lang('To')</b>:
             {{ $invoice->customer->name }}
             <br/><br/>
@@ -44,7 +44,7 @@
             @endif
         </div>
 
-        <div class="float-right">
+        <div class="float-right" style="float:right;">
             <b>@lang('From')</b>: {{ $invoice->creator->present()->name() }}
             <br/><br/>
             @if ($invoice->creator->address)
@@ -83,8 +83,8 @@
 
     <div class="clearfix mt-3">
         @if($invoice->note)
-            <div class="float-left col-md-7">
-                <p>{{$invoice->note}}</p>
+            <div class="float-left text-right" style="width: 60%">
+                <p style="text-align: right">{{$invoice->note}}</p>
             </div>
         @endif
         <table class="float-right table tbl-total">
@@ -121,4 +121,5 @@
             </tbody>
         </table>
     </div>
+
 @endsection

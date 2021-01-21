@@ -1,14 +1,14 @@
-@extends('layouts.app')
+@extends('layouts.main')
 
-@section('page-title', 'Uploaded documents')
-@section('page-heading', 'Uploaded documents')
+@section('page-title', __('Documents'))
+@section('page-heading', __('Documents'))
 
 @section('breadcrumbs')
     <li class="breadcrumb-item">
         <a href="{{ route('documents.index') }}">@lang('Documents')</a>
     </li>
     <li class="breadcrumb-item active">
-        <a>Document {{$document->id}}</a>
+        <a>@lang('Documents') {{$document->id}}</a>
     </li>
 @stop
 

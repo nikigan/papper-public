@@ -35,14 +35,14 @@
                         <tbody class="text-success">
                         @foreach ($groups as $name => $group)
                             <tr style="font-weight: bold">
-                                <td>{{$name != "" && $name != null ? $name : __('Other Income Group')}}</td>
+                                <td>{{$name != "" && $name != null ? __($name) : __('Other Income Group')}}</td>
                                 <td>{{number_format($group['sum'], 2) ?? 'N/A'}}</td>
                                 <td>100%</td>
                             </tr>
                             @foreach($group['subgroups'] as $n => $subgroup)
                                 @if($n != "Other")
                                     <tr>
-                                        <td>{{$n ?? 'Other'}}</td>
+                                        <td>{{$n ?? __('Other')}}</td>
                                         <td>{{number_format($subgroup['sum'], 2)}}</td>
                                         <td>{{number_format($subgroup['percentage'], 2)}}%</td>
                                     </tr>

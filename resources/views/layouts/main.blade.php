@@ -131,6 +131,8 @@
 <script src="{{ asset('assets/plugins/slick/slick.min.js') }}"></script>
 <script src="{{ asset('assets/plugins/owl/owl.carousel.min.js') }}"></script>
 <script src="{{ url('assets/js/custom.js') }}"></script>
+<script src="{{ asset('assets/js/main.js') }}"></script>
+
 @yield('scripts')
 
 @hook('app:scripts')
