@@ -100,10 +100,10 @@
 
                 <div class="col-md-6 col-12">
                     @if(auth()->user()->hasPermission('document.upload'))
-                        <a href="{{ route('documents.upload') }}" class="btn btn-primary btn-rounded action-btn mb-sm-2">
+                        {{--<a href="{{ route('documents.upload') }}" class="btn btn-primary btn-rounded action-btn mb-sm-2">
                             <i class="fas fa-plus mr-2"></i>
                             @lang('Upload Document')
-                        </a>
+                        </a> --}}
                         <a href="{{ route('document.create') }}" class="btn btn-primary btn-rounded action-btn mr-lg-2">
                             <i class="fas fa-plus mr-2"></i>
                             @lang('Create Document')

@@ -205,13 +205,15 @@ class DocumentController extends Controller
     public function manualStore(Request $request)
     {
         $request->validate([
-            'document_number' => 'required|unique:documents',
-            'sum' => 'required|numeric',
-            'vat' => 'required|numeric',
+            'document_number' => 'unique:documents',
+            'sum' => 'numeric|nullable',
+            'vat' => 'numeric|nullable',
             'file' => 'file'
         ]);
 
-        $sum_without_vat = $request->sum - $request->vat;
+        $vat = $request->sum * $request->vat / 100;
+
+        $sum_without_vat = $request->sum - $vat;
 
         $file = null;
 
@@ -222,7 +224,8 @@ class DocumentController extends Controller
         }
 
         Document::query()
-            ->create($request->except(['file', 'expense_type_id', 'income_type_id', 'customer_id', 'vendor_id']) + [
+            ->create($request->except(['file', 'expense_type_id', 'income_type_id', 'customer_id', 'vendor_id', 'vat']) + [
+                    'vat' => $vat,
                     'file' => $file,
                     'sum_without_vat' => $sum_without_vat,
                     'user_id' => auth()->id(),

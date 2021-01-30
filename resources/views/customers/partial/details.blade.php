@@ -33,5 +33,12 @@
             <input type="text" class="form-control input-solid" id="vat"
                    name="vat_number" placeholder="@lang('VAT Number')" required value="{{ $edit ? $customer->vat_number : old('vat_number') }}">
         </div>
+        @if(auth()->user()->hasRole('Auditor') || auth()->user()->hasRole('Accountant'))
+            <div class="form-group">
+                <label for="client_id">@lang('Client')</label>
+                {!! Form::select('client_id', $clients, old('client_id', $customer->creator_id ?? null),
+                ['class' => 'form-control input-solid', 'id' => 'client_id']) !!}
+            </div>
+        @endif
     </div>
 </div>

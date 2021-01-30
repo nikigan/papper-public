@@ -21,7 +21,7 @@
                 @lang('Details')
 
                 <small>
-                    @canBeImpersonated($user)
+                    {{--@canBeImpersonated($user)
                     <a href="{{ route('impersonate', $user) }}"
                        data-toggle="tooltip"
                        data-placement="top"
@@ -29,7 +29,7 @@
                         @lang('Impersonate')
                     </a>
                     <span class="text-muted">|</span>
-                    @endCanBeImpersonated
+                    @endCanBeImpersonated--}}
 
                     <a href="{{ route('users.edit', $user) }}"
                        class="edit"

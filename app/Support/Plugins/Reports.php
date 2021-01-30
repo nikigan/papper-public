@@ -10,7 +10,11 @@ class Reports extends Plugin
 {
     public function sidebar()
     {
-        $client = \Route::current()->parameter('client');
+        if (auth()->user()->hasRole('User')) {
+            $client = auth()->user();
+        } else {
+            $client = \Route::current()->parameter('client');
+        }
         if ($client) {
             $report1 = Item::create(__('Report 1'))
                 ->permissions('reports.report1')

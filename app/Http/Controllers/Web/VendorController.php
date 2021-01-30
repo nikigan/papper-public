@@ -4,6 +4,8 @@ namespace Vanguard\Http\Controllers\Web;
 
 use Illuminate\Http\Request;
 use Vanguard\Http\Controllers\Controller;
+use Vanguard\Repositories\Role\RoleRepository;
+use Vanguard\Repositories\User\UserRepository;
 use Vanguard\Vendor;
 
 class VendorController extends Controller
@@ -12,9 +14,28 @@ class VendorController extends Controller
      * Display a listing of the resource.
      *
      */
+
+    /**
+     * UsersController constructor.
+     * @param UserRepository $users
+     * @param RoleRepository $roles
+     */
+    public function __construct(UserRepository $users, RoleRepository $roles)
+    {
+        $this->users = $users;
+        $this->roles = $roles;
+    }
+
     public function index()
     {
-        $vendors = Vendor::query()->where('creator_id', auth()->id())->get();
+        $user = auth()->user();
+        $clients = [null];
+
+        if ($user->hasRole('Auditor') || $user->hasRole('Accountant')) {
+            $clients = $this->users->clients()->pluck('id')->toArray();
+        }
+
+        $vendors = Vendor::query()->where('creator_id', auth()->id())->orWhereIn('creator_id', $clients)->get();
         return view('vendors.index', compact('vendors'));
     }
 
@@ -24,7 +45,9 @@ class VendorController extends Controller
      */
     public function create()
     {
-        return view('vendors.create', ['edit' => false]);
+        $clients = $this->users->clients()->pluck('username', 'id');
+
+        return view('vendors.create', ['edit' => false] + compact('clients'));
     }
 
     /**
@@ -43,8 +66,8 @@ class VendorController extends Controller
             'vat_number' => 'required|unique:vendors'
         ]);
 
-        Vendor::query()->create($request->all() + [
-                'creator_id' => auth()->id()
+        Vendor::query()->create($request->except('client_id') + [
+                'creator_id' => $request->get('client_id') ?? auth()->id()
             ]);
         return redirect()->route('vendors.index')->with('success', __('Vendor created successfully'));
     }
@@ -57,7 +80,9 @@ class VendorController extends Controller
      */
     public function show(Vendor $vendor)
     {
-        return view('vendors.show', compact('vendor'));
+        $clients = $this->users->clients()->pluck('username', 'id');
+
+        return view('vendors.show', compact('vendor', 'clients'));
     }
 
     /**
@@ -77,14 +102,16 @@ class VendorController extends Controller
             'vat_number' => 'required|unique:vendors'
         ]);
 
-        $vendor->update($request->all());
+        $vendor->update($request->except('client_id') + [
+                'creator_id' => $request->get('client_id') ?? auth()->id()
+            ]);
         return redirect()->route('vendors.index')->with('success', __('Vendor info updated successfully'));
     }
 
     /**
      * Remove the specified resource from storage.
      *
-     * @param  int  $id
+     * @param int $id
      * @return \Illuminate\Http\RedirectResponse
      */
     public function destroy(Vendor $vendor)

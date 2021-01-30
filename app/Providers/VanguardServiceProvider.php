@@ -5,6 +5,7 @@ namespace Vanguard\Providers;
 use Vanguard\Announcements\Announcements;
 use Vanguard\Plugins\VanguardServiceProvider as BaseVanguardServiceProvider;
 use Vanguard\Support\Plugins\Accountants;
+use Vanguard\Support\Plugins\ClientInfo;
 use Vanguard\Support\Plugins\Clients;
 use Vanguard\Support\Plugins\Customers;
 use Vanguard\Support\Plugins\Dashboard\Dashboard;
@@ -49,11 +50,12 @@ class VanguardServiceProvider extends BaseVanguardServiceProvider
             Vendors::class,
             Invoices::class,
             Customers::class,
-            Clients::class,
             Accountants::class,
+            Clients::class,
             Users::class,
 //            UserActivity::class,
             RolesAndPermissions::class,
+            ClientInfo::class,
             Reports::class,
             Settings::class,
             Announcements::class

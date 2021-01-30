@@ -5,6 +5,7 @@ namespace Vanguard\Http\Controllers\Web\Profile;
 use Illuminate\Contracts\View\Factory;
 use Illuminate\View\View;
 use Vanguard\Http\Controllers\Controller;
+use Vanguard\IncomeType;
 use Vanguard\OrganizationType;
 use Vanguard\Repositories\Country\CountryRepository;
 use Vanguard\Repositories\Role\RoleRepository;
@@ -53,14 +54,16 @@ class ProfileController extends Controller
             return $role->id == auth()->user()->role_id;
         })->pluck('name', 'id');
 
+        $organization_types = OrganizationType::all()->pluck('name', 'id');
+        $income_types = IncomeType::all()->pluck('name', 'id');
+
         return view('user.profile', [
             'user' => auth()->user(),
             'edit' => true,
             'roles' => $roles,
-            'organization_types' => OrganizationType::all()->pluck('name', 'id'),
             'countries' => [0 => __('Select a Country')] + $this->countries->lists()->toArray(),
             'socialLogins' => $this->users->getUserSocialLogins(auth()->id()),
             'statuses' => UserStatus::lists()
-        ]);
+        ] + compact('organization_types', 'income_types'));
     }
 }

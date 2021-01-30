@@ -96,7 +96,7 @@
                 <div class="col-lg-12">
                     <div class="form-group">
                         <label for="document_number">@lang('Document number')</label>
-                        <input type="text" class="form-control" name="document_number" id="document_number" required
+                        <input type="text" class="form-control" name="document_number" id="document_number"
                                value="{{old('document_number')}}">
                     </div>
                 </div>
@@ -105,13 +105,13 @@
                 <div class="col-md-6">
                     <div class="form-group">
                         <label for="sum">@lang('Total sum')</label>
-                        <input type="text" class="form-control" name="sum" id="sum" required value="{{old('sum')}}">
+                        <input type="text" class="form-control" name="sum" id="sum" value="{{old('sum')}}">
                     </div>
                 </div>
                 <div class="col-md-6">
                     <div class="form-group">
-                        <label for="vat">@lang('VAT')</label>
-                        <input type="text" class="form-control" name="vat" id="vat" required value="{{old('vat')}}">
+                        <label for="vat">@lang('VAT') %</label>
+                        <input type="number" min="0" max="100" step="0.1" class="form-control" name="vat" id="vat" value="{{old('vat', 17)}}">
                     </div>
                 </div>
             </div>
@@ -169,7 +169,7 @@
                     <div class="form-group">
                         <label for="document_date">@lang('Document date')</label>
                         <input type="date" max="{{ date('Y-m-d') }}" value="{{ date('Y-m-d') }}" class="form-control"
-                               id="document_date" name="document_date" required>
+                               id="document_date" name="document_date">
                     </div>
                 </div>
                 <div class="col-md-6">

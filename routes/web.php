@@ -245,10 +245,12 @@ Route::group(['middleware' => ['auth', 'verified', 'locale']], function () {
      * Clients
      */
 
-    Route::group(['prefix' => 'clients', 'middleware' => ['permission:clients.manage']], function () {
-        Route::get('/', 'ClientController@index')->name('clients.index');
-        Route::get('/create', 'ClientController@create')->name('clients.create');
-        Route::post('/create', 'ClientController@store')->name('clients.store');
+    Route::group(['prefix' => 'clients'], function () {
+        Route::middleware('permission:clients.manage')->group(function () {
+            Route::get('/', 'ClientController@index')->name('clients.index');
+            Route::get('/create', 'ClientController@create')->name('clients.create');
+            Route::post('/create', 'ClientController@store')->name('clients.store');
+        });
         Route::group(['middleware' => 'view.client', 'prefix' => '/{client}'], function () {
             Route::get('/', 'ClientController@show')->name('clients.show');
             Route::put('/accountant/{accountant}', 'ClientController@editAccountant')->name('clients.edit.accountant');

@@ -52,10 +52,12 @@
             <input type="text" class="form-control input-solid" id="address"
                    name="address" placeholder="@lang('Address')" value="{{ $edit ? $user->address : '' }}">
         </div>
+        {{--
         <div class="form-group">
             <label for="address">@lang('Country')</label>
-            {!! Form::select('country_id', $countries, $edit ? $user->country_id : '', ['class' => 'form-control input-solid']) !!}
+          {!! Form::select('country_id', $countries, $edit ? $user->country_id : '', ['class' => 'form-control input-solid']) !!}
         </div>
+        --}}
     </div>
 
     @if ($edit)
