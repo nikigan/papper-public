@@ -183,16 +183,19 @@ class ReportController extends Controller
         $income_groups = $income_groups->mergeRecursive($invoice_groups);
 
         $groups = [];
+        $income_sum = 0;
         foreach ($income_groups as $name => $group) {
             foreach ($group as $item) {
                 if ($item instanceof Document || $item instanceof Invoice) {
                     $groups['Other Income Group']['subgroups']['Other']['sum'] = ($groups[$name]['subgroups']['Other']['sum'] ?? 0) + $item->sum;
                     $groups['Other Income Group']['sum'] = ($groups['Other Income Group']['sum'] ?? 0) + $item->sum;
+                    $income_sum += $item->sum;
                 }
                 if (is_array($item)) {
                     foreach ($item as $i) {
                         $groups[$name]['subgroups'][$i->name]['sum'] = ($groups[$name]['subgroups'][$i->name]['sum'] ?? 0) + $i->sum;
                         $groups[$name]['sum'] = ($groups[$name]['sum'] ?? 0) + $i->sum;
+                        $income_sum += $i->sum;
 
                     }
                 }
@@ -212,12 +215,15 @@ class ReportController extends Controller
 
         $expense_groups = $expense_groups->leftJoin('currencies as c', 'documents.currency_id', '=', 'c.id')->select('eg.name as group', 'et.name as name', DB::raw('SUM(documents.sum / c.value) as sum'))->leftJoin('expense_types as et', 'documents.expense_type_id', '=', 'et.id')->leftJoin('expense_groups as eg', 'et.expense_group_id', '=', 'eg.id')->groupBy(['group', 'name'])->get()->groupBy(['group', 'name'])->toArray();
 
+        $expense_sum = 0;
+
         foreach ($expense_groups as $key => $expense_group) {
             $sum = 0;
             foreach ($expense_group as $subgroup) {
                 $sum += $subgroup[0]['sum'];
             }
             $expense_groups[$key]['sum'] = $sum;
+            $expense_sum += $sum;
         }
 
         foreach ($expense_groups as $k => $expense_group) {
@@ -227,7 +233,7 @@ class ReportController extends Controller
             }
         }
 
-        return compact('client', 'groups', 'expense_groups');
+        return compact('client', 'groups', 'expense_groups', 'income_sum', 'expense_sum');
     }
 
     public function report3(Request $request, User $client)

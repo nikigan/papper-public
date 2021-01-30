@@ -205,7 +205,7 @@ class DocumentController extends Controller
     public function manualStore(Request $request)
     {
         $request->validate([
-            'document_number' => 'unique:documents',
+            'document_number' => 'nullable',
             'sum' => 'numeric|nullable',
             'vat' => 'numeric|nullable',
             'file' => 'file'

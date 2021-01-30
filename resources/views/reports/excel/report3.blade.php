@@ -1,6 +1,5 @@
 @extends('layouts.excel')
 @section('content')
-
     @if (count($groups))
         <table class="table">
             <thead>
@@ -27,6 +26,11 @@
                     @endif
                 @endforeach
             @endforeach
+            <tr style="font-weight: bold">
+                <td style="font-weight: bold">@lang('Sum')</td>
+                <td style="font-weight: bold">{{number_format($income_sum, 2)}}</td>
+                <td></td>
+            </tr>
             </tbody>
         </table>
     @endif
@@ -58,8 +62,18 @@
                     </tr>
                 @endforeach
             @endforeach
+            <tr style="font-weight: bold">
+                <td style="font-weight: bold">@lang('Sum')</td>
+                <td style="font-weight: bold">{{number_format($expense_sum, 2)}}</td>
+                <td></td>
+            </tr>
             </tbody>
         </table>
     @endif
-
+    <table>
+        <tr>
+            <td style="font-weight: bold">@lang('Outcome')</td>
+            <td style="font-weight: bold">{{number_format($income_sum - $expense_sum, 2)}}</td>
+        </tr>
+    </table>
 @stop

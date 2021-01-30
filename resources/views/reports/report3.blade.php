@@ -49,6 +49,11 @@
                                 @endif
                             @endforeach
                         @endforeach
+                        <tr style="font-weight: bold">
+                            <td>@lang('Sum')</td>
+                            <td>{{number_format($income_sum, 2)}}</td>
+                            <td></td>
+                        </tr>
                         </tbody>
                     </table>
                 </div>
@@ -86,10 +91,16 @@
                                 </tr>
                             @endforeach
                         @endforeach
+                        <tr style="font-weight: bold">
+                            <td>@lang('Sum')</td>
+                            <td>{{number_format($expense_sum, 2)}}</td>
+                            <td></td>
+                        </tr>
                         </tbody>
                     </table>
                 </div>
             </div>
         </div>
+        <b class=h3>@lang('Outcome'): {{number_format($income_sum - $expense_sum, 2)}}</b>
     @endif
 @endsection
