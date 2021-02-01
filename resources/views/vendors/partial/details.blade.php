@@ -3,7 +3,7 @@
         <div class="form-group">
             <label for="first_name">@lang('Name')</label>
             <input type="text" class="form-control input-solid" id="first_name"
-                   name="name" placeholder="@lang('Name')" required value="{{ $edit ? $vendor->name : old('name') }}">
+                   name="name" placeholder="@lang('Name')" value="{{ $edit ? $vendor->name : old('name') }}">
         </div>
         <div class="form-group">
             <label for="email">@lang('Email')</label>
@@ -12,7 +12,6 @@
                    id="email"
                    name="email"
                    placeholder="@lang('Email')"
-                   required
                    value="{{ $edit ? $vendor->email : old('email') }}">
         </div>
     </div>
@@ -21,19 +20,19 @@
         <div class="form-group">
             <label for="phone">@lang('Phone')</label>
             <input type="text" class="form-control input-solid" id="phone"
-                   name="phone" placeholder="@lang('Phone')" required
+                   name="phone" placeholder="@lang('Phone')"
                    value="{{ $edit ? $vendor->phone : old('phone') }}">
         </div>
         <div class="form-group">
             <label for="address">@lang('Address')</label>
             <input type="text" class="form-control input-solid" id="address"
-                   name="address" placeholder="@lang('Address')" required
+                   name="address" placeholder="@lang('Address')"
                    value="{{ $edit ? $vendor->address : old('address') }}">
         </div>
         <div class="form-group">
             <label for="address">@lang('VAT Number')</label>
             <input type="text" class="form-control input-solid" id="vat"
-                   name="vat_number" placeholder="@lang('VAT Number')" required
+                   name="vat_number" placeholder="@lang('VAT Number')"
                    value="{{ $edit ? $vendor->vat_number : old('vat_number') }}">
         </div>
         @if(auth()->user()->hasRole('Auditor') || auth()->user()->hasRole('Accountant'))

@@ -59,11 +59,11 @@ class VendorController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'email' => 'required',
-            'phone' => 'required',
-            'address' => 'required',
-            'name' => 'required',
-            'vat_number' => 'required|unique:vendors'
+            'email' => 'nullable',
+            'phone' => 'nullable',
+            'address' => 'nullable',
+            'name' => 'nullable',
+            'vat_number' => 'nullable|unique:vendors'
         ]);
 
         Vendor::query()->create($request->except('client_id') + [
@@ -95,11 +95,11 @@ class VendorController extends Controller
     public function update(Request $request, Vendor $vendor)
     {
         $request->validate([
-            'email' => 'required',
-            'phone' => 'required',
-            'address' => 'required',
-            'name' => 'required',
-            'vat_number' => 'required|unique:vendors'
+            'email' => 'nullable',
+            'phone' => 'nullable',
+            'address' => 'nullable',
+            'name' => 'nullable',
+            'vat_number' => 'nullable|unique:vendors'
         ]);
 
         $vendor->update($request->except('client_id') + [

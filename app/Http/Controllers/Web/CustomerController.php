@@ -57,11 +57,11 @@ class CustomerController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'email' => 'required',
-            'phone' => 'required',
-            'address' => 'required',
-            'name' => 'required',
-            'vat_number' => 'required|unique:customers'
+            'email' => 'nullable',
+            'phone' => 'nullable',
+            'address' => 'nullable',
+            'name' => 'nullable',
+            'vat_number' => 'nullable|unique:customers'
         ]);
 
         Customer::query()->create($request->except('client_id') + [
@@ -87,11 +87,11 @@ class CustomerController extends Controller
     public function update(Request $request, Customer $customer)
     {
         $request->validate([
-            'email' => 'required',
-            'phone' => 'required',
-            'address' => 'required',
-            'name' => 'required',
-            'vat_number' => 'required|unique:customers'
+            'email' => 'nullable',
+            'phone' => 'nullable',
+            'address' => 'nullable',
+            'name' => 'nullable',
+            'vat_number' => 'nullable|unique:customers'
         ]);
 
         $customer->update($request->except('client_id') + [
