@@ -233,7 +233,9 @@ class ReportController extends Controller
             }
         }
 
-        return compact('client', 'groups', 'expense_groups', 'income_sum', 'expense_sum');
+        $diff = $income_sum - $expense_sum;
+
+        return compact('client', 'groups', 'expense_groups', 'income_sum', 'expense_sum', 'diff');
     }
 
     public function report3(Request $request, User $client)

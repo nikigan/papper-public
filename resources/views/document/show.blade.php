@@ -106,7 +106,7 @@
                     </div>
                     <div class="form-row">
                         <div class="col-md-6">
-                            <div id="vendor-block" class="form-group"
+                            <div id="vendors-block" class="form-group"
                                  @if($document->document_type != 0) style="display:none;" @endif>
                                 <label for="vendor">@lang("Vendor"):</label>
                                 <select name='vendor_id' class="form-control" id="vendor" @nopermission('document.edit')
@@ -119,8 +119,9 @@
                                             @endisset>@lang($vendor->name)</option>
                                     @endforeach
                                 </select>
-                            </div>
-                            <div id="customer-block" class="form-group"
+                                <a href="{{route('vendors.create')}}">@lang('Add a new vendor')</a>
+                        </div>
+                            <div id="customers-block" class="form-group"
                                  @if($document->document_type != 1) style="display:none;" @endif>
                                 <label for="customer">@lang("Customer"):</label>
                                 <select name='customer_id' class="form-control" id="customer">
@@ -134,7 +135,8 @@
                                         </option>
                                     @endforeach
                                 </select>
-                            </div>
+                                <a href="{{route('customers.create')}}">@lang('Add a new customer')</a>
+                        </div>
                         </div>
                         <div class="col-md-6">
                             <div class="form-group" id="expense_type_block"
@@ -247,6 +249,23 @@
     <script src="{{asset('assets/plugins/zoom-master/jquery.zoom.min.js')}}"></script>
     <script>
         $(document).ready(function () {
+
+            $('input[name=\"document_type\"]').change(function (event) {
+                if (event.target.value == 0) {
+                    $('#expense_type_block').show();
+                    $('#document_type_block').hide();
+                    $('#income_type_block').hide();
+                    $('#vendors-block').show();
+                    $('#customers-block').hide();
+                } else {
+                    $('#expense_type_block').hide();
+                    $('#document_type_block').show();
+                    $('#income_type_block').show();
+                    $('#vendors-block').hide();
+                    $('#customers-block').show();
+                }
+            })
+
             const img = document.querySelector('.document-image');
 
             const ratio = img.naturalHeight / img.naturalWidth;
@@ -254,19 +273,6 @@
                 url: '{{asset($document->file)}}',
                 magnify: ratio
             });
-
-
-            $('input[name=\"document_type\"]').change(function (event) {
-                if (event.target.value == 0) {
-                    $('#expense_type_block').show();
-                    $('#document_type_block').hide();
-                    $('#income_type_block').hide();
-                } else {
-                    $('#expense_type_block').hide();
-                    $('#document_type_block').show();
-                    $('#income_type_block').show();
-                }
-            })
         });
     </script>
 @stop

@@ -4,6 +4,7 @@ namespace Vanguard\Support\Plugins;
 
 use Vanguard\Plugins\Plugin;
 use Vanguard\Support\Sidebar\Item;
+use Vanguard\User;
 
 class Vendors extends Plugin
 {
@@ -11,7 +12,9 @@ class Vendors extends Plugin
     {
         return Item::create(__('Vendors'))
             ->route('vendors.index')
-            ->permissions('vendors.manage')
+            ->permissions(function (User $user) {
+                return $user->hasRole('Client');
+            })
             ->icon('fas fa-user-tag')
             ->active("vendors*");
     }

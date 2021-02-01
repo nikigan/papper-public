@@ -101,6 +101,11 @@
                 </div>
             </div>
         </div>
-        <b class=h3>@lang('Outcome'): {{number_format($income_sum - $expense_sum, 2)}}</b>
+        <b class=h3>@if($diff >= 0)
+                @lang('Report 3 Income')
+            @else
+                @lang('Report 3 Expense')
+            @endif
+            ({{number_format($diff, 2)}})</b>
     @endif
 @endsection

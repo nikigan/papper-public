@@ -72,8 +72,12 @@
     @endif
     <table>
         <tr>
-            <td style="font-weight: bold">@lang('Outcome')</td>
-            <td style="font-weight: bold">{{number_format($income_sum - $expense_sum, 2)}}</td>
+            <td style="font-weight: bold">@if($diff >= 0)
+                    @lang('Report 3 Income')
+                @else
+                    @lang('Report 3 Expense')
+                @endif</td>
+            <td style="font-weight: bold">{{number_format($diff, 2)}}</td>
         </tr>
     </table>
 @stop
