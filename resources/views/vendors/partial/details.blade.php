@@ -38,7 +38,7 @@
         @if(auth()->user()->hasRole('Auditor') || auth()->user()->hasRole('Accountant'))
             <div class="form-group">
                 <label for="client_id">@lang('Client')</label>
-                {!! Form::select('client_id', $clients, old('client_id', $vendor->creator_id ?? null),
+                {!! Form::select('client_id', $clients, old('client_id', $selected_client ?? $vendor->creator_id ?? null),
                 ['class' => 'form-control input-solid', 'id' => 'client_id']) !!}
             </div>
         @endif

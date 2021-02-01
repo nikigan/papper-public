@@ -119,7 +119,7 @@
                                             @endisset>@lang($vendor->name)</option>
                                     @endforeach
                                 </select>
-                                <a href="{{route('vendors.create')}}">@lang('Add a new vendor')</a>
+                                <a href="{{route('vendors.create', ['selected_client' => $document->user])}}">@lang('Add a new vendor')</a>
                         </div>
                             <div id="customers-block" class="form-group"
                                  @if($document->document_type != 1) style="display:none;" @endif>
@@ -135,7 +135,7 @@
                                         </option>
                                     @endforeach
                                 </select>
-                                <a href="{{route('customers.create')}}">@lang('Add a new customer')</a>
+                                <a href="{{route('customers.create', ['selected_client' => $document->user])}}">@lang('Add a new customer')</a>
                         </div>
                         </div>
                         <div class="col-md-6">

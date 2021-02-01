@@ -42,11 +42,13 @@ class CustomerController extends Controller
      * Show the form for creating a new resource.
      *
      */
-    public function create()
+    public function create(Request $request)
     {
+        $selected_client = $request->get('selected_client');
+
         $clients = $this->users->clients()->pluck('username', 'id');
 
-        return view('customers.create', ['edit' => false] + compact('clients'));
+        return view('customers.create', ['edit' => false] + compact('clients', 'selected_client'));
     }
 
     /**

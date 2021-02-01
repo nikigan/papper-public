@@ -43,11 +43,12 @@ class VendorController extends Controller
      * Show the form for creating a new resource.
      *
      */
-    public function create()
+    public function create(Request $request)
     {
+        $selected_client = $request->get('selected_client');
         $clients = $this->users->clients()->pluck('username', 'id');
 
-        return view('vendors.create', ['edit' => false] + compact('clients'));
+        return view('vendors.create', ['edit' => false] + compact('clients', 'selected_client'));
     }
 
     /**
