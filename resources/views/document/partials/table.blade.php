@@ -8,6 +8,7 @@
             <th class="min-width-80">@lang('Status')</th>
             <th class="min-width-100">@lang('Sum')</th>
             <th class="min-width-100">@lang('VAT')</th>
+            <th class="min-width-100">@lang('Sum without VAT')</th>
             <th class="text-center min-width-100">@lang('Action')</th>
         </tr>
         </thead>

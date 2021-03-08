@@ -85,7 +85,7 @@
                                 <label for="document_date">@lang('Document date')</label>
                                 <input type="date" max="{{ date('Y-m-d') }}"
                                        value="{{ \Carbon\Carbon::parse($document->document_date)->format('Y-m-d') }}"
-                                       class="form-control" id="document_date" name="document_date" readonly
+                                       class="form-control" id="document_date" name="document_date"
                                        required>
                             </div>
                         </div>

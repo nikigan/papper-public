@@ -101,11 +101,14 @@
                 </div>
             </div>
         </div>
-        <b class=h3>@if($diff >= 0)
+        <b class=h3>
+            @if($diff >= 0)
                 @lang('Report 3 Income')
+                {{number_format($diff, 2)}}
             @else
                 @lang('Report 3 Expense')
+                ({{number_format($diff, 2)}})
             @endif
-            ({{number_format($diff, 2)}})</b>
+            </b>
     @endif
 @endsection

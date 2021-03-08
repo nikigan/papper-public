@@ -211,7 +211,11 @@ class DocumentController extends Controller
             'file' => 'file'
         ]);
 
-        $vat = $request->sum * $request->vat / 100;
+        if ($request->get('include_tax') == "on") {
+            $vat = ($request->sum / (1 + $request->vat / 100)) * $request->vat / 100;
+        } else {
+            $vat = $request->sum * $request->vat / 100;
+        }
 
         $sum_without_vat = $request->sum - $vat;
 

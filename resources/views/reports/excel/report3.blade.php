@@ -73,11 +73,12 @@
     <table>
         <tr>
             <td style="font-weight: bold">@if($diff >= 0)
-                    @lang('Report 3 Income')
+                    @lang('Report 3 Income')</td>
+            <td style="font-weight: bold">{{number_format($diff, 2)}}
                 @else
-                    @lang('Report 3 Expense')
-                @endif</td>
-            <td style="font-weight: bold">{{number_format($diff, 2)}}</td>
+                    @lang('Report 3 Expense')</td>
+            <td style="font-weight: bold">({{number_format($diff, 2)}})
+            @endif
         </tr>
     </table>
 @stop

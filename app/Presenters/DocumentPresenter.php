@@ -49,6 +49,13 @@ class DocumentPresenter extends Presenter
         return numfmt_format_currency($nf, $this->model->sum, $this->model->currency->ISO_code);
     }
 
+    public function sum_without_vat()
+    {
+        $nf = numfmt_create('he_IL', \NumberFormatter::CURRENCY);
+        $minus = $this->model->document_type === 0 ? '-' : '';
+        return numfmt_format_currency($nf, $this->model->sum_without_vat, $this->model->currency->ISO_code);
+    }
+
     public function vat()
     {
         $nf = numfmt_create('he_IL', \NumberFormatter::CURRENCY);
