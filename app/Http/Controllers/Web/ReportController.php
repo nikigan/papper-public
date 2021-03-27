@@ -390,6 +390,18 @@ class ReportController extends Controller
                 ]
             ];
         }
+
+        if ($document_vat[0] ?? true) {
+            $document_vat[0] = [
+                    'vat' => 0,
+                    'sum' => 0];
+        }
+
+        if ($document_vat[1] ?? true) {
+            $document_vat[1] = [
+                    'vat' => 0,
+                    'sum' => 0];
+        }
         $in_vat = $document_vat[1]['vat'] + $invoices_vat->sum('vat');
         $exp_vat = $document_vat[0]['vat'];
         $diff_vat = $in_vat - $exp_vat;

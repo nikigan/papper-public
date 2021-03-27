@@ -41,8 +41,7 @@ class InvoiceController extends Controller
      */
     public function create()
     {
-        $statement = DB::select("SHOW TABLE STATUS LIKE 'invoices'");
-        $id = $statement[0]->Auto_increment;
+        $id = Invoice::query()->orderByDesc('id')->first()->id + 1;
         $tax = 17;
         $user = auth()->user();
         $organization_type = $user->organization_type;

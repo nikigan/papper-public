@@ -39,7 +39,7 @@
                                          id="prefix">{{$document_types[0]->prefix}}</div>
                                 </div>
                                 <input type="text" name='invoice[invoice_number]' class="form-control"
-                                       value="{{$id}}" required readonly
+                                       value="{{$id}}" required
                                        id="invoice_number"/>
                             </div>
                         </div>

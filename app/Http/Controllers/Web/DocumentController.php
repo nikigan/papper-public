@@ -14,6 +14,7 @@ use Vanguard\DocumentType;
 use Vanguard\ExpenseType;
 use Vanguard\Http\Controllers\Controller;
 use Vanguard\Http\Filters\DateSearch;
+use Vanguard\Http\Filters\DocumentKeywordSearch;
 use Vanguard\IncomeType;
 use Vanguard\Jobs\ProcessDocument;
 use Vanguard\Repositories\Document\DocumentRepository;
@@ -21,6 +22,14 @@ use Vanguard\Services\YandexVision;
 use Vanguard\Support\Enum\DocumentStatus;
 use Vanguard\Support\Plugins\Vendors;
 use Vanguard\Vendor;
+
+class Store
+{
+    private $products = [];
+    public function getProducts() {
+        return $this->products;
+    }
+}
 
 class DocumentController extends Controller
 {
@@ -39,14 +48,21 @@ class DocumentController extends Controller
 
     public function index(Request $request)
     {
+
+        $store = new Store();
+
+        $store->getProducts()['test'] = 'test';
+        dump($store->getProducts()['test']);
+
         $current_user = auth()->user();
         if ($current_user->hasRole('Auditor') || $current_user->hasRole('Admin') || $current_user->hasRole('Accountant')) {
-            $documents = Document::query()
+            /*$documents = Document::query()
                 ->whereHas('user', function ($q) use ($current_user) {
                     $q->where('auditor_id', $current_user->id)
                         ->orWhere('accountant_id', $current_user->id);
                 })
-                ->orderByDesc('document_date');
+                ->orderByDesc('document_date');*/
+            $documents = $this->documentRepository->documentsAuditor();
         } else {
             $documents = Document::query()
                 ->with('user')
@@ -54,22 +70,17 @@ class DocumentController extends Controller
                 ->orderByDesc('created_at');
         }
 
-        if ($request->get('query')) {
-            (new DateSearch)($documents, $request->get('query'));
+        if ($request->has('query'))
+        {
+            (new DocumentKeywordSearch)($documents, $request->get('query'));
         }
 
-        $start_date = $request->get('start_date') ?? false;
-        $end_date = $request->get('end_date') ?? false;
-
-        if ($start_date) {
-            $documents = $documents->whereDate('document_date', '>=', $start_date);
-        }
-
-        if ($end_date) {
-            $documents = $documents->whereDate('document_date', '<=', $end_date);
+        if ($request->has('start_date') || $request->has('end_date')) {
+            (new DateSearch)($documents, $request->only(['start_date', 'end_date']), 'document_date');
         }
 
         $documents = $documents->paginate(10);
+
         $statuses = DocumentStatus::lists();
         return view('document.index', compact('documents', 'statuses', 'current_user'));
     }
@@ -77,18 +88,14 @@ class DocumentController extends Controller
     public function waiting(Request $request)
     {
         $documents = $this->documentRepository->documentsAuditor();
-        $start_date = $request->get('start_date') ?? false;
-        $end_date = $request->get('end_date') ?? false;
 
-        if ($request->get('query')) {
-            (new DateSearch)($documents, $request->get('query'));
-        }
-        if ($start_date) {
-            $documents = $documents->whereDate('document_date', '>=', $start_date);
+        if ($request->has('query'))
+        {
+            (new DocumentKeywordSearch)($documents, $request->get('query'));
         }
 
-        if ($end_date) {
-            $documents = $documents->whereDate('document_date', '<=', $end_date);
+        if ($request->has('start_date') || $request->has('end_date')) {
+            (new DateSearch)($documents, $request->only(['start_date', 'end_date']), 'document_date');
         }
 
         $documents = $documents->where('status', DocumentStatus::UNCONFIRMED)->paginate(10);
