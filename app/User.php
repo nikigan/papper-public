@@ -18,6 +18,98 @@ use Vanguard\Support\Authorization\AuthorizationUserTrait;
 use Vanguard\Support\CanImpersonateUsers;
 use Vanguard\Support\Enum\UserStatus;
 
+/**
+ * Vanguard\User
+ *
+ * @property int $id
+ * @property string $email
+ * @property string|null $username
+ * @property string $password
+ * @property string|null $first_name
+ * @property string|null $last_name
+ * @property string|null $phone
+ * @property string|null $avatar
+ * @property string|null $address
+ * @property int|null $country_id
+ * @property int $role_id
+ * @property \Illuminate\Support\Carbon|null $birthday
+ * @property \Illuminate\Support\Carbon|null $last_login
+ * @property string $status
+ * @property int|null $two_factor_country_code
+ * @property int|null $two_factor_phone
+ * @property string|null $two_factor_options
+ * @property string|null $email_verified_at
+ * @property string|null $remember_token
+ * @property \Illuminate\Support\Carbon|null $created_at
+ * @property \Illuminate\Support\Carbon|null $updated_at
+ * @property string|null $announcements_last_read_at
+ * @property int|null $auditor_id
+ * @property int|null $accountant_id
+ * @property int|null $organization_type_id
+ * @property string|null $vat_number
+ * @property string|null $passport
+ * @property float|null $tax_percent
+ * @property float $social_security
+ * @property int $report_period
+ * @property string|null $social_security_number
+ * @property int $default_income_type_id
+ * @property string|null $mh_advances
+ * @property string|null $mh_deductions
+ * @property string|null $portfolio
+ * @property-read \Vanguard\User|null $accountant
+ * @property-read \Vanguard\User|null $auditor
+ * @property-read \Vanguard\Country|null $country
+ * @property-read \Illuminate\Database\Eloquent\Collection|\Vanguard\Document[] $documents
+ * @property-read int|null $documents_count
+ * @property-read bool $using_two_factor_auth
+ * @property-read \Illuminate\Database\Eloquent\Collection|\Vanguard\Invoice[] $invoices
+ * @property-read int|null $invoices_count
+ * @property-read \Illuminate\Notifications\DatabaseNotificationCollection|\Illuminate\Notifications\DatabaseNotification[] $notifications
+ * @property-read int|null $notifications_count
+ * @property-read \Vanguard\OrganizationType|null $organization_type
+ * @property-read \Vanguard\Role $role
+ * @property-read \Illuminate\Database\Eloquent\Collection|\Laravel\Sanctum\PersonalAccessToken[] $tokens
+ * @property-read int|null $tokens_count
+ * @method static \Illuminate\Database\Eloquent\Builder|\Vanguard\User newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|\Vanguard\User newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|\Vanguard\User query()
+ * @method static \Illuminate\Database\Eloquent\Builder|\Vanguard\User whereAccountantId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\Vanguard\User whereAddress($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\Vanguard\User whereAnnouncementsLastReadAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\Vanguard\User whereAuditorId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\Vanguard\User whereAvatar($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\Vanguard\User whereBirthday($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\Vanguard\User whereCountryId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\Vanguard\User whereCreatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\Vanguard\User whereDefaultIncomeTypeId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\Vanguard\User whereEmail($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\Vanguard\User whereEmailVerifiedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\Vanguard\User whereFirstName($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\Vanguard\User whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\Vanguard\User whereLastLogin($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\Vanguard\User whereLastName($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\Vanguard\User whereMhAdvances($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\Vanguard\User whereMhDeductions($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\Vanguard\User whereOrganizationTypeId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\Vanguard\User wherePassport($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\Vanguard\User wherePassword($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\Vanguard\User wherePhone($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\Vanguard\User wherePortfolio($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\Vanguard\User whereRememberToken($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\Vanguard\User whereReportPeriod($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\Vanguard\User whereRoleId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\Vanguard\User whereSocialSecurity($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\Vanguard\User whereSocialSecurityNumber($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\Vanguard\User whereStatus($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\Vanguard\User whereTaxPercent($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\Vanguard\User whereTwoFactorCountryCode($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\Vanguard\User whereTwoFactorOptions($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\Vanguard\User whereTwoFactorPhone($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\Vanguard\User whereUpdatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\Vanguard\User whereUsername($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\Vanguard\User whereVatNumber($value)
+ * @mixin \Eloquent
+ */
 class User extends Authenticatable implements TwoFactorAuthenticatableContract, MustVerifyEmail
 {
     use TwoFactorAuthenticatable,

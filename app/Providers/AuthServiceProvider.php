@@ -4,6 +4,8 @@ namespace Vanguard\Providers;
 
 use Illuminate\Contracts\Auth\Access\Gate as GateContract;
 use Illuminate\Foundation\Support\Providers\AuthServiceProvider as ServiceProvider;
+use Vanguard\Document;
+use Vanguard\Policies\DocumentPolicy;
 use Vanguard\User;
 
 class AuthServiceProvider extends ServiceProvider
@@ -15,6 +17,7 @@ class AuthServiceProvider extends ServiceProvider
      */
     protected $policies = [
         'Vanguard\Model' => 'Vanguard\Policies\ModelPolicy',
+        Document::class => DocumentPolicy::class
     ];
 
     /**
@@ -49,7 +52,7 @@ class AuthServiceProvider extends ServiceProvider
                 return true;
             }
 
-            return (int) $user->id === (int) $session->user_id;
+            return (int)$user->id === (int)$session->user_id;
         });
     }
 }

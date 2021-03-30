@@ -23,14 +23,6 @@ use Vanguard\Support\Enum\DocumentStatus;
 use Vanguard\Support\Plugins\Vendors;
 use Vanguard\Vendor;
 
-class Store
-{
-    private $products = [];
-    public function getProducts() {
-        return $this->products;
-    }
-}
-
 class DocumentController extends Controller
 {
 
@@ -48,20 +40,8 @@ class DocumentController extends Controller
 
     public function index(Request $request)
     {
-
-        $store = new Store();
-
-        $store->getProducts()['test'] = 'test';
-        dump($store->getProducts()['test']);
-
         $current_user = auth()->user();
-        if ($current_user->hasRole('Auditor') || $current_user->hasRole('Admin') || $current_user->hasRole('Accountant')) {
-            /*$documents = Document::query()
-                ->whereHas('user', function ($q) use ($current_user) {
-                    $q->where('auditor_id', $current_user->id)
-                        ->orWhere('accountant_id', $current_user->id);
-                })
-                ->orderByDesc('document_date');*/
+        if (!$current_user->hasRole('User')) {
             $documents = $this->documentRepository->documentsAuditor();
         } else {
             $documents = Document::query()
@@ -106,9 +86,9 @@ class DocumentController extends Controller
 
     }
 
-    public function show($id)
+    public function show(Document $document)
     {
-        $document = Document::query()->findOrFail($id);
+        $id = $document->id;
         $currencies = Currency::all();
         $vendors = Vendor::query()->where('creator_id', $document->user->id)->get();
         $customers = Customer::query()->where('creator_id', $document->user->id)->get();

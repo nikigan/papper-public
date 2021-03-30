@@ -237,7 +237,7 @@ Route::group(['middleware' => ['auth', 'verified', 'locale']], function () {
         Route::post('/upload', 'DocumentController@store')->name('documents.store')
             ->middleware('permission:document.upload');
         Route::put('/{document}', 'DocumentController@update')->name('documents.update');
-        Route::get('/{document}', 'DocumentController@show')->name('documents.show');
+        Route::get('/{document}', 'DocumentController@show')->name('documents.show')->middleware('can:view,document');
         Route::delete('/{document}', 'DocumentController@destroy')->name('documents.destroy')->middleware('permission:document.delete');
     });
 

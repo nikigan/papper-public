@@ -204,7 +204,11 @@ class ReportController extends Controller
 
         foreach ($groups as $k => $group) {
             foreach ($group['subgroups'] as $key => $subgroup) {
-                $groups[$k]['subgroups'][$key]['percentage'] = $subgroup['sum'] / $group['sum'] * 100;
+                if ($group['sum']) {
+                    $groups[$k]['subgroups'][$key]['percentage'] = $subgroup['sum'] / $group['sum'] * 100;
+                } else {
+                    $groups[$k]['subgroups'][$key]['percentage'] = 0;
+                }
             }
         }
 

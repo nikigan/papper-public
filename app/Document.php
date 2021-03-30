@@ -7,6 +7,62 @@ use Illuminate\Support\Carbon;
 use Vanguard\Presenters\DocumentPresenter;
 use Vanguard\Presenters\Traits\Presentable;
 
+/**
+ * Vanguard\Document
+ *
+ * @property int $id
+ * @property string|null $file
+ * @property int $user_id
+ * @property string|null $document_text
+ * @property \Illuminate\Support\Carbon|null $created_at
+ * @property \Illuminate\Support\Carbon|null $updated_at
+ * @property string $status
+ * @property string|null $document_number
+ * @property int|null $document_type
+ * @property float|null $sum
+ * @property float|null $sum_without_vat
+ * @property float|null $vat
+ * @property string|null $document_date
+ * @property int|null $currency_id
+ * @property int|null $vendor_id
+ * @property int|null $expense_type_id
+ * @property string|null $note
+ * @property int|null $document_type_id
+ * @property int|null $income_type_id
+ * @property int|null $customer_id
+ * @property-read \Vanguard\Currency|null $currency
+ * @property-read \Vanguard\Customer|null $customer
+ * @property-read \Vanguard\DocumentType|null $dt
+ * @property-read \Vanguard\ExpenseGroup $expense_group
+ * @property-read \Vanguard\ExpenseType|null $expense_type
+ * @property-read \Vanguard\IncomeType|null $income_type
+ * @property-read \Vanguard\User $user
+ * @property-read \Vanguard\Vendor|null $vendor
+ * @method static \Illuminate\Database\Eloquent\Builder|\Vanguard\Document newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|\Vanguard\Document newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|\Vanguard\Document query()
+ * @method static \Illuminate\Database\Eloquent\Builder|\Vanguard\Document whereCreatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\Vanguard\Document whereCurrencyId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\Vanguard\Document whereCustomerId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\Vanguard\Document whereDocumentDate($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\Vanguard\Document whereDocumentNumber($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\Vanguard\Document whereDocumentText($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\Vanguard\Document whereDocumentType($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\Vanguard\Document whereDocumentTypeId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\Vanguard\Document whereExpenseTypeId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\Vanguard\Document whereFile($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\Vanguard\Document whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\Vanguard\Document whereIncomeTypeId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\Vanguard\Document whereNote($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\Vanguard\Document whereStatus($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\Vanguard\Document whereSum($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\Vanguard\Document whereSumWithoutVat($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\Vanguard\Document whereUpdatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\Vanguard\Document whereUserId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\Vanguard\Document whereVat($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\Vanguard\Document whereVendorId($value)
+ * @mixin \Eloquent
+ */
 class Document extends Model
 {
     use Presentable;
