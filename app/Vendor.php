@@ -31,6 +31,8 @@ use Illuminate\Database\Eloquent\Model;
  * @method static \Illuminate\Database\Eloquent\Builder|\Vanguard\Vendor whereUpdatedAt($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\Vanguard\Vendor whereVatNumber($value)
  * @mixin \Eloquent
+ * @property int|null $default_expense_type_id
+ * @method static \Illuminate\Database\Eloquent\Builder|Vendor whereDefaultExpenseTypeId($value)
  */
 class Vendor extends Model
 {
@@ -38,5 +40,9 @@ class Vendor extends Model
 
     public function documents() {
         return $this->belongsToMany(Document::class);
+    }
+
+    public function default_expense_type() {
+        return $this->belongsTo(ExpenseType::class, 'default_expense_type_id');
     }
 }

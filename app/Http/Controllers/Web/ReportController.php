@@ -239,7 +239,7 @@ class ReportController extends Controller
 
         $diff = $income_sum - $expense_sum;
 
-        return compact('client', 'groups', 'expense_groups', 'income_sum', 'expense_sum', 'diff');
+        return compact('client', 'groups', 'expense_groups', 'income_sum', 'expense_sum', 'diff', 'start_date', 'end_date');
     }
 
     public function report3(Request $request, User $client)
@@ -252,6 +252,7 @@ class ReportController extends Controller
     {
         $date = date('Y-m-d');
         $data = $this->report3_data($request, $client);
+        $data['percentage'] = $request->get('percentage') === "on";
         return Excel::download(new ExcelReport($data, 'reports.excel.report3'), "report3-{$client->present()->name}-{$date}.xlsx");
     }
 
@@ -259,6 +260,7 @@ class ReportController extends Controller
     {
         $date = date('Y-m-d');
         $data = $this->report3_data($request, $client);
+        $data['percentage'] = $request->get('percentage') === "on";
 
         $pdf = \PDF::loadView('reports.excel.report3', $data);
 
@@ -376,6 +378,8 @@ class ReportController extends Controller
 
         $document_vat = $income->leftJoin('currencies as c', 'documents.currency_id', '=', 'c.id')->select(DB::raw('SUM(vat/c.value) as vat, SUM(sum/c.value) as sum, document_type'))->groupBy('document_type')->get()->toArray();
 
+        $equipment_vat = $income->leftJoin('currencies as cur', 'documents.currency_id', '=', 'cur.id')->select(DB::raw("SUM(vat/cur.value) as vat, SUM(sum/cur.value) as sum, expense_type_id"))->groupBy('expense_type_id')->where('expense_type_id', 700)->get();
+
         $invoices = $client->invoices()->getQuery();
 
         (new DateSearch())($invoices, compact('start_date', 'end_date'), 'invoice_date');
@@ -395,17 +399,19 @@ class ReportController extends Controller
             ];
         }
 
-        if ($document_vat[0] ?? true) {
+        if (!isset($document_vat[0])) {
             $document_vat[0] = [
                     'vat' => 0,
                     'sum' => 0];
         }
 
-        if ($document_vat[1] ?? true) {
+
+        if (!isset($document_vat[1])) {
             $document_vat[1] = [
                     'vat' => 0,
                     'sum' => 0];
         }
+
         $in_vat = $document_vat[1]['vat'] + $invoices_vat->sum('vat');
         $exp_vat = $document_vat[0]['vat'];
         $diff_vat = $in_vat - $exp_vat;
@@ -413,6 +419,7 @@ class ReportController extends Controller
         $in_vat = number_format($in_vat, 2);
         $exp_vat = number_format($exp_vat, 2);
         $diff_vat = number_format($diff_vat, 2);
+        $equipment_vat = number_format($equipment_vat->sum('vat'), 2);
 
         $in_sum = $document_vat[1]['sum'] + $invoices_vat->sum('sum');
         $in_tax = $in_sum * $client->tax_percent / 100;
@@ -421,6 +428,6 @@ class ReportController extends Controller
         $in_tax = number_format($in_tax, 2);
 
 
-        return view('reports.report_tax', compact('in_vat', 'exp_vat', 'diff_vat', 'client', 'in_tax', 'in_sum'));
+        return view('reports.report_tax', compact('in_vat', 'exp_vat', 'diff_vat', 'client', 'in_tax', 'in_sum', 'equipment_vat'));
     }
 }

@@ -3,6 +3,7 @@
 namespace Vanguard\Repositories\User;
 
 use Carbon\Carbon;
+use Illuminate\Database\Eloquent\Builder;
 use Vanguard\User;
 use \Laravel\Socialite\Contracts\User as SocialUser;
 
@@ -169,5 +170,5 @@ interface UserRepository
      */
     public function findByConfirmationToken($token);
 
-    public function clients();
+    public function clients(): Builder;
 }

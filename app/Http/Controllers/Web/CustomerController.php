@@ -7,6 +7,7 @@ use Vanguard\Customer;
 use Vanguard\Http\Controllers\Controller;
 use Vanguard\Repositories\Role\RoleRepository;
 use Vanguard\Repositories\User\UserRepository;
+use Vanguard\User;
 
 class CustomerController extends Controller
 {
@@ -25,17 +26,17 @@ class CustomerController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(?User $client)
     {
         $user = auth()->user();
         $clients = [null];
 
-        if ($user->hasRole('Auditor') || $user->hasRole('Accountant')) {
+        if (($user->hasRole('Auditor') || $user->hasRole('Accountant')) && !$client) {
             $clients = $this->users->clients()->pluck('id')->toArray();
         }
 
-        $customers = Customer::query()->where('creator_id', auth()->id())->orWhereIn('creator_id', $clients)->get();
-        return view('customers.index', compact('customers', 'clients'));
+        $customers = Customer::query()->where('creator_id', $client->id ?? auth()->id())->orWhereIn('creator_id', $clients)->get();
+        return view('customers.index', compact('customers', 'client'));
     }
 
     /**
@@ -63,12 +64,17 @@ class CustomerController extends Controller
             'phone' => 'nullable',
             'address' => 'nullable',
             'name' => 'nullable',
-            'vat_number' => 'nullable|unique:customers'
+            'vat_number' => 'required|unique:customers'
         ]);
 
-        Customer::query()->create($request->except('client_id') + [
+        $customer = Customer::query()->create($request->except('client_id') + [
                 'creator_id' => $request->get('client_id') ?? auth()->id()
             ]);
+
+        if ($request->expectsJson()) {
+            return $customer;
+        }
+
         return redirect()->route('customers.index')->with('success', __('Customer created successfully'));
     }
 

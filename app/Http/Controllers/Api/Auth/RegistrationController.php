@@ -38,10 +38,10 @@ class RegistrationController extends ApiController
      */
     public function index(RegisterRequest $request)
     {
-        $role = $this->roles->findByName('User');
+        $role = $this->roles->findByName('Auditor');
 
         $user = $this->users->create(
-            array_merge($request->validFormData(), ['role_id' => $role])
+            array_merge($request->validFormData(), ['role_id' => $role->id])
         );
 
         event(new Registered($user));

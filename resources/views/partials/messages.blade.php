@@ -25,3 +25,20 @@
         </div>
     @endif
 @endif
+
+@if(Session::get('warning', false))
+    <?php $data = Session::get('warning'); ?>
+    @if (is_array($data))
+        @foreach ($data as $msg)
+            <div class="alert alert-warning alert-notification">
+                <i class="fa fa-exclamation"></i>
+                {{ $msg }}
+            </div>
+        @endforeach
+    @else
+        <div class="alert alert-warning alert-notification">
+            <i class="fa fa-exclamation"></i>
+            {{ $data }}
+        </div>
+    @endif
+@endif

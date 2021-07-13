@@ -89,37 +89,12 @@
         }
     </style>
 
-    {!! Form::open(['route' => 'document.manualStore', 'files' => true, 'id' => 'document-form']) !!}
+    {!! Form::open(['route' => ['document.manualStore', 'client' => $client], 'files' => true, 'id' => 'document-form']) !!}
     <div class="card">
         <div class="card-body">
-            <div class="form-row align-items-center">
-                <div class="col-lg-12">
-                    <div class="form-group">
-                        <label for="document_number">@lang('Document number')</label>
-                        <input type="text" class="form-control" name="document_number" id="document_number"
-                               value="{{old('document_number')}}">
-                    </div>
-                </div>
-            </div>
-            <div class="form-row">
-                <div class="col-md-6">
-                    <div class="form-group">
-                        <label for="sum">@lang('Sum')</label>
-                        <input type="text" class="form-control" name="sum" id="sum" value="{{old('sum')}}">
-                    </div>
-                    <div class="custom-control custom-checkbox">
-                        <input type="checkbox" checked class="custom-control-input" id="include_tax" name="include_tax">
-                        <label class="custom-control-label" for="include_tax">@lang('Including tax')</label>
-                    </div>
-                </div>
-                <div class="col-md-6">
-                    <div class="form-group">
-                        <label for="vat">@lang('VAT') %</label>
-                        <input type="number" min="0" max="100" step="0.1" class="form-control" name="vat" id="vat"
-                               value="{{old('vat', 17)}}">
-                    </div>
-                </div>
-            </div>
+            @isset($client)
+                <h3>@lang('Client'): {{$client->present()->name}}</h3>
+            @endisset
             <div class="form-row my-3 align-items-center">
                 <div class="col-md-6 form-group">
                     <div class="custom-control custom-radio custom-control-inline">
@@ -152,6 +127,39 @@
                                         @if(auth()->user()->default_income_type_id == $type->id) selected @endif>@lang($type->name)</option>
                             @endforeach
                         </select>
+                    </div>
+                </div>
+            </div>
+            <div class="form-row align-items-center">
+                <div class="col-lg-12">
+                    <div class="form-group">
+                        <label for="document_number">@lang('Document number')</label>
+                        <input type="text" class="form-control" @if($required)required @endif name="document_number"
+                               id="document_number"
+                               value="{{old('document_number')}}">
+                        @if($error_document)
+                            <a href="{{$error_document}}">@lang('Document with this number')</a>
+                        @endif
+                    </div>
+                </div>
+            </div>
+            <div class="form-row">
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label for="sum">@lang('Sum')</label>
+                        <input type="text" class="form-control" @if($required)required @endif name="sum" id="sum"
+                               value="{{old('sum')}}">
+                    </div>
+                    <div class="custom-control custom-checkbox">
+                        <input type="checkbox" checked class="custom-control-input" id="include_tax" name="include_tax">
+                        <label class="custom-control-label" for="include_tax">@lang('Including tax')</label>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label for="vat">@lang('VAT') %</label>
+                        <input type="number" min="0" max="100" step="0.1" class="form-control" name="vat" id="vat"
+                               value="{{old('vat', 17)}}">
                     </div>
                 </div>
             </div>
@@ -196,21 +204,37 @@
                             <label for="vendor">@lang("Vendor"):</label>
                             <select name='vendor_id' class="form-control" id="vendor">
                                 @foreach($vendors as $vendor)
-                                    <option value="{{$vendor->id}}">@lang($vendor->name)</option>
+                                    <option value="{{$vendor->id}}"
+                                            data-vat="{{$vendor->vat_number}}">@lang($vendor->name) -
+                                        ({{$vendor->vat_number}})
+                                    </option>
                                 @endforeach
                             </select>
                         </div>
-                        <a href="{{route('vendors.create')}}">@lang('Add a new vendor')</a></div>
+                        <button type="button" class="btn btn-link" data-toggle="modal"
+                                data-target="#vendorsModal">@lang('Add a new vendor')</button>
+                    </div>
                     <div id="customers-block" style="display: none;">
                         <div class="form-group">
                             <label for="customer">@lang("Customer"):</label>
                             <select name='customer_id' class="form-control" id="customer">
                                 @foreach($customers as $customer)
-                                    <option value="{{$customer->id}}">@lang($customer->name)</option>
+                                    <option value="{{$customer->id}}"
+                                            data-vat="{{$customer->vat_number}}">@lang($customer->name)
+                                        - {{$customer->vat_number}}</option>
                                 @endforeach
                             </select>
                         </div>
-                        <a href="{{route('customers.create')}}">@lang('Add a new customer')</a></div>
+                        <button type="button" class="btn btn-link" data-toggle="modal"
+                                data-target="#customersModal">@lang('Add a new customer')</button>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label for="partner_vat">@lang("VAT"):</label>
+                        <input type="text" name='partner_vat' value="{{$vendors[0]->vat_number}}" class="form-control"
+                               id="partner_vat">
+                    </div>
                 </div>
             </div>
             <div class="col-lg-6" id="drop-area">
@@ -235,6 +259,66 @@
     {!! Form::close() !!}
 
     <br>
+
+    <div class="modal" tabindex="-1" role="dialog" id="vendorsModal">
+        <div class="modal-dialog modal-lg" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">@lang('Create Vendor')</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    {!! Form::open(['route' => 'vendors.store', 'id' => "vendorsForm"]) !!}
+                    <div class="card">
+                        <div class="card-body">
+                            @include('vendors.partial.details', ['edit' => false])
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-12">
+                            <button type="submit" class="btn btn-primary">
+                                @lang('Create Vendor')
+                            </button>
+                        </div>
+                    </div>
+                    {!! Form::close() !!}
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal" tabindex="-1" role="dialog" id="customersModal">
+        <div class="modal-dialog modal-lg" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">@lang('Create Customer')</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    {!! Form::open(['route' => 'customers.store', 'id' => 'customersForm']) !!}
+                    <div class="card">
+                        <div class="card-body">
+                            @include('customers.partial.details', ['edit' => false])
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-12">
+                            <button type="submit" class="btn btn-primary">
+                                @lang('Create Customer')
+                            </button>
+                        </div>
+                    </div>
+                    {!! Form::close() !!}
+                </div>
+            </div>
+        </div>
+    </div>
 @stop
 
 @section('scripts')
@@ -310,7 +394,86 @@
                 $('#document_type_block').show();
                 $('#income_type_block').show();
             }
-        })
+        });
+
+        const listErrors = (data) => {
+            return Object.values(data.errors).map(error => error.join('\n'));
+        }
+
+        $('#vendorsForm').submit(function (e) {
+            e.preventDefault();
+            const form = $(this);
+
+            if (!form.valid) return false;
+            const data = form.serialize();
+
+            $.ajax({
+                type: form.attr('method'),
+                url: form.attr('action'),
+                dataType: 'json',
+                data: data,
+                success: (response) => {
+                    $("#vendorsModal").modal('hide');
+                    $("#vendor").append(`<option value="${response.id}" data-vat="${response.vat_number}" selected >${response.name} - ${response.vat_number}</option>`).change();
+                },
+                error: (response) => {
+                    $("#vendorsModal .modal-body").append(`<div class="alert alert-danger" role="alert">${listErrors(response.responseJSON)} <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+    <span aria-hidden="true">&times;</span>
+  </button>
+</div>`)
+                }
+            });
+        });
+
+        $('#customersForm').submit(function (e) {
+            e.preventDefault();
+            const form = $(this);
+
+            if (!form.valid) return false;
+            const data = form.serialize();
+
+            $.ajax({
+                type: form.attr('method'),
+                url: form.attr('action'),
+                dataType: 'json',
+                data: data,
+                success: (response) => {
+                    $("#customersModal").modal('hide');
+                    $("#customer").append(`<option value="${response.id}" data-vat="${response.vat_number}" selected>${response.name} - ${response.vat_number}</option>`).change();
+                },
+                error: (response) => {
+                    $("#customersModal .modal-body").append(`<div class="alert alert-danger" role="alert">${listErrors(response.responseJSON)} <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+    <span aria-hidden="true">&times;</span>
+  </button>
+</div>`)
+                }
+            });
+        });
+
+        const partnerVatInput = $("#partner_vat")
+
+        partnerVatInput.on('input', function (e) {
+            const value = $(this).val();
+            $("#vendor_vat_number").val(value);
+            $("#customer_vat_number").val(value);
+            let found = false;
+
+            $("#vendor > option").each(function () {
+                if ($(this).data('vat').toString() === value.toString()) {
+                    $(this).attr('selected', 'selected');
+                    found = true;
+                    $("#vendor").val($(this).val());
+                }
+
+                if (!found) { $(this).attr('selected', false);
+                    $("#vendor").val(null);
+                }
+            });
+        });
+
+        $("#vendor, #customer").change(function () {
+            partnerVatInput.val($(this).find(":selected").data('vat'));
+        });
     </script>
 @stop
 

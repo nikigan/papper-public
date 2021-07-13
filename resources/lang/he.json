@@ -327,13 +327,13 @@
     "Report 1": "פקודות יומן",
     "Report 2": "כרטסת",
     "Report 3": "רווח והפסד",
-    "Report 3 Income" : "רווח",
-    "Report 3 Expense" : "הפסד",
-    "You were just registered on :app website." : "זה אתה נרשמת ל:app.",
+    "Report 3 Income": "רווח",
+    "Report 3 Expense": "הפסד",
+    "You were just registered on :app website.": "זה אתה נרשמת ל:app.",
     "To login just visit the link below.": "להתחברות פשוט היכנס לקישור למטה.",
     "Login page": "דף כניסה",
     "Seller details": "פרטי לקוח",
-    "Add new customer" : "לקוח חדש",
+    "Add new customer": "לקוח חדש",
     "Document type": "סוג מסמך",
     "Payment type": "שיטות תשלום",
     "Income type": "הכנסה מ",
@@ -375,5 +375,7 @@
     "Report Period": "תדירות דוח מעמ",
     "One Month": "חד חודשי",
     "Two Months": "דו חודשי",
-    "Book of MH Deductions": "מספר פנקס מ\"ה ניכויים"
+    "Book of MH Deductions": "מספר פנקס מ\"ה ניכויים",
+    "Confirmed": "מאושר",
+    "Unconfirmed": "לא מאושר"
 }

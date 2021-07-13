@@ -5,11 +5,20 @@ namespace Vanguard\Presenters;
 use Vanguard\Support\Enum\UserStatus;
 use Illuminate\Support\Str;
 
+/**
+ * Class UserPresenter
+ * @package Vanguard\Presenters
+ * @property $model Vanguard\User
+ */
 class UserPresenter extends Presenter
 {
     public function name()
     {
-        return sprintf("%s %s", $this->model->first_name, $this->model->last_name);
+        if ($this->model->first_name || $this->model->last_name) {
+            return sprintf( "%s %s", $this->model->first_name, $this->model->last_name );
+        } else {
+            return $this->model->email;
+        }
     }
 
     public function nameOrEmail()

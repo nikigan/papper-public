@@ -9,9 +9,12 @@ use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
 use Mail;
 use Vanguard\Events\User\RequestedPasswordResetEmail;
+use Vanguard\Interfaces\Sortable;
 use Vanguard\Mail\ClientRegistered;
+use Vanguard\Mail\ResetPassword;
 use Vanguard\Presenters\Traits\Presentable;
 use Vanguard\Presenters\UserPresenter;
+use Vanguard\Scopes\TableSortScope;
 use Vanguard\Services\Auth\TwoFactor\Authenticatable as TwoFactorAuthenticatable;
 use Vanguard\Services\Auth\TwoFactor\Contracts\Authenticatable as TwoFactorAuthenticatableContract;
 use Vanguard\Support\Authorization\AuthorizationUserTrait;
@@ -109,8 +112,12 @@ use Vanguard\Support\Enum\UserStatus;
  * @method static \Illuminate\Database\Eloquent\Builder|\Vanguard\User whereUsername($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\Vanguard\User whereVatNumber($value)
  * @mixin \Eloquent
+ * @property int $notify
+ * @property int $notification_rate
+ * @method static \Illuminate\Database\Eloquent\Builder|\Vanguard\User whereNotificationRate($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\Vanguard\User whereNotify($value)
  */
-class User extends Authenticatable implements TwoFactorAuthenticatableContract, MustVerifyEmail
+class User extends Authenticatable implements TwoFactorAuthenticatableContract, MustVerifyEmail, Sortable
 {
     use TwoFactorAuthenticatable,
         CanResetPassword,
@@ -135,7 +142,7 @@ class User extends Authenticatable implements TwoFactorAuthenticatableContract, 
         'email', 'password', 'username', 'first_name', 'last_name', 'phone', 'avatar',
         'address', 'country_id', 'birthday', 'last_login', 'confirmation_token', 'status',
         'remember_token', 'role_id', 'email_verified_at', 'accountant_id', 'auditor_id',
-        'organization_type_id', 'vat_number', 'passport', 'report_period', 'tax_percent', 'social_security', 'social_security_number', 'mh_advances', 'mh_deductions', 'portfolio', 'organization_type_id', 'default_income_type_id'
+        'organization_type_id', 'vat_number', 'passport', 'report_period', 'tax_percent', 'social_security', 'social_security_number', 'mh_advances', 'mh_deductions', 'portfolio', 'organization_type_id', 'default_income_type_id', 'notify', 'notification_rate'
 
     ];
     protected $guarded = [];
@@ -210,6 +217,12 @@ class User extends Authenticatable implements TwoFactorAuthenticatableContract, 
         return $this->belongsTo(User::class, 'accountant_id');
     }
 
+    public function clients()
+    {
+        $role = Role::where('name', 'Accountant')->first();
+        return $this->hasMany(User::class, 'auditor_id')->where('role_id', "<>", $role->id);
+    }
+
     public function organization_type()
     {
         return $this->belongsTo(OrganizationType::class);
@@ -223,7 +236,7 @@ class User extends Authenticatable implements TwoFactorAuthenticatableContract, 
      */
     public function sendPasswordResetNotification($token)
     {
-        Mail::to($this)->send(new \Vanguard\Mail\ResetPassword($token));
+        Mail::to($this)->send(new ResetPassword($token));
 
         event(new RequestedPasswordResetEmail($this));
     }
@@ -231,5 +244,15 @@ class User extends Authenticatable implements TwoFactorAuthenticatableContract, 
     public function sendEmailAccountCreated($token)
     {
         Mail::to($this)->send(new ClientRegistered($token, $this));
+    }
+
+    protected static function booted() {
+        parent::booted();
+        static::addGlobalScope(new TableSortScope);
+    }
+
+
+    public function sort_table_name(): string {
+        return "users";
     }
 }

@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use Vanguard\Http\Controllers\Controller;
 use Vanguard\Repositories\Role\RoleRepository;
 use Vanguard\Repositories\User\UserRepository;
+use Vanguard\User;
 use Vanguard\Vendor;
 
 class VendorController extends Controller
@@ -26,16 +27,17 @@ class VendorController extends Controller
         $this->roles = $roles;
     }
 
-    public function index()
+    public function index(?User $client)
     {
         $user = auth()->user();
         $clients = [null];
 
-        if ($user->hasRole('Auditor') || $user->hasRole('Accountant')) {
+        if (($user->hasRole('Auditor') || $user->hasRole('Accountant')) && !$client) {
             $clients = $this->users->clients()->pluck('id')->toArray();
         }
 
-        $vendors = Vendor::query()->where('creator_id', auth()->id())->orWhereIn('creator_id', $clients)->get();
+
+        $vendors = Vendor::query()->where('creator_id', $client->id ?? auth()->id())->orWhereIn('creator_id', $clients)->get();
         return view('vendors.index', compact('vendors'));
     }
 
@@ -64,12 +66,16 @@ class VendorController extends Controller
             'phone' => 'nullable',
             'address' => 'nullable',
             'name' => 'nullable',
-            'vat_number' => 'nullable|unique:vendors'
+            'vat_number' => 'required|unique:vendors'
         ]);
 
-        Vendor::query()->create($request->except('client_id') + [
+        $vendor = Vendor::query()->create($request->except('client_id') + [
                 'creator_id' => $request->get('client_id') ?? auth()->id()
             ]);
+
+        if ($request->expectsJson()) {
+            return $vendor;
+        }
         return redirect()->route('vendors.index')->with('success', __('Vendor created successfully'));
     }
 

@@ -1,14 +1,14 @@
 <div class="table-responsive" id="users-table-wrapper">
-    <table class="table table-borderless table-striped">
+    <table class="table table-borderless table-striped" data-table="documents">
         <thead>
         <tr>
-            <th class="min-width-80">@lang('Document number')</th>
-            <th class="min-width-100">@lang('Username')</th>
-            <th class="min-width-80">@lang('Document date')</th>
-            <th class="min-width-80">@lang('Status')</th>
-            <th class="min-width-100">@lang('Sum')</th>
-            <th class="min-width-100">@lang('VAT')</th>
-            <th class="min-width-100">@lang('Sum without VAT')</th>
+            <th class="min-width-80"><a data-sort-prop="document_number" class="table-sort-btn">@lang('Document number')</a></th>
+            <th class="min-width-100"><a data-sort-prop="user_id" class="table-sort-btn">@lang('Username')</a></th>
+            <th class="min-width-80"><a data-sort-prop="document_date" class="table-sort-btn">@lang('Document date')</a></th>
+            <th class="min-width-80"><a data-sort-prop="status" class="table-sort-btn">@lang('Status')</a></th>
+            <th class="min-width-100"><a data-sort-prop="sum" class="table-sort-btn">@lang('Sum')</a></th>
+            <th class="min-width-100"><a data-sort-prop="vat" class="table-sort-btn">@lang('VAT')</a></th>
+            <th class="min-width-100"><a data-sort-prop="sum_without_vat" class="table-sort-btn">@lang('Sum without VAT')</a></th>
             <th class="text-center min-width-100">@lang('Action')</th>
         </tr>
         </thead>

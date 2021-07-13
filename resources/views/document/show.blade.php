@@ -31,24 +31,46 @@
     <div class="card">
         <div class="card-body">
             <div class="row py-3">
-                <div class="col-lg-6 text-center">
-                    @isset($document->file)
-                        @if($isPdf)
-                            <iframe
-                                src='{{ asset("assets/pdf-js/web/viewer.html") . "?file=" . asset($document->file) }}'
-                                width="100%"
-                                height="600px"
-                                style="border: none;"></iframe>
-                            <a href="{{ asset($document->file) }}">PDF file</a>
-                        @else
-                            <div class="document-image-zoom">
-                                <img class="img-responsive document-image" src="{{ asset($document->file) }}" alt="">
-                            </div>
-                        @endif
-                    @endisset
-                </div>
                 <div class="col-lg-6">
+                    <h3>@lang('Client'): {{$document->user->present()->name}}</h3>
                     {!! Form::open(['route' => ['documents.update', 'document' => $document], 'files' => true, 'id' => 'document-form', 'method' => 'PUT']) !!}
+                    <div class="my-3">
+                        <div class="form-row align-items-center">
+                            <div class="col-md-6">
+                                <div class="custom-control custom-radio custom-control-inline">
+                                    <input type="radio" id="document_type_0" name="document_type"
+                                           class="custom-control-input"
+                                           value="0"
+                                           @unless($document->document_type) checked @endunless"
+                                    @nopermission('document.edit') disabled @endpermission>
+                                    <label class="custom-control-label"
+                                           for="document_type_0">@lang('Expense')</label>
+                                </div>
+                                <div class="custom-control custom-radio custom-control-inline">
+                                    <input type="radio" id="document_type_1" name="document_type"
+                                           class="custom-control-input"
+                                           value="1"
+                                           @if($document->document_type) checked @endif
+                                           @nopermission('document.edit') disabled @endpermission>
+                                    <label class="custom-control-label"
+                                           for="document_type_1">@lang('Income')</label>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group" id="document_type_block"
+                                     @if($document->document_type != 1) style="display: none;" @endif>
+                                    <label for="document_type">@lang("Document type"):</label>
+                                    <select name='document_type_id' class="form-control" id="document_type">
+                                        <option value="">@lang('Other Type')</option>
+                                        @foreach($document_types as $type)
+                                            <option value="{{$type->id}}"
+                                                    @if($document->document_type_id == $type->id) selected @endif>@lang($type->name)</option>
+                                        @endforeach
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                     <div class="form-row align-items-center">
                         <div class="col-lg-12">
                             <div class="form-group">
@@ -109,100 +131,82 @@
                             <div id="vendors-block" class="form-group"
                                  @if($document->document_type != 0) style="display:none;" @endif>
                                 <label for="vendor">@lang("Vendor"):</label>
-                                <select name='vendor_id' class="form-control" id="vendor" @nopermission('document.edit')
-                                disabled @endpermission>
+                                <input list="vendor_id_list" name='vendor_id' class="form-control" id="vendor" @nopermission('document.edit')
+                                disabled @endpermission autocomplete="off" value="{{$document->vendor->name ?? ""}}">
+                                <datalist id="vendor_id_list">
                                     @foreach($vendors as $vendor)
                                         <option
-                                            value="{{$vendor->id}}"
+                                            data-value="{{$vendor->id}}"
                                             @isset($document->vendor)
                                             @if($document->vendor->id == $vendor->id) selected @endif
-                                            @endisset>@lang($vendor->name)</option>
+                                            @endisset>@lang($vendor->name) ({{$vendor->vat_number}})</option>
                                     @endforeach
-                                </select>
+                                </datalist>
+                                <input type="hidden" name="customer_id" id="vendor-hidden"
+                                       value="{{$document->vendor->id ?? null}}">
                                 <a href="{{route('vendors.create', ['selected_client' => $document->user])}}">@lang('Add a new vendor')</a>
-                        </div>
+                            </div>
                             <div id="customers-block" class="form-group"
                                  @if($document->document_type != 1) style="display:none;" @endif>
                                 <label for="customer">@lang("Customer"):</label>
-                                <select name='customer_id' class="form-control" id="customer">
-                                    <option value="">@lang('N/A')</option>
+                                <input list="customer_id_list" class="form-control" id="customer"
+                                       value="{{$document->customer->name ?? ""}}"/>
+                                <datalist id="customer_id_list">
+                                    <option data-value="">@lang('N/A')</option>
                                     @foreach($customers as $customer)
-                                        <option value="{{$customer->id}}"
+                                        <option data-value="{{$customer->id}}"
                                                 @isset($document->customer)
                                                 @if($document->customer->id == $customer->id) selected @endif
                                             @endisset
                                         >@lang($customer->name)
                                         </option>
                                     @endforeach
-                                </select>
+                                </datalist>
+                                <input type="hidden" name="customer_id" id="customer-hidden"
+                                       value="{{$document->customer->id ?? null}}">
+
                                 <a href="{{route('customers.create', ['selected_client' => $document->user])}}">@lang('Add a new customer')</a>
-                        </div>
+                            </div>
                         </div>
                         <div class="col-md-6">
                             <div class="form-group" id="expense_type_block"
                                  @if($document->document_type != 0) style="display:none;" @endif>
                                 <label for="expense_type">@lang("Expense type"):</label>
-                                <select name='expense_type_id' class="form-control" id="expense_type"
-                                        @nopermission('document.edit') disabled @endpermission>
+                                <input list="expense_types_list" class="form-control"
+                                       id="expense_type" autocomplete="off"
+                                       value="{{$document->expense_type->name ?? ""}}"
+                                       @nopermission('document.edit') disabled @endpermission>
+                                <datalist id="expense_types_list">
                                     <option value="">@lang('Other Expense')</option>
                                     @foreach($expense_types as $type)
-                                        <option value="{{$type->id}}"
+                                        <option data-value="{{$type->id}}"
                                                 @if($document->expense_type_id == $type->id) selected @endif
                                         >@lang($type->name)</option>
                                     @endforeach
-                                </select>
+                                </datalist>
+                                <input type="hidden" name="expense_type_id" id="expense_type-hidden"
+                                       value="{{$document->expense_type_id}}">
                             </div>
                             <div class="form-group" id="income_type_block"
                                  @if($document->document_type != 1) style="display: none" @endif>
                                 <label for="income_type">@lang("Income type"):</label>
-                                <select name='income_type_id' class="form-control" id="income_type">
-                                    <option value="">@lang('Other Income')</option>
+                                <input list="income_type_list" class="form-control" id="income_type" autocomplete="off"
+                                       value="{{$document->income_type->name ?? ""}}"
+                                       @nopermission('document.edit') disabled @endpermission>
+                                <datalist id="income_type_list">
+                                    <option data-value="">@lang('Other Income')</option>
                                     @foreach($income_types as $type)
-                                        <option value="{{$type->id}}"
+                                        <option data-value="{{$type->id}}"
                                                 @if($document->income_type_id == $type->id) selected @endif
                                         >@lang($type->name)</option>
                                     @endforeach
-                                </select>
+                                </datalist>
+                                <input type="hidden" name='income_type_id' id="income_type-hidden"
+                                       value="{{$document->income_type_id}}">
                             </div>
                         </div>
                     </div>
-                    <div class="my-3">
-                        <div class="form-row align-items-center">
-                            <div class="col-md-6">
-                                <div class="custom-control custom-radio custom-control-inline">
-                                    <input type="radio" id="document_type_0" name="document_type"
-                                           class="custom-control-input"
-                                           value="0"
-                                           @unless($document->document_type) checked @endunless"
-                                    @nopermission('document.edit') disabled @endpermission>
-                                    <label class="custom-control-label"
-                                           for="document_type_0">@lang('Expense')</label>
-                                </div>
-                                <div class="custom-control custom-radio custom-control-inline">
-                                    <input type="radio" id="document_type_1" name="document_type"
-                                           class="custom-control-input"
-                                           value="1"
-                                           @if($document->document_type) checked @endif
-                                           @nopermission('document.edit') disabled @endpermission>
-                                    <label class="custom-control-label"
-                                           for="document_type_1">@lang('Income')</label>
-                                </div>
-                            </div>
-                            <div class="col-md-6">
-                                <div class="form-group" id="document_type_block"
-                                     @if($document->document_type != 1) style="display: none;" @endif>
-                                    <label for="document_type">@lang("Document type"):</label>
-                                    <select name='document_type_id' class="form-control" id="document_type">
-                                        <option value="">@lang('Other Type')</option>
-                                        @foreach($document_types as $type)
-                                            <option value="{{$type->id}}"
-                                                    @if($document->document_type_id == $type->id) selected @endif>@lang($type->name)</option>
-                                        @endforeach
-                                    </select>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
+
                     {{--<div class="form-group">
                         <label for="file">Upload file</label>
                         <input type="file" accept="image/png, image/jpeg, .pdf" name="file" id="file"
@@ -240,6 +244,23 @@
                     @endpermission
                     {!! Form::close() !!}
                 </div>
+
+                <div class="col-lg-6 text-center">
+                    @isset($document->file)
+                        @if($isPdf)
+                            <iframe
+                                src='{{ asset("assets/pdf-js/web/viewer.html") . "?file=" . asset($document->file) }}'
+                                width="100%"
+                                height="600px"
+                                style="border: none;"></iframe>
+                            <a href="{{ asset($document->file) }}">PDF file</a>
+                        @else
+                            <div class="document-image-zoom">
+                                <img class="img-responsive document-image" src="{{ asset($document->file) }}" alt="">
+                            </div>
+                        @endif
+                    @endisset
+                </div>
             </div>
         </div>
     </div>
@@ -274,5 +295,25 @@
                 magnify: ratio
             });
         });
+
+        document.querySelectorAll('input[list]').forEach(input => input.addEventListener('input', function (e) {
+            var input = e.target,
+                list = input.getAttribute('list'),
+                options = document.querySelectorAll('#' + list + ' option'),
+                hiddenInput = document.getElementById(input.getAttribute('id') + '-hidden'),
+                inputValue = input.value;
+
+            hiddenInput.value = inputValue;
+
+            console.log(input);
+            for (var i = 0; i < options.length; i++) {
+                var option = options[i];
+
+                if (option.innerText === inputValue) {
+                    hiddenInput.value = option.getAttribute('data-value');
+                    break;
+                }
+            }
+        }));
     </script>
 @stop

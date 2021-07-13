@@ -47,9 +47,17 @@
                 </div>
             </div>
             <div class="row">
-                <div class="tax-block">
-                    <span class="tax-block__title">@lang('VAT Number')</span>
-                    <h3>{{$client->vat_number}}</h3>
+                <div class="col-lg-3">
+                    <div class="tax-block">
+                        <span class="tax-block__title">@lang('VAT Number')</span>
+                        <h3>{{$client->vat_number}}</h3>
+                    </div>
+                </div>
+                <div class="col-lg-3">
+                    <div class="tax-block">
+                        <span class="tax-block__title">@lang('Equipment VAT')</span>
+                        <h3 class="text-danger">{{$equipment_vat}}</h3>
+                    </div>
                 </div>
             </div>
         </div>

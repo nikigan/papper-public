@@ -11,7 +11,7 @@ use Vanguard\Support\Plugins\Customers;
 use Vanguard\Support\Plugins\Invoices;
 use Vanguard\Support\Plugins\RolesAndPermissions;
 use Vanguard\Support\Plugins\Reports;
-use Vanguard\Support\Plugins\UnconfirmedDocuments;
+use Vanguard\Support\Plugins\LastDocuments;
 use Vanguard\Support\Plugins\Users;
 use Vanguard\UserActivity\UserActivity;
 

@@ -28,32 +28,7 @@
                     @endpermission
                 </div>
             </div>
-            <div class="table-responsive" id="users-table-wrapper">
-                <table class="table table-borderless table-striped">
-                    <thead>
-                    <tr>
-                        <th></th>
-                        <th class="min-width-80">@lang('Username')</th>
-                        <th class="min-width-150">@lang('Full Name')</th>
-                        <th class="min-width-100">@lang('Email')</th>
-                        <th class="min-width-80">@lang('Registration Date')</th>
-                        <th class="min-width-80">@lang('Accountant')</th>
-                        <th class="text-center min-width-150">@lang('Action')</th>
-                    </tr>
-                    </thead>
-                    <tbody>
-                    @if (count($users))
-                        @foreach ($users as $user)
-                            @include('clients.partials.row')
-                        @endforeach
-                    @else
-                        <tr>
-                            <td colspan="7"><em>@lang('No records found.')</em></td>
-                        </tr>
-                    @endif
-                    </tbody>
-                </table>
-            </div>
+            @include('clients.partials.table')
         </div>
     </div>
 @endsection

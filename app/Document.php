@@ -4,8 +4,10 @@ namespace Vanguard;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Carbon;
+use Vanguard\Interfaces\Sortable;
 use Vanguard\Presenters\DocumentPresenter;
 use Vanguard\Presenters\Traits\Presentable;
+use Vanguard\Scopes\TableSortScope;
 
 /**
  * Vanguard\Document
@@ -63,7 +65,7 @@ use Vanguard\Presenters\Traits\Presentable;
  * @method static \Illuminate\Database\Eloquent\Builder|\Vanguard\Document whereVendorId($value)
  * @mixin \Eloquent
  */
-class Document extends Model
+class Document extends Model implements Sortable
 {
     use Presentable;
 
@@ -133,5 +135,14 @@ class Document extends Model
     public function getConvertedSum()
     {
         return $this->sum / $this->currency->value;
+    }
+
+    protected static function booted() {
+        parent::booted();
+        static::addGlobalScope(new TableSortScope);
+    }
+
+    public function sort_table_name(): string {
+        return "documents";
     }
 }

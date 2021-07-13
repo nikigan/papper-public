@@ -1,6 +1,11 @@
 <?php
 
+Route::post('/ping', function (\Illuminate\Http\Request $request) {
+    \Illuminate\Support\Facades\Log::info($request->input());
+    return response()->json(['message' => 'success', 'request' => $request->all()]);
+});
 Route::post('login', 'Auth\AuthController@token');
+
 Route::post('login/social', 'Auth\SocialLoginController@index');
 Route::post('logout', 'Auth\AuthController@logout');
 
@@ -63,4 +68,16 @@ Route::group(['middleware' => ['auth', 'verified']], function () {
     Route::get('/settings', 'SettingsController@index');
 
     Route::get('/countries', 'CountriesController@index');
+
+    /**
+     * Documents routes
+     */
+    Route::get('/documents/last', 'DocumentController@last');
+    Route::get('/documents/waiting', 'DocumentController@waiting');
+    Route::apiResource('documents', 'DocumentController');
+
+    Route::apiResource('clients', 'ClientController');
+
+    Route::apiResource('invoices', 'InvoiceController');
+
 });

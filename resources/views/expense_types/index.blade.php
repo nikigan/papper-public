@@ -32,6 +32,7 @@
                         <tr>
                             <th class="text-center"> #</th>
                             <th class="text-center"> @lang("Type name")</th>
+                            <th class="text-center"> @lang("VAT Rate")</th>
                             <th class="text-center">@lang("Action")</th>
                         </tr>
                         </thead>
@@ -43,6 +44,9 @@
                                 </td>
                                 <td class="text-center">
                                     <b>@lang($type->name)</b>
+                                </td>
+                                <td class="text-center">
+                                    <b>{{$type->vat_rate->vat_rate * 100}}%</b>
                                 </td>
                                 <td class="text-center">
                                     <a href="{{ route('expense_types.edit', $type) }}"

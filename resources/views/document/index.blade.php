@@ -44,13 +44,15 @@
                             <div class="col">
                                 <div class="form-group mb-4">
                                     <label for="startDate">@lang('From'):</label>
-                                    <input type="date" name="start_date" class="form-control datechk" id="startDate" value="{{Request::get('start_date') ?? date('Y-m-d', strtotime(date('Y-m-d') . "-1 year"))}}">
+                                    <input type="date" name="start_date" class="form-control datechk" id="startDate"
+                                           value="{{Request::get('start_date') ?? date('Y-m-d', strtotime(date('Y-m-d') . "-1 year"))}}">
                                 </div>
                             </div>
                             <div class="col">
                                 <div class="form-group mb-4">
                                     <label for="endDate">@lang('To'):</label>
-                                    <input type="date" name="end_date" class="form-control datechk" id="endDate" value="{{ Request::get('end_date') ?? date('Y-m-d') }}">
+                                    <input type="date" name="end_date" class="form-control datechk" id="endDate"
+                                           value="{{ Request::get('end_date') ?? date('Y-m-d') }}">
                                 </div>
                             </div>
                         </div>
@@ -99,7 +101,7 @@
                 </div>
 
                 <div class="col-md-6 col-12">
-                    @if(auth()->user()->hasPermission('document.upload'))
+                    @if(auth()->user()->hasRole('User'))
                         {{--<a href="{{ route('documents.upload') }}" class="btn btn-primary btn-rounded action-btn mb-sm-2">
                             <i class="fas fa-plus mr-2"></i>
                             @lang('Upload Document')
@@ -111,7 +113,8 @@
                     @endif
                 </div>
             </div>
-            @include('document.partials.table')
+                        @include('document.partials.table')
+{{--            {{$table}}--}}
         </div>
     </div>
 @endsection

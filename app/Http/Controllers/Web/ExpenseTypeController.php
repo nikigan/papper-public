@@ -7,6 +7,7 @@ use Illuminate\Validation\Rule;
 use Vanguard\ExpenseGroup;
 use Vanguard\ExpenseType;
 use Vanguard\Http\Controllers\Controller;
+use Vanguard\VatRate;
 
 class ExpenseTypeController extends Controller
 {
@@ -29,8 +30,9 @@ class ExpenseTypeController extends Controller
     public function create()
     {
         $expense_groups = ExpenseGroup::all();
+        $vat_rates = VatRate::all();
 
-        return view('expense_types.create', compact('expense_groups'));
+        return view('expense_types.create', compact('expense_groups', 'vat_rates'));
     }
 
     /**
@@ -59,8 +61,10 @@ class ExpenseTypeController extends Controller
     public function edit(ExpenseType $expenseType)
     {
         $expense_groups = ExpenseGroup::all();
+        $vat_rates = VatRate::all();
 
-        return view('expense_types.edit', compact('expenseType', 'expense_groups'));
+
+        return view('expense_types.edit', compact('expenseType', 'expense_groups', 'vat_rates'));
     }
 
     /**

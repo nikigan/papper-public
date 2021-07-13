@@ -132,6 +132,7 @@
 <script src="{{ asset('assets/plugins/owl/owl.carousel.min.js') }}"></script>
 <script src="{{ url('assets/js/custom.js') }}"></script>
 <script src="{{ asset('assets/js/main.js') }}"></script>
+<script src="{{asset('assets/js/table-sort.js')}}"></script>
 
 @yield('scripts')
 

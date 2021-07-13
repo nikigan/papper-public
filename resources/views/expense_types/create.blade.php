@@ -39,6 +39,18 @@
                     </div>
                 </div>
             </div>
+            <div class="row">
+                <div class="col-lg-6">
+                    <div class="form-group">
+                        <label for="vat_rate">@lang('VAT Rate')</label>
+                        <select class="form-control" name="vat_rate_id" id="vat_rate">
+                            @foreach($vat_rates as $vat_rate)
+                                <option value="{{$vat_rate->id}}">{{$vat_rate->vat_rate * 100}}%</option>
+                            @endforeach
+                        </select>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
 

@@ -31,7 +31,7 @@ class InvoiceController extends Controller
     public function index()
     {
         $current_user = auth()->user();
-        $invoices = Invoice::query()->where('creator_id', $current_user->id)->paginate(10);
+        $invoices = Invoice::query()->where('creator_id', $current_user->id)->orderByDesc('created_at')->paginate(10);
         return view('invoices.index', compact('invoices',));
     }
 

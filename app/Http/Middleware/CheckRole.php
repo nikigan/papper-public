@@ -25,12 +25,18 @@ class CheckRole
      * @param  \Closure  $next
      * @return mixed
      */
-    public function handle($request, Closure $next, $role)
+    public function handle($request, Closure $next, ... $roles)
     {
-        if ($this->auth->guest() || ! $request->user()->hasRole($role)) {
+        if ($this->auth->guest()) {
             abort(403);
         }
 
-        return $next($request);
+        foreach ($roles as $role) {
+            if ($request->user()->hasRole($role)) {
+                return $next($request);
+            }
+        }
+
+        abort(403);
     }
 }

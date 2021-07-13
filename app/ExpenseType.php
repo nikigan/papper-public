@@ -22,6 +22,9 @@ use Illuminate\Database\Eloquent\Model;
  * @method static \Illuminate\Database\Eloquent\Builder|\Vanguard\ExpenseType whereName($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\Vanguard\ExpenseType whereUpdatedAt($value)
  * @mixin \Eloquent
+ * @property int $vat_rate_id
+ * @property-read \Vanguard\VatRate $vat_rate
+ * @method static \Illuminate\Database\Eloquent\Builder|\Vanguard\ExpenseType whereVatRateId($value)
  */
 class ExpenseType extends Model
 {
@@ -30,5 +33,10 @@ class ExpenseType extends Model
     public function expense_group()
     {
         return $this->belongsTo(ExpenseGroup::class);
+    }
+
+    public function vat_rate()
+    {
+        return $this->belongsTo(VatRate::class);
     }
 }

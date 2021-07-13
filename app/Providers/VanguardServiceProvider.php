@@ -5,8 +5,12 @@ namespace Vanguard\Providers;
 use Vanguard\Announcements\Announcements;
 use Vanguard\Plugins\VanguardServiceProvider as BaseVanguardServiceProvider;
 use Vanguard\Support\Plugins\Accountants;
+use Vanguard\Support\Plugins\ClientCustomers;
+use Vanguard\Support\Plugins\ClientDocuments;
 use Vanguard\Support\Plugins\ClientInfo;
+use Vanguard\Support\Plugins\ClientLastDocuments;
 use Vanguard\Support\Plugins\Clients;
+use Vanguard\Support\Plugins\ClientVendors;
 use Vanguard\Support\Plugins\Customers;
 use Vanguard\Support\Plugins\Dashboard\Dashboard;
 use Vanguard\Support\Plugins\Dashboard\Widgets\BannedUsers;
@@ -26,7 +30,7 @@ use Vanguard\Support\Plugins\RolesAndPermissions;
 use Vanguard\Support\Plugins\Search;
 use Vanguard\Support\Plugins\Reports;
 use Vanguard\Support\Plugins\Settings;
-use Vanguard\Support\Plugins\UnconfirmedDocuments;
+use Vanguard\Support\Plugins\LastDocuments;
 use Vanguard\Support\Plugins\UploadDocument;
 use Vanguard\Support\Plugins\Users;
 use Vanguard\Support\Plugins\Vendors;
@@ -46,7 +50,7 @@ class VanguardServiceProvider extends BaseVanguardServiceProvider
             Dashboard::class,
             Search::class,
             UploadDocument::class,
-            UnconfirmedDocuments::class,
+            LastDocuments::class,
             Vendors::class,
             Invoices::class,
             Customers::class,
@@ -56,6 +60,10 @@ class VanguardServiceProvider extends BaseVanguardServiceProvider
 //            UserActivity::class,
             RolesAndPermissions::class,
             ClientInfo::class,
+            ClientCustomers::class,
+            ClientVendors::class,
+            ClientDocuments::class,
+            ClientLastDocuments::class,
             Reports::class,
             Settings::class,
             Announcements::class

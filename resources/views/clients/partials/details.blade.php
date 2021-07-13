@@ -78,6 +78,17 @@
             {!! Form::select('default_income_type_id', $income_types, $edit ? $user->default_income_type_id : old('default_income_type_id'),
             ['class' => 'form-control input-solid', 'id' => 'default_income_type_id']) !!}
         </div>
+        <div class="custom-control custom-checkbox">
+            {!! Form::hidden('notify', 0) !!}
+            {!! Form::checkbox('notify', 1, ($edit ? old('notify', $user->notify) : 1),  ['class' => "custom-control-input", "id" => "notify"]) !!}
+            <label class="custom-control-label" for="notify">@lang('Notify about inactivity')</label>
+
+        </div>
+        <div class="form-group">
+            <label for="notification_rate">@lang('Days to notification')</label>
+            <input type="text" class="form-control input-solid" id="notification_rate"
+                   name="notification_rate" value="{{ $edit ? $user->notification_rate : old('notification_rate') }}">
+        </div>
     </div>
 
     @if ($edit)

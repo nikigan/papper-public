@@ -12,6 +12,7 @@ use Vanguard\Events\User\LoggedIn;
 use Vanguard\Events\User\LoggedOut;
 use Vanguard\Http\Controllers\Api\ApiController;
 use Vanguard\Http\Requests\Auth\ApiLoginRequest;
+use Vanguard\Http\Resources\UserResource;
 use Vanguard\User;
 
 /**
@@ -43,13 +44,18 @@ class AuthController extends ApiController
             return $this->errorUnauthorized(__('Your account is banned by administrators.'));
         }
 
+        if (!$user->hasVerifiedEmail()) {
+            return abort(403, "Your email address is not verified.");
+        }
+
         Auth::setUser($user);
 
         event(new LoggedIn);
 
         return $this->respondWithArray([
-            'token' => $user->createToken($request->device_name)->plainTextToken
-        ]);
+            'token' => $user->createToken($request->device_name)->plainTextToken,
+            'user' => new UserResource($user)
+        ])->setStatusCode(200);
     }
 
     /**

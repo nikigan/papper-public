@@ -311,16 +311,22 @@
 
         function calc_total() {
             let total = 0;
+            let sub_total = 0;
             $('.total').each(function () {
-                total += parseFloat($(this).val());
+                sub_total += parseFloat($(this).val());
             });
-            console.log(total);
-            $('#sub_total').val(total.toFixed(2));
             @if($have_tax)
-            const k = $('#include_tax').prop('checked') ? 1 : -1;
-            const tax_sum = total / 100 * $('#tax').val();
+                const taxAmount = parseInt($('#tax').val());
+                let tax_sum = 0;
+            if ($('#include_tax').prop('checked')) {
+                tax_sum = ((sub_total / ((100 + taxAmount)/100))) * (taxAmount/100);
+                sub_total -= tax_sum;
+            } else {
+                tax_sum = (sub_total * (taxAmount/100));
+            }
+            $('#sub_total').val((sub_total + tax_sum).toFixed(2));
             $('#tax_amount').val(tax_sum.toFixed(2));
-            $('#total_amount').val((k * tax_sum + total).toFixed(2));
+            $('#total_amount').val((tax_sum + parseFloat(sub_total)).toFixed(2));
             @else
             $('#total_amount').val((total).toFixed(2));
             @endif
