@@ -2,15 +2,17 @@
 
 namespace Vanguard\Http\Controllers\Web\Auth;
 
+use Auth;
 use Illuminate\Auth\Events\Registered;
+use Illuminate\Contracts\Foundation\Application;
+use Illuminate\Http\Response;
+use Illuminate\View\View;
 use Vanguard\Http\Controllers\Controller;
 use Vanguard\Http\Requests\Auth\RegisterRequest;
 use Vanguard\Repositories\Role\RoleRepository;
 use Vanguard\Repositories\User\UserRepository;
-use Vanguard\Support\Enum\UserStatus;
 
-class RegisterController extends Controller
-{
+class RegisterController extends Controller {
     /**
      * @var UserRepository
      */
@@ -18,11 +20,11 @@ class RegisterController extends Controller
 
     /**
      * Create a new authentication controller instance.
+     *
      * @param UserRepository $users
      */
-    public function __construct(UserRepository $users)
-    {
-        $this->middleware('registration')->only('show', 'register');
+    public function __construct( UserRepository $users ) {
+        $this->middleware( 'registration' )->only( 'show', 'register' );
 
         $this->users = $users;
     }
@@ -30,13 +32,12 @@ class RegisterController extends Controller
     /**
      * Show the application registration form.
      *
-     * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\View\View
+     * @return Application|View
      */
-    public function show()
-    {
-        return view('auth.register', [
-            'socialProviders' => config('auth.social.providers')
-        ]);
+    public function show() {
+        return view( 'auth.register', [
+            'socialProviders' => config( 'auth.social.providers' )
+        ] );
     }
 
     /**
@@ -44,21 +45,21 @@ class RegisterController extends Controller
      *
      * @param RegisterRequest $request
      * @param RoleRepository $roles
-     * @return \Illuminate\Http\Response
+     *
+     * @return Response
      */
-    public function register(RegisterRequest $request, RoleRepository $roles)
-    {
+    public function register( RegisterRequest $request, RoleRepository $roles ) {
         $user = $this->users->create(
-            array_merge($request->validFormData(), ['role_id' => $roles->findByName('Auditor')->id])
+            array_merge( $request->validFormData(), [ 'role_id' => $roles->findByName( 'Auditor' )->id ] )
         );
 
-        event(new Registered($user));
+        event( new Registered( $user ) );
 
-        $message = setting('reg_email_confirmation')
-            ? __('Your account is created successfully! Please confirm your email.')
-            : __('Your account is created successfully!');
+        $message = setting( 'reg_email_confirmation' )
+            ? __( 'Your account is created successfully! Please confirm your email.' )
+            : __( 'Your account is created successfully!');
 
-        \Auth::login($user);
+        Auth::login($user);
 
         return redirect('/')->with('success', $message);
     }

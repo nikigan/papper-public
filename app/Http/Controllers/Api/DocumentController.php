@@ -4,6 +4,7 @@ namespace Vanguard\Http\Controllers\Api;
 
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
+use Illuminate\Http\Response;
 use Vanguard\Document;
 use Vanguard\Http\Controllers\Controller;
 use Vanguard\Http\Filters\DateSearch;
@@ -45,8 +46,9 @@ class DocumentController extends Controller
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
+     * @param Request $request
+     *
+     * @return Response
      */
     public function store(Request $request)
     {
@@ -68,9 +70,10 @@ class DocumentController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
+     * @param Request $request
+     * @param int $id
+     *
+     * @return Response
      */
     public function update(Request $request, $id)
     {
@@ -80,8 +83,9 @@ class DocumentController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
+     * @param int $id
+     *
+     * @return Response
      */
     public function destroy($id)
     {

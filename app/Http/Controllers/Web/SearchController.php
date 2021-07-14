@@ -69,4 +69,23 @@ class SearchController extends Controller
 
         return view('search.index', compact('clients', 'documents', 'invoices'));
     }
+
+    public function autocomplete(Request $request) {
+        $query = $request->get('query');
+
+        $documents = $this->documents->currentUserDocuments();
+        $invoices = Invoice::currentUserInvoices();
+        $clients = $this->users->clients();
+
+        (new DocumentKeywordSearch)($documents, $query);
+        (new InvoiceSearch)($invoices, $query);
+        (new UserKeywordSearch)($clients, $query);
+
+        $documents = $documents->limit(5)->get();
+        $invoices = $invoices->limit(5)->get();
+        $clients = $clients->limit(5)->get();
+
+        return response()->json(compact('documents', 'invoices', 'clients'));
+
+    }
 }

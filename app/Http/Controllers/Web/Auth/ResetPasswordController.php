@@ -3,12 +3,12 @@
 namespace Vanguard\Http\Controllers\Web\Auth;
 
 use Illuminate\Auth\Events\PasswordReset;
+use Illuminate\Contracts\Auth\CanResetPassword;
+use Illuminate\Foundation\Auth\ResetsPasswords;
 use Illuminate\Support\Str;
 use Vanguard\Http\Controllers\Controller;
-use Illuminate\Foundation\Auth\ResetsPasswords;
 
-class ResetPasswordController extends Controller
-{
+class ResetPasswordController extends Controller {
     /*
     |--------------------------------------------------------------------------
     | Password Reset Controller
@@ -42,8 +42,9 @@ class ResetPasswordController extends Controller
     /**
      * Reset the given user's password.
      *
-     * @param  \Illuminate\Contracts\Auth\CanResetPassword  $user
-     * @param  string  $password
+     * @param CanResetPassword $user
+     * @param string $password
+     *
      * @return void
      */
     protected function resetPassword($user, $password)

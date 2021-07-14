@@ -160,6 +160,7 @@
                         <label for="vat">@lang('VAT') %</label>
                         <input type="number" min="0" max="100" step="0.1" class="form-control" name="vat" id="vat"
                                value="{{old('vat', 17)}}">
+                        <small id="vatHelp" class="form-text text-muted">0</small>
                     </div>
                 </div>
             </div>
@@ -464,6 +465,7 @@
                     found = true;
                     $("#vendor").val($(this).val());
                 }
+                console.log(found);
 
                 if (!found) { $(this).attr('selected', false);
                     $("#vendor").val(null);
@@ -473,6 +475,19 @@
 
         $("#vendor, #customer").change(function () {
             partnerVatInput.val($(this).find(":selected").data('vat'));
+        });
+
+        $("#sum, #vat, #include_tax").on('input', function () {
+           const sum = $("#sum").val();
+           const tax = $("#vat").val();
+           const includeTax = $("#include_tax").is(':checked');
+
+           if (includeTax) {
+               $("#vatHelp").html((( sum / ( 1 + tax / 100 ) ) * tax / 100).toFixed(2));
+           } else {
+               $("#vatHelp").html( (sum * tax / 100 ).toFixed(2));
+           }
+
         });
     </script>
 @stop

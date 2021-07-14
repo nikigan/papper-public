@@ -3,6 +3,7 @@
 namespace Vanguard\Http\Controllers\Api;
 
 use Carbon\Carbon;
+use Illuminate\Http\JsonResponse;
 use Vanguard\Http\Resources\UserResource;
 use Vanguard\Repositories\User\UserRepository;
 use Vanguard\Support\Enum\UserStatus;
@@ -25,7 +26,7 @@ class StatsController extends ApiController
     }
 
     /**
-     * @return \Illuminate\Http\JsonResponse|mixed
+     * @return JsonResponse|mixed
      */
     public function index()
     {

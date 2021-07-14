@@ -209,6 +209,19 @@
                                                                        id="sub_total" readonly/></td>
                                     </tr>
                                     <tr>
+                                        <th class="text-center">@lang("Sale")</th>
+                                        <td class="text-center">
+                                            <div class="input-group mb-2 mb-sm-0">
+                                                <input type="number" class="form-control" id="sale"
+                                                       placeholder="0"
+                                                       step="0.1"
+                                                       max="100"
+                                                       name="invoice[sale]" value="0">
+                                                <div class="input-group-addon">%</div>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    <tr>
                                         <th class="text-center">@lang("Tax")</th>
                                         <td class="text-center">
                                             <div class="input-group mb-2 mb-sm-0">
@@ -278,7 +291,7 @@
             $('#tab_logic').on('keyup change', function () {
                 calc();
             });
-            $('#tax').on('keyup change', function () {
+            $('#tax, #sale').on('keyup change', function () {
                 calc_total();
             });
 
@@ -315,6 +328,9 @@
             $('.total').each(function () {
                 sub_total += parseFloat($(this).val());
             });
+            const sale = $("#sale").val();
+            const sale_sum = sub_total - sub_total * (100 - parseFloat(sale))/100;
+            sub_total *= (100 - parseFloat(sale))/100;
             @if($have_tax)
                 const taxAmount = parseInt($('#tax').val());
                 let tax_sum = 0;
@@ -324,7 +340,7 @@
             } else {
                 tax_sum = (sub_total * (taxAmount/100));
             }
-            $('#sub_total').val((sub_total + tax_sum).toFixed(2));
+            $('#sub_total').val((sub_total + tax_sum + sale_sum).toFixed(2));
             $('#tax_amount').val(tax_sum.toFixed(2));
             $('#total_amount').val((tax_sum + parseFloat(sub_total)).toFixed(2));
             @else

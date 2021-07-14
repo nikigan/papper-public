@@ -12,7 +12,7 @@
         </div>
         <div class="form-group">
             <label for="tax">@lang('Tax Percent')</label>
-            <input type="number" step="0.1" min="0" max="100" class="form-control input-solid" id="tax"
+            <input type="number" step="0.1" min="0" max="50" class="form-control input-solid" id="tax"
                    name="tax_percent" placeholder="@lang('Tax Percent')" value="{{ $edit ? $user->tax_percent : old('tax_percent') }}">
         </div>
         <div class="form-group">

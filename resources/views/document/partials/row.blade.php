@@ -7,9 +7,9 @@
     <td class="align-middle">
         <a href="
         @if ($document->user->id == auth()->id())
-            {{ route('profile') }}
+        {{ route('profile') }}
         @else
-            {{ route('clients.show', $document->user) }}
+        {{ route('clients.show', $document->user) }}
         @endif">
             {{ $document->user->username ?: __('N/A') }}
         </a>
@@ -49,9 +49,9 @@
 
         <a href="{{ route('documents.show', $document) }}"
            class="btn btn-icon"
-            title="@lang('View Document')"
-            data-toggle="tooltip"
-            data-placement="top">
+           title="@lang('View Document')"
+           data-toggle="tooltip"
+           data-placement="top">
             <i class="fas fa-eye"></i>
         </a>
         {{--@if($current_user->hasPermission('document.edit'))
@@ -65,17 +65,31 @@
 
 
         @if(auth()->user()->hasPermission('document.delete'))
-            <a href="{{ route('documents.destroy', $document) }}"
-               class="btn btn-icon"
-               title="@lang('Delete Document')"
-               data-toggle="tooltip"
-               data-placement="top"
-               data-method="DELETE"
-               data-confirm-title="@lang('Please Confirm')"
-               data-confirm-text="@lang('Are you sure that you want to delete this document?')"
-               data-confirm-delete="@lang('Yes, delete it!')">
-                <i class="fas fa-trash"></i>
-            </a>
+            @if(!$document->trashed())
+                <a href="{{ route('documents.destroy', $document) }}"
+                   class="btn btn-icon"
+                   title="@lang('Delete Document')"
+                   data-toggle="tooltip"
+                   data-placement="top"
+                   data-method="DELETE"
+                   data-confirm-title="@lang('Please Confirm')"
+                   data-confirm-text="@lang('Are you sure that you want to delete this document?')"
+                   data-confirm-delete="@lang('Yes, delete it!')">
+                    <i class="fas fa-trash"></i>
+                </a>
+            @else
+                <a href="{{ route('documents.restore', ['document' => $document ]) }}"
+                   class="btn btn-icon"
+                   title="@lang('Restore Document')"
+                   data-toggle="tooltip"
+                   data-placement="top"
+                   data-method="GET"
+                   data-confirm-title="@lang('Please Confirm')"
+                   data-confirm-text="@lang('Are you sure that you want to restore this document?')"
+                   data-confirm-get="@lang('Yes, restore it!')">
+                    <i class="fas fa-trash-restore"></i>
+                </a>
+            @endif
         @endif
     </td>
 </tr>

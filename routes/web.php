@@ -222,6 +222,7 @@ Route::group(['middleware' => ['auth', 'verified', 'locale']], function () {
     });
 
     Route::get('/search', 'SearchController@index')->middleware('permission:search')->name('search.index');
+    Route::get('/search/autocomplete', 'SearchController@autocomplete')->middleware('permission:search')->name('search.autocomplete');
 
 
     /**
@@ -229,6 +230,7 @@ Route::group(['middleware' => ['auth', 'verified', 'locale']], function () {
      */
     Route::group(['prefix' => 'documents'], function () {
         Route::get('/last-modified', 'DocumentController@lastModified')->name('documents.last')->middleware('role:Auditor,Accountant');
+        Route::get('/{document}/restore', 'DocumentController@restore')->name('documents.restore');
         Route::get('/upload', 'DocumentController@upload')->name('documents.upload')
             ->middleware('permission:document.upload');
         Route::get('/create', 'DocumentController@create')->name('document.create');
@@ -307,9 +309,16 @@ Route::group(['middleware' => ['auth', 'verified', 'locale']], function () {
      * Invoices
      */
     Route::resource('invoice', "InvoiceController")->except('edit', 'update');
+    Route::get('invoices/{invoice}/restore', 'InvoiceController@restore')->name('invoices.restore');
     Route::resource('customers', 'CustomerController');
     Route::resource('vendors', 'VendorController');
     Route::get('invoice/{invoice}/download', 'InvoiceController@download')->name('invoice.download');
+
+    /**
+     * Trash
+     */
+
+    Route::get('trash', 'TrashController@index')->name('trash.index');
 
 });
 

@@ -4,17 +4,12 @@ namespace Vanguard\Http\Controllers\Api;
 
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
+use Illuminate\Http\Response;
 use Vanguard\Http\Controllers\Controller;
-use Vanguard\Http\Filters\DateSearch;
-use Vanguard\Http\Filters\DocumentKeywordSearch;
-use Vanguard\Http\Resources\DocumentResource;
 use Vanguard\Http\Resources\InvoiceResource;
 use Vanguard\Invoice;
-use Vanguard\Repositories\Document\DocumentRepository;
 
-class InvoiceController extends Controller
-{
-
+class InvoiceController extends Controller {
 
 
     /**
@@ -24,7 +19,7 @@ class InvoiceController extends Controller
      *
      * @return AnonymousResourceCollection
      */
-    public function index(Request $request)
+    public function index( Request $request )
     {
         $invoices = Invoice::query()->currentUserInvoices()->paginate();
 
@@ -35,8 +30,9 @@ class InvoiceController extends Controller
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
+     * @param Request $request
+     *
+     * @return Response
      */
     public function store(Request $request)
     {
@@ -46,8 +42,9 @@ class InvoiceController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
+     * @param int $id
+     *
+     * @return Response
      */
     public function show($id)
     {
@@ -57,9 +54,10 @@ class InvoiceController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
+     * @param Request $request
+     * @param int $id
+     *
+     * @return Response
      */
     public function update(Request $request, $id)
     {
@@ -69,8 +67,9 @@ class InvoiceController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
+     * @param int $id
+     *
+     * @return Response
      */
     public function destroy($id)
     {

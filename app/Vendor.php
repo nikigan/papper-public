@@ -33,6 +33,7 @@ use Illuminate\Database\Eloquent\Model;
  * @mixin \Eloquent
  * @property int|null $default_expense_type_id
  * @method static \Illuminate\Database\Eloquent\Builder|Vendor whereDefaultExpenseTypeId($value)
+ * @property-read \Vanguard\ExpenseType|null $default_expense_type
  */
 class Vendor extends Model
 {

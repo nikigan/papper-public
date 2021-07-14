@@ -3,6 +3,8 @@
 namespace Vanguard\Http\Controllers\Api\Authorization;
 
 use Cache;
+use Illuminate\Http\JsonResponse;
+use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 use Spatie\QueryBuilder\QueryBuilder;
 use Vanguard\Http\Controllers\Api\ApiController;
 use Vanguard\Http\Requests\Role\CreateRoleRequest;
@@ -31,7 +33,7 @@ class RolesController extends ApiController
 
     /**
      * Get all system roles with users count for each role.
-     * @return \Illuminate\Http\Resources\Json\AnonymousResourceCollection
+     * @return AnonymousResourceCollection
      */
     public function index()
     {
@@ -93,10 +95,12 @@ class RolesController extends ApiController
 
     /**
      * Remove specified role (if role is removable).
+     *
      * @param Role $role
      * @param UserRepository $users
      * @param RemoveRoleRequest $request
-     * @return \Illuminate\Http\JsonResponse
+     *
+     * @return JsonResponse
      */
     public function destroy(Role $role, UserRepository $users, RemoveRoleRequest $request)
     {

@@ -2,11 +2,10 @@
 
 namespace Vanguard\Http\Controllers\Web\Auth;
 
-use Vanguard\Http\Controllers\Controller;
 use Illuminate\Foundation\Auth\VerifiesEmails;
+use Vanguard\Http\Controllers\Controller;
 
-class VerificationController extends Controller
-{
+class VerificationController extends Controller {
     /*
     |--------------------------------------------------------------------------
     | Email Verification Controller

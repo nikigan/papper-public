@@ -3,6 +3,7 @@
 namespace Vanguard\Http\Controllers\Api\Profile;
 
 use Illuminate\Http\Request;
+use Illuminate\Validation\ValidationException;
 use Vanguard\Events\User\ChangedAvatar;
 use Vanguard\Http\Controllers\Api\ApiController;
 use Vanguard\Http\Requests\User\UploadAvatarRawRequest;
@@ -53,8 +54,9 @@ class AvatarController extends ApiController
 
     /**
      * @param Request $request
+     *
      * @return UserResource
-     * @throws \Illuminate\Validation\ValidationException
+     * @throws ValidationException
      */
     public function updateExternal(Request $request)
     {

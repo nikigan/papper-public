@@ -41,7 +41,7 @@ class InvoiceController extends Controller
      */
     public function create()
     {
-        $id = Invoice::query()->orderByDesc('id')->first()->id + 1;
+        $id = Invoice::query()->withTrashed()->orderByDesc('id')->first()->id + 1;
         $tax = 17;
         $user = auth()->user();
         $organization_type = $user->organization_type;
@@ -148,7 +148,14 @@ class InvoiceController extends Controller
     public function destroy(Invoice $invoice)
     {
         $invoice->delete();
-        return redirect()->route('invoice.index')->with('success', __('Invoice deleted successfully'));
+        return redirect()->back()->with('success', __('Invoice deleted successfully'));
+    }
+
+    public function restore( int $id ) {
+        $invoice = Invoice::onlyTrashed()->findOrFail($id);
+        $invoice->restore();
+
+        return redirect()->back()->withSuccess(__("Invoice restored successfully"));
     }
 
     public function download(Invoice $invoice)

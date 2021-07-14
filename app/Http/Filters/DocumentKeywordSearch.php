@@ -12,7 +12,9 @@ class DocumentKeywordSearch implements Filter
         $query->where(function ($q) use ($search) {
             $q->where('document_number', "like", "%{$search}%");
             $q->orWhere('document_text', 'like', "%{$search}%");
-            $q->orWhereHas('User');
+            $q->orWhereHas('User', function ($q) use ($search) {
+                (new UserKeywordSearch)($q, $search);
+            });
         });
     }
 }

@@ -4,15 +4,18 @@ namespace Vanguard\Http\Controllers\Web\Auth;
 
 use Auth;
 use Authy;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Routing\Redirector;
+use Illuminate\Validation\ValidationException;
+use Illuminate\View\View;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Vanguard\Events\User\LoggedIn;
 use Vanguard\Http\Controllers\Controller;
 use Vanguard\Repositories\User\UserRepository;
 use Vanguard\Services\Auth\ThrottlesLogins;
 
-class TwoFactorTokenController extends Controller
-{
+class TwoFactorTokenController extends Controller {
     use ThrottlesLogins;
 
     /**
@@ -31,7 +34,7 @@ class TwoFactorTokenController extends Controller
 
     /**
      * Show Two-Factor Token form.
-     * @return \Illuminate\Http\RedirectResponse|\Illuminate\View\View
+     * @return RedirectResponse|View
      */
     public function show()
     {
@@ -42,8 +45,9 @@ class TwoFactorTokenController extends Controller
      * Handle Two-Factor token form submission.
      *
      * @param Request $request
-     * @return \Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector
-     * @throws \Illuminate\Validation\ValidationException
+     *
+     * @return RedirectResponse|Redirector
+     * @throws ValidationException
      */
     public function update(Request $request)
     {

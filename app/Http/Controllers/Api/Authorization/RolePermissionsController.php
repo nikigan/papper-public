@@ -2,6 +2,7 @@
 
 namespace Vanguard\Http\Controllers\Api\Authorization;
 
+use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 use Vanguard\Events\Role\PermissionsUpdated;
 use Vanguard\Http\Controllers\Api\ApiController;
 use Vanguard\Http\Requests\Role\UpdateRolePermissionsRequest;
@@ -19,32 +20,31 @@ class RolePermissionsController extends ApiController
      */
     private $roles;
 
-    public function __construct(RoleRepository $roles)
-    {
+    public function __construct( RoleRepository $roles ) {
         $this->roles = $roles;
-        $this->middleware('permission:permissions.manage');
+        $this->middleware( 'permission:permissions.manage' );
     }
 
-    public function show(Role $role)
-    {
-        return PermissionResource::collection($role->cachedPermissions());
+    public function show( Role $role ) {
+        return PermissionResource::collection( $role->cachedPermissions() );
     }
 
     /**
      * Update specified role.
+     *
      * @param Role $role
      * @param UpdateRolePermissionsRequest $request
-     * @return \Illuminate\Http\Resources\Json\AnonymousResourceCollection
+     *
+     * @return AnonymousResourceCollection
      */
-    public function update(Role $role, UpdateRolePermissionsRequest $request)
-    {
+    public function update( Role $role, UpdateRolePermissionsRequest $request ) {
         $this->roles->updatePermissions(
             $role->id,
             $request->permissions
         );
 
-        event(new PermissionsUpdated);
+        event( new PermissionsUpdated );
 
-        return PermissionResource::collection($role->cachedPermissions());
+        return PermissionResource::collection( $role->cachedPermissions() );
     }
 }

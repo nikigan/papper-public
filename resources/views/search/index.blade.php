@@ -18,12 +18,17 @@
                 <div class="row align-items-center">
                     <div class="col-md-6">
                         <div class="input-group custom-search-form">
-                            <input type="text"
-                                   class="form-control input-solid"
-                                   id="search"
-                                   name="query"
-                                   value="{{ Request::get('query') }}"
-                                   placeholder="@lang('Search...')">
+                            <div class="dropdown">
+                                <input type="text"
+                                       class="form-control input-solid dropdown-toggle"
+                                       id="search"
+                                       name="query"
+                                       data-toggle="dropdown"
+                                       value="{{ Request::get('query') }}"
+                                       placeholder="@lang('Search...')">
+                                <ul id="search_items" class="dropdown-menu"></ul>
+                            </div>
+
 
                             <span class="input-group-append">
                                 @if (Request::has('query') && Request::get('query') != '')
@@ -44,13 +49,15 @@
                             <div class="col">
                                 <div class="form-group mb-4">
                                     <label for="startDate">@lang('From'):</label>
-                                    <input type="date" name="start_date" class="form-control datechk" id="startDate" value="{{Request::get('start_date') ?? date('Y-m-d', strtotime(date('Y-m-d') . "-1 year"))}}">
+                                    <input type="date" name="start_date" class="form-control datechk" id="startDate"
+                                           value="{{Request::get('start_date') ?? date('Y-m-d', strtotime(date('Y-m-d') . "-1 year"))}}">
                                 </div>
                             </div>
                             <div class="col">
                                 <div class="form-group mb-4">
                                     <label for="endDate">@lang('To'):</label>
-                                    <input type="date" name="end_date" class="form-control datechk" id="endDate" value="{{ Request::get('end_date') ?? date('Y-m-d') }}">
+                                    <input type="date" name="end_date" class="form-control datechk" id="endDate"
+                                           value="{{ Request::get('end_date') ?? date('Y-m-d') }}">
                                 </div>
                             </div>
                         </div>
@@ -121,8 +128,10 @@
                                 <td>{{ $invoice->customer->name }}</td>
                                 <td>{{ number_format($invoice->total_amount, 2) }}</td>
                                 <td>
-                                    <a href="{{ route('invoice.show', $invoice) }}" class="btn btn-sm btn-primary"><i class="fa fa-eye"></i></a>
-                                    <a href="{{ route('invoice.download', $invoice) }}" class="btn btn-sm btn-warning"><i class="fa fa-download"></i></a>
+                                    <a href="{{ route('invoice.show', $invoice) }}" class="btn btn-sm btn-primary"><i
+                                            class="fa fa-eye"></i></a>
+                                    <a href="{{ route('invoice.download', $invoice) }}"
+                                       class="btn btn-sm btn-warning"><i class="fa fa-download"></i></a>
                                     <a href="{{ route('invoice.destroy', $invoice) }}"
                                        class="btn btn-sm btn-danger"
                                        title="@lang('Delete Invoice')"
@@ -155,5 +164,34 @@
         $('input[type=\'date\']').change(function () {
             $('#search-form').submit();
         });
+
+        $("#search").on('input', function () {
+            $.ajax('{{route('search.autocomplete')}}', {
+                dataType: "json",
+                data: {
+                    query: $(this).val()
+                },
+                complete: (res) => {
+                    const url = "{{url("/")}}";
+                    const si = $("#search_items");
+                    {{--const docString = @lang('Document');--}}
+                    {{--const invoiceString = @lang('Invoice');--}}
+                    {{--const clientString = @lang('Client');--}}
+                    si.empty();
+                    res.responseJSON.documents.forEach(document => {
+                        si.append(`<a target="_blank" class="dropdown-item" href="${url}/documents/${document.id}">Document ${document.document_number}</a>`);
+                    });
+                    si.append(`<div class="dropdown-divider"></div>`);
+                    res.responseJSON.invoices.forEach(invoice => {
+                        si.append(`<a target="_blank" class="dropdown-item" href="${url}/invoice/${invoice.id}">Invoice ${invoice.invoice_number}</a>`);
+                    });
+                    si.append(`<div class="dropdown-divider"></div>`);
+                    res.responseJSON.clients.forEach(client => {
+                        si.append(`<a target="_blank" class="dropdown-item" href="${url}/clients/${client.id}">Client ${client.username}</a>`);
+                    });
+                    // si.dropdown();
+                }
+            })
+        });
     </script>
-    @stop
+@stop

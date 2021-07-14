@@ -13,8 +13,9 @@ let mix = require('laravel-mix');
 
 mix.scripts([
     'public/assets/js/jquery-3.3.1.min.js',
-    'public/assets/js/popper.min.js',
-    'public/assets/js/bootstrap.min.js',
+    // 'public/assets/js/popper.min.js',
+    'public/assets/js/bootstrap.bundle.min.js',
+    'public/assets/js/bootstrap-select.min.js',
     'public/assets/js/moment.min.js',
     'public/assets/js/sweetalert.min.js',
     'public/assets/js/delete.handler.js',
@@ -29,6 +30,7 @@ mix.styles([
     'public/assets/css/fontawesome-all.min.css',
     'public/assets/plugins/bootstrap-datepicker/bootstrap-datepicker.min.css',
     'public/assets/plugins/croppie/croppie.css',
+    'public/assets/css/bootstrap-select.min.css',
 ], 'public/assets/css/vendor.css');
 
 mix.sass('resources/sass/app.scss', 'public/assets/css');

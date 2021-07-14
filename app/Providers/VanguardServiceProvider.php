@@ -31,6 +31,7 @@ use Vanguard\Support\Plugins\Search;
 use Vanguard\Support\Plugins\Reports;
 use Vanguard\Support\Plugins\Settings;
 use Vanguard\Support\Plugins\LastDocuments;
+use Vanguard\Support\Plugins\Trash;
 use Vanguard\Support\Plugins\UploadDocument;
 use Vanguard\Support\Plugins\Users;
 use Vanguard\Support\Plugins\Vendors;
@@ -51,6 +52,7 @@ class VanguardServiceProvider extends BaseVanguardServiceProvider
             Search::class,
             UploadDocument::class,
             LastDocuments::class,
+            Trash::class,
             Vendors::class,
             Invoices::class,
             Customers::class,

@@ -3,21 +3,22 @@
 namespace Vanguard\Http\Controllers\Api\Auth\Password;
 
 use Illuminate\Auth\Events\PasswordReset;
+use Illuminate\Contracts\Auth\CanResetPassword;
+use Illuminate\Http\JsonResponse;
 use Password;
 use Vanguard\Http\Controllers\Api\ApiController;
 use Vanguard\Http\Requests\Auth\PasswordResetRequest;
 
-class ResetController extends ApiController
-{
+class ResetController extends ApiController {
     /**
      * Reset the given user's password.
      *
      * @param PasswordResetRequest $request
-     * @return \Illuminate\Http\JsonResponse
+     *
+     * @return JsonResponse
      */
-    public function index(PasswordResetRequest $request)
-    {
-        $response = Password::reset($request->credentials(), function ($user, $password) {
+    public function index( PasswordResetRequest $request ) {
+        $response = Password::reset( $request->credentials(), function ( $user, $password ) {
             $this->resetPassword($user, $password);
         });
 
@@ -34,8 +35,9 @@ class ResetController extends ApiController
     /**
      * Reset the given user's password.
      *
-     * @param  \Illuminate\Contracts\Auth\CanResetPassword  $user
-     * @param  string  $password
+     * @param CanResetPassword $user
+     * @param string $password
+     *
      * @return void
      */
     protected function resetPassword($user, $password)

@@ -3,13 +3,11 @@
 namespace Vanguard\Http\Controllers\Web;
 
 use Carbon\Carbon;
-use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Crypt;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Str;
-use Password;
 use Vanguard\Customer;
 use Vanguard\Document;
 use Vanguard\Http\Controllers\Controller;
@@ -19,13 +17,9 @@ use Vanguard\OrganizationType;
 use Vanguard\Repositories\Country\CountryRepository;
 use Vanguard\Repositories\Role\RoleRepository;
 use Vanguard\Repositories\User\UserRepository;
-use Vanguard\Scopes\TableSortScope;
-use Vanguard\Services\Auth\TwoFactor\Authenticatable;
 use Vanguard\Support\ClientCard;
 use Vanguard\Support\Enum\DocumentStatus;
 use Vanguard\Support\Enum\UserStatus;
-use Vanguard\Tables\DocumentsTable;
-use Vanguard\Tables\InvoicesTable;
 use Vanguard\User;
 use Vanguard\Vendor;
 
@@ -193,9 +187,9 @@ class ClientController extends Controller {
             $customers_card = new ClientCard( 'Customers', route( 'clients.customers', [ 'client' => $user ] ), 'Show', Customer::query()->where( 'creator_id', $id )->count() );
             $vendors_card   = new ClientCard( 'Vendors', route( 'clients.vendors', [ 'client' => $user ] ), 'Show', Vendor::query()->where( 'creator_id', $id )->count() );
 
-            if ($user->notify && $user->last_login->diffInDays(Carbon::now()) >= $user->notification_rate) {
-                $flash = __("User hasn't been logged in for :days days", ['days' => $user->notification_rate]);
-                Session::flash('warning', $flash);
+            if ( $user->notify && $user->last_login && $user->last_login->diffInDays( Carbon::now() ) >= $user->notification_rate ) {
+                $flash = __( "User hasn't been logged in for :days days", [ 'days' => $user->notification_rate ] );
+                Session::flash( 'warning', $flash );
             }
 
             return view( 'clients.show',

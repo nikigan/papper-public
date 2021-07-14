@@ -43,7 +43,7 @@ class DocumentController extends Controller {
             ( new DateSearch )( $documents, $request->only( [ 'start_date', 'end_date' ] ), 'document_date' );
         }
 
-        $documents = $documents->paginate(10);
+        $documents = $documents->paginate( 10 );
 
         return view( 'document.index', compact( 'documents' ) );
     }
@@ -70,8 +70,8 @@ class DocumentController extends Controller {
     public function show( Document $document ) {
         $id         = $document->id;
         $currencies = Currency::all();
-        $vendors    = Vendor::query()->where( 'creator_id', $document->user->id )->get();
-        $customers  = Customer::query()->where( 'creator_id', $document->user->id )->get();
+        $vendors    = Vendor::query()->where( 'creator_id', $document->user->id )->orWhere('creator_id', auth()->id())->get();
+        $customers  = Customer::query()->where( 'creator_id', $document->user->id )->orWhere('creator_id', auth()->id())->get();
         $isPdf      = false;
         if ( $document->file ) {
             $isPdf = mime_content_type( $document->file ) == 'application/pdf';
@@ -167,8 +167,8 @@ class DocumentController extends Controller {
     public function create( ?User $client ) {
         $id             = $client->id ?? auth()->id();
         $currencies     = Currency::all();
-        $vendors        = Vendor::query()->where( 'creator_id', $id )->get();
-        $customers      = Customer::query()->where( 'creator_id', $id )->get();
+        $vendors        = Vendor::query()->where( 'creator_id', $id )->orWhere('creator_id', auth()->id())->get();
+        $customers      = Customer::query()->where( 'creator_id', $id )->orWhere('creator_id', auth()->id())->get();
         $expense_types  = ExpenseType::all();
         $income_types   = IncomeType::all();
         $document_types = $client->organization_type->document_types ?? auth()->user()->organization_type->document_types;
@@ -179,7 +179,7 @@ class DocumentController extends Controller {
                 $error_document = route( 'documents.show', $document );
             }
         }
-        $required = auth()->user()->hasRole("Auditor") || auth()->user()->hasRole("Accountant");
+        $required = auth()->user()->hasRole( "Auditor" ) || auth()->user()->hasRole( "Accountant" );
 
         return view( 'document.create', compact( 'currencies', 'vendors', 'expense_types', 'document_types', 'income_types', 'customers', 'error_document', 'client', 'required' ) );
     }
@@ -208,9 +208,9 @@ class DocumentController extends Controller {
             $vat = $request->sum * $request->vat / 100;
         }
 
-        if ( $request->has('expense_type_id')) {
-            $expense_type = ExpenseType::find($request->get('expense_type_id'));
-            $vat *= $expense_type->vat_rate->vat_rate ?? 1;
+        if ( $request->has( 'expense_type_id' ) ) {
+            $expense_type = ExpenseType::find( $request->get( 'expense_type_id' ) );
+            $vat          *= $expense_type->vat_rate->vat_rate ?? 1;
         }
 
         $sum_without_vat = $request->sum - $vat;
@@ -224,14 +224,20 @@ class DocumentController extends Controller {
         }
 
         $isExpense = $request->get( 'document_type' ) == 0;
-        $isIncome = $request->get( 'document_type' ) == 1;
+        $isIncome  = $request->get( 'document_type' ) == 1;
 
-        if ($isExpense && !$request->has('vendor_id') && $request->has('partner_vat')) {
-            $vendor = Vendor::create(['vat_number' => $request->get('partner_vat'), 'creator_id' => $request->query('client')]);
+        if ( $isExpense && ! $request->has( 'vendor_id' ) && $request->has( 'partner_vat' ) ) {
+            $vendor = Vendor::create( [
+                'vat_number' => $request->get( 'partner_vat' ),
+                'creator_id' => $request->query( 'client' )
+            ] );
         }
 
-        if ($isIncome && !$request->has('customer_id') && $request->has('partner_vat')) {
-            $customer = Customer::create(['vat_number' => $request->get('partner_vat'), 'creator_id' => $request->query('client')]);
+        if ( $isIncome && ! $request->has( 'customer_id' ) && $request->has( 'partner_vat' ) ) {
+            $customer = Customer::create( [
+                'vat_number' => $request->get( 'partner_vat' ),
+                'creator_id' => $request->query( 'client' )
+            ] );
         }
 
         Document::query()
@@ -246,7 +252,7 @@ class DocumentController extends Controller {
                               'vat'             => $vat,
                               'file'            => $file,
                               'sum_without_vat' => $sum_without_vat,
-                              'user_id'         => $request->query('client') ?? auth()->id(),
+                              'user_id'         => $request->query( 'client' ) ?? auth()->id(),
                               'vendor_id'       => $isExpense ? $vendor->id ?? $request->get( 'vendor_id' ) : null,
                               'customer_id'     => $isIncome ? $customer->id ?? $request->get( 'customer_id' ) : null,
                               'expense_type_id' => $isExpense ? $request->get( 'expense_type_id' ) : null,
@@ -277,6 +283,13 @@ class DocumentController extends Controller {
         $document->delete();
 
         return redirect()->back()->withSuccess( __( "Document deleted successfully" ) );
+    }
+
+    public function restore( int $id ) {
+        $document = Document::onlyTrashed()->findOrFail($id);
+        $document->restore();
+
+        return redirect()->back()->withSuccess(__("Document restored successfully"));
     }
 
     public function lastModified() {

@@ -2,7 +2,9 @@
 
 namespace Vanguard\Http\Controllers\Api\Users;
 
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 use Spatie\QueryBuilder\AllowedFilter;
 use Spatie\QueryBuilder\QueryBuilder;
 use Vanguard\Events\User\Banned;
@@ -27,29 +29,29 @@ class UsersController extends ApiController
      */
     private $users;
 
-    public function __construct(UserRepository $users)
-    {
-        $this->middleware('permission:users.manage');
+    public function __construct( UserRepository $users ) {
+        $this->middleware( 'permission:users.manage' );
 
         $this->users = $users;
     }
 
     /**
      * Paginate all users.
+     *
      * @param Request $request
-     * @return \Illuminate\Http\Resources\Json\AnonymousResourceCollection
+     *
+     * @return AnonymousResourceCollection
      */
-    public function index(Request $request)
-    {
-        $users = QueryBuilder::for(User::class)
-            ->allowedIncludes(UserResource::allowedIncludes())
-            ->allowedFilters([
-                AllowedFilter::custom('search', new DateSearch),
-                AllowedFilter::exact('status'),
-            ])
-            ->allowedSorts(['id', 'first_name', 'last_name', 'email', 'created_at', 'updated_at'])
-            ->defaultSort('id')
-            ->paginate($request->per_page ?: 20);
+    public function index( Request $request ) {
+        $users = QueryBuilder::for( User::class )
+                             ->allowedIncludes( UserResource::allowedIncludes() )
+                             ->allowedFilters( [
+                                 AllowedFilter::custom( 'search', new DateSearch ),
+                                 AllowedFilter::exact( 'status' ),
+                             ] )
+                             ->allowedSorts( [ 'id', 'first_name', 'last_name', 'email', 'created_at', 'updated_at' ] )
+                             ->defaultSort( 'id' )
+                             ->paginate( $request->per_page ?: 20 );
 
         return UserResource::collection($users);
     }
@@ -59,15 +61,22 @@ class UsersController extends ApiController
      * @param CreateUserRequest $request
      * @return UserResource
      */
-    public function store(CreateUserRequest $request)
-    {
-        $data = $request->only([
-            'email', 'password', 'username', 'first_name', 'last_name',
-            'phone', 'address', 'country_id', 'birthday', 'role_id'
-        ]);
+    public function store( CreateUserRequest $request ) {
+        $data = $request->only( [
+            'email',
+            'password',
+            'username',
+            'first_name',
+            'last_name',
+            'phone',
+            'address',
+            'country_id',
+            'birthday',
+            'role_id'
+        ] );
 
         $data += [
-            'status' => UserStatus::ACTIVE,
+            'status'            => UserStatus::ACTIVE,
             'email_verified_at' => $request->verified ? now() : null
         ];
 
@@ -81,13 +90,12 @@ class UsersController extends ApiController
      * @param $id
      * @return UserResource
      */
-    public function show($id)
-    {
-        $user = QueryBuilder::for(User::where('id', $id))
-            ->allowedIncludes(UserResource::allowedIncludes())
-            ->firstOrFail();
+    public function show( $id ) {
+        $user = QueryBuilder::for( User::where( 'id', $id ) )
+                            ->allowedIncludes( UserResource::allowedIncludes() )
+                            ->firstOrFail();
 
-        return new UserResource($user);
+        return new UserResource( $user );
     }
 
     /**
@@ -95,16 +103,24 @@ class UsersController extends ApiController
      * @param UpdateUserRequest $request
      * @return UserResource
      */
-    public function update(User $user, UpdateUserRequest $request)
-    {
-        $data = $request->only([
-            'email', 'password', 'username', 'first_name', 'last_name',
-            'phone', 'address', 'country_id', 'birthday', 'status', 'role_id'
-        ]);
+    public function update( User $user, UpdateUserRequest $request ) {
+        $data = $request->only( [
+            'email',
+            'password',
+            'username',
+            'first_name',
+            'last_name',
+            'phone',
+            'address',
+            'country_id',
+            'birthday',
+            'status',
+            'role_id'
+        ] );
 
-        $user = $this->users->update($user->id, $data);
+        $user = $this->users->update( $user->id, $data );
 
-        event(new UpdatedByAdmin($user));
+        event( new UpdatedByAdmin( $user ) );
 
         // If user status was updated to "Banned",
         // fire the appropriate event.
@@ -122,25 +138,25 @@ class UsersController extends ApiController
      * @param Request $request
      * @return bool
      */
-    private function userIsBanned(User $user, Request $request)
-    {
+    private function userIsBanned( User $user, Request $request ) {
         return $user->status != $request->status && $request->status == UserStatus::BANNED;
     }
 
     /**
      * Remove specified user from storage.
+     *
      * @param User $user
-     * @return \Illuminate\Http\JsonResponse
+     *
+     * @return JsonResponse
      */
-    public function destroy(User $user)
-    {
-        if ($user->id == auth()->id()) {
-            return $this->errorForbidden(__("You cannot delete yourself."));
+    public function destroy( User $user ) {
+        if ( $user->id == auth()->id() ) {
+            return $this->errorForbidden( __( "You cannot delete yourself." ) );
         }
 
-        event(new Deleted($user));
+        event( new Deleted( $user ) );
 
-        $this->users->delete($user->id);
+        $this->users->delete( $user->id );
 
         return $this->respondWithSuccess();
     }

@@ -5,13 +5,13 @@ namespace Vanguard\Http\Controllers\Web\Authorization;
 use Cache;
 use Illuminate\Contracts\View\Factory;
 use Illuminate\View\View;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Vanguard\Http\Controllers\Controller;
 use Vanguard\Http\Requests\Role\CreateRoleRequest;
 use Vanguard\Http\Requests\Role\UpdateRoleRequest;
 use Vanguard\Repositories\Role\RoleRepository;
 use Vanguard\Repositories\User\UserRepository;
 use Vanguard\Role;
-use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 /**
  * Class RolesController

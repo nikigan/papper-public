@@ -131,78 +131,75 @@
                             <div id="vendors-block" class="form-group"
                                  @if($document->document_type != 0) style="display:none;" @endif>
                                 <label for="vendor">@lang("Vendor"):</label>
-                                <input list="vendor_id_list" name='vendor_id' class="form-control" id="vendor" @nopermission('document.edit')
-                                disabled @endpermission autocomplete="off" value="{{$document->vendor->name ?? ""}}">
-                                <datalist id="vendor_id_list">
+                                <select name='vendor_id' class="form-control selectpicker" data-live-search="true"
+                                        id="vendor">
                                     @foreach($vendors as $vendor)
-                                        <option
-                                            data-value="{{$vendor->id}}"
-                                            @isset($document->vendor)
-                                            @if($document->vendor->id == $vendor->id) selected @endif
-                                            @endisset>@lang($vendor->name) ({{$vendor->vat_number}})</option>
+                                        <option value="{{$vendor->id}}"
+                                                @isset($document->$vendor)
+                                                @if($document->vendor->id == $vendor->id) selected @endif
+                                                @endisset
+                                                data-vat="{{$vendor->vat_number}}">@lang($vendor->name) -
+                                            ({{$vendor->vat_number}})
+                                        </option>
                                     @endforeach
-                                </datalist>
-                                <input type="hidden" name="customer_id" id="vendor-hidden"
-                                       value="{{$document->vendor->id ?? null}}">
-                                <a href="{{route('vendors.create', ['selected_client' => $document->user])}}">@lang('Add a new vendor')</a>
+                                </select>
+                                <button type="button" class="btn btn-link" data-toggle="modal"
+                                        data-target="#vendorsModal">@lang('Add a new vendor')</button>
                             </div>
                             <div id="customers-block" class="form-group"
                                  @if($document->document_type != 1) style="display:none;" @endif>
                                 <label for="customer">@lang("Customer"):</label>
-                                <input list="customer_id_list" class="form-control" id="customer"
-                                       value="{{$document->customer->name ?? ""}}"/>
-                                <datalist id="customer_id_list">
-                                    <option data-value="">@lang('N/A')</option>
+                                <select name="customer_id" id="customer" class="selectpicker" data-live-search="true">
                                     @foreach($customers as $customer)
-                                        <option data-value="{{$customer->id}}"
+                                        <option value="{{$customer->id}}"
                                                 @isset($document->customer)
                                                 @if($document->customer->id == $customer->id) selected @endif
-                                            @endisset
-                                        >@lang($customer->name)
-                                        </option>
+                                                @endisset
+                                                data-vat="{{$customer->vat_number}}">@lang($customer->name)
+                                            - {{$customer->vat_number}}</option>
                                     @endforeach
-                                </datalist>
-                                <input type="hidden" name="customer_id" id="customer-hidden"
-                                       value="{{$document->customer->id ?? null}}">
+                                </select>
 
-                                <a href="{{route('customers.create', ['selected_client' => $document->user])}}">@lang('Add a new customer')</a>
+                                <button type="button" class="btn btn-link" data-toggle="modal"
+                                        data-target="#customersModal">@lang('Add a new customer')</button>
+                                {{--                                <a href="{{route('customers.create', ['selected_client' => $document->user])}}">@lang('Add a new customer')</a>--}}
                             </div>
                         </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label for="partner_vat">@lang("VAT"):</label>
+                                <input type="text" name='partner_vat'
+                                       value="{{isset($document->vendor) ? $document->vendor->vat_number : (isset($document->customer) ? $document->customer->vat_number : "")}}"
+                                       class="form-control"
+                                       id="partner_vat">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-row">
                         <div class="col-md-6">
                             <div class="form-group" id="expense_type_block"
                                  @if($document->document_type != 0) style="display:none;" @endif>
                                 <label for="expense_type">@lang("Expense type"):</label>
-                                <input list="expense_types_list" class="form-control"
-                                       id="expense_type" autocomplete="off"
-                                       value="{{$document->expense_type->name ?? ""}}"
-                                       @nopermission('document.edit') disabled @endpermission>
-                                <datalist id="expense_types_list">
+                                <select name='expense_type_id' class="form-control selectpicker" data-live-search="true"
+                                        id="expense_type">
                                     <option value="">@lang('Other Expense')</option>
                                     @foreach($expense_types as $type)
-                                        <option data-value="{{$type->id}}"
-                                                @if($document->expense_type_id == $type->id) selected @endif
-                                        >@lang($type->name)</option>
+                                        <option value="{{$type->id}}"
+                                                @if($document->expense_type_id == $type->id) selected @endif>@lang($type->name)</option>
                                     @endforeach
-                                </datalist>
-                                <input type="hidden" name="expense_type_id" id="expense_type-hidden"
-                                       value="{{$document->expense_type_id}}">
+                                </select>
                             </div>
                             <div class="form-group" id="income_type_block"
                                  @if($document->document_type != 1) style="display: none" @endif>
                                 <label for="income_type">@lang("Income type"):</label>
-                                <input list="income_type_list" class="form-control" id="income_type" autocomplete="off"
-                                       value="{{$document->income_type->name ?? ""}}"
-                                       @nopermission('document.edit') disabled @endpermission>
-                                <datalist id="income_type_list">
-                                    <option data-value="">@lang('Other Income')</option>
+                                <select name='income_type_id' class="form-control selectpicker" data-live-search="true"
+                                        id="income_type">
+                                    <option value="">@lang('Other Income')</option>
                                     @foreach($income_types as $type)
-                                        <option data-value="{{$type->id}}"
-                                                @if($document->income_type_id == $type->id) selected @endif
-                                        >@lang($type->name)</option>
+                                        <option value="{{$type->id}}"
+                                                @if($document->income_type_id == $type->id || auth()->user()->default_income_type_id == $type->id) selected @endif>@lang($type->name)</option>
                                     @endforeach
-                                </datalist>
-                                <input type="hidden" name='income_type_id' id="income_type-hidden"
-                                       value="{{$document->income_type_id}}">
+                                </select>
                             </div>
                         </div>
                     </div>
@@ -264,6 +261,66 @@
             </div>
         </div>
     </div>
+
+    <div class="modal" tabindex="-1" role="dialog" id="vendorsModal">
+        <div class="modal-dialog modal-lg" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">@lang('Create Vendor')</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    {!! Form::open(['route' => 'vendors.store', 'id' => "vendorsForm"]) !!}
+                    <div class="card">
+                        <div class="card-body">
+                            @include('vendors.partial.details', ['edit' => false])
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-12">
+                            <button type="submit" class="btn btn-primary">
+                                @lang('Create Vendor')
+                            </button>
+                        </div>
+                    </div>
+                    {!! Form::close() !!}
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal" tabindex="-1" role="dialog" id="customersModal">
+        <div class="modal-dialog modal-lg" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">@lang('Create Customer')</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    {!! Form::open(['route' => 'customers.store', 'id' => 'customersForm']) !!}
+                    <div class="card">
+                        <div class="card-body">
+                            @include('customers.partial.details', ['edit' => false])
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-12">
+                            <button type="submit" class="btn btn-primary">
+                                @lang('Create Customer')
+                            </button>
+                        </div>
+                    </div>
+                    {!! Form::close() !!}
+                </div>
+            </div>
+        </div>
+    </div>
 @endsection
 
 @section('scripts')
@@ -315,5 +372,106 @@
                 }
             }
         }));
+
+        const listErrors = (data) => {
+            return Object.values(data.errors).map(error => error.join('\n'));
+        }
+
+        $('#vendorsForm').submit(function (e) {
+            e.preventDefault();
+            const form = $(this);
+
+            if (!form.valid) return false;
+            const data = form.serialize();
+
+            $.ajax({
+                type: form.attr('method'),
+                url: form.attr('action'),
+                dataType: 'json',
+                data: data,
+                success: (response) => {
+                    $("#vendorsModal").modal('hide');
+                    $("#vendor").append(`<option value="${response.id}" data-vat="${response.vat_number}" selected >${response.name} - ${response.vat_number}</option>`).change();
+                    $('.selectpicker').selectpicker('refresh');
+                    $('.selectpicker').selectpicker('render');
+
+                },
+                error: (response) => {
+                    $("#vendorsModal .modal-body").append(`<div class="alert alert-danger" role="alert">${listErrors(response.responseJSON)} <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+    <span aria-hidden="true">&times;</span>
+  </button>
+</div>`)
+                }
+            });
+        });
+
+        $('#customersForm').submit(function (e) {
+            e.preventDefault();
+            const form = $(this);
+
+            if (!form.valid) return false;
+            const data = form.serialize();
+
+            $.ajax({
+                type: form.attr('method'),
+                url: form.attr('action'),
+                dataType: 'json',
+                data: data,
+                success: (response) => {
+                    $("#customersModal").modal('hide');
+                    $("#customer").append(`<option value="${response.id}" data-vat="${response.vat_number}" selected>${response.name} - ${response.vat_number}</option>`).change();
+                    $('.selectpicker').selectpicker('refresh');
+                    $('.selectpicker').selectpicker('render');
+
+                },
+                error: (response) => {
+                    $("#customersModal .modal-body").append(`<div class="alert alert-danger" role="alert">${listErrors(response.responseJSON)} <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+    <span aria-hidden="true">&times;</span>
+  </button>
+</div>`)
+                }
+            });
+        });
+
+        const partnerVatInput = $("#partner_vat")
+
+        partnerVatInput.on('input', function (e) {
+            const value = $(this).val();
+            $("#vendor_vat_number").val(value);
+            $("#customer_vat_number").val(value);
+            let found = false;
+
+            $("#vendor option").each(function () {
+                if ($(this).data('vat').toString() === value.toString()) {
+                    $(this).attr('selected', 'selected');
+                    found = true;
+                    $("#vendor").val($(this).val());
+                }
+
+                if (!found) {
+                    $(this).attr('selected', false);
+                    $("#vendor").val(null);
+                }
+            });
+
+            $("#customer option").each(function () {
+                if ($(this).data('vat').toString() === value.toString()) {
+                    $(this).attr('selected', 'selected');
+                    found = true;
+                    $("#customer").val($(this).val());
+                }
+
+                if (!found) {
+                    $(this).attr('selected', false);
+                    $("#customer").val(null);
+                }
+            });
+
+            $('.selectpicker').selectpicker('render');
+        });
+
+        $("#vendor, #customer").change(function () {
+            partnerVatInput.val($(this).find(":selected").data('vat'));
+        });
     </script>
 @stop

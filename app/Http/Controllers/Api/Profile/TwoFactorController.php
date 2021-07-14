@@ -3,6 +3,7 @@
 namespace Vanguard\Http\Controllers\Api\Profile;
 
 use Authy;
+use Illuminate\Http\JsonResponse;
 use Vanguard\Events\User\TwoFactorDisabled;
 use Vanguard\Events\User\TwoFactorEnabled;
 use Vanguard\Http\Controllers\Api\ApiController;
@@ -17,8 +18,10 @@ class TwoFactorController extends ApiController
 {
     /**
      * Enable 2FA for specified user.
+     *
      * @param EnableTwoFactorRequest $request
-     * @return \Illuminate\Http\JsonResponse
+     *
+     * @return JsonResponse
      */
     public function update(EnableTwoFactorRequest $request)
     {
@@ -40,16 +43,17 @@ class TwoFactorController extends ApiController
 
         Authy::sendTwoFactorVerificationToken($user);
 
-        return $this->respondWithArray([
+        return $this->respondWithArray( [
             'message' => 'Verification token sent.'
-        ]);
+        ] );
     }
 
     /**
      * Verify provided 2FA token.
      *
      * @param VerifyTwoFactorTokenRequest $request
-     * @return \Illuminate\Http\JsonResponse|UserResource
+     *
+     * @return JsonResponse|UserResource
      */
     public function verify(VerifyTwoFactorTokenRequest $request)
     {
@@ -69,12 +73,12 @@ class TwoFactorController extends ApiController
 
         event(new TwoFactorEnabled);
 
-        return new UserResource($user);
+        return new UserResource( $user );
     }
 
     /**
      * Disable 2FA for currently authenticated user.
-     * @return \Illuminate\Http\JsonResponse|UserResource
+     * @return JsonResponse|UserResource
      */
     public function destroy()
     {

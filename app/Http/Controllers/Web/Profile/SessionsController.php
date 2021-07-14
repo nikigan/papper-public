@@ -2,6 +2,7 @@
 
 namespace Vanguard\Http\Controllers\Web\Profile;
 
+use stdClass;
 use Vanguard\Http\Controllers\Controller;
 use Vanguard\Repositories\Session\SessionRepository;
 
@@ -9,8 +10,7 @@ use Vanguard\Repositories\Session\SessionRepository;
  * Class SessionsController
  * @package Vanguard\Http\Controllers\Web\Profile
  */
-class SessionsController extends Controller
-{
+class SessionsController extends Controller {
     /**
      * @var SessionRepository
      */
@@ -19,8 +19,7 @@ class SessionsController extends Controller
     /**
      * @param SessionRepository $sessions
      */
-    public function __construct(SessionRepository $sessions)
-    {
+    public function __construct( SessionRepository $sessions ) {
         $this->sessions = $sessions;
     }
 
@@ -39,7 +38,8 @@ class SessionsController extends Controller
     /**
      * Invalidate user's session.
      *
-     * @param $session \stdClass Session object.
+     * @param $session stdClass Session object.
+     *
      * @return mixed
      */
     public function destroy($session)

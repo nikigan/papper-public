@@ -32,13 +32,15 @@
             <input type="text" class="form-control input-solid" id="customer_vat_number"
                    name="vat_number" placeholder="@lang('VAT Number')" value="{{ $edit ? $customer->vat_number : old('vat_number') }}">
         </div>
-        @if(!$client && (auth()->user()->hasRole('Auditor') || auth()->user()->hasRole('Accountant')))
+        @if(!isset($client) && (auth()->user()->hasRole('Auditor') || auth()->user()->hasRole('Accountant')) && isset($clients))
             <div class="form-group">
                 <label for="client_id">@lang('Client')</label>
                 {!! Form::select('client_id', $clients, old('client_id', $selected_client ?? $customer->creator_id ?? null),
                 ['class' => 'form-control input-solid', 'id' => 'client_id']) !!}
             </div>
         @endif
-        <input type="hidden" name="client_id" value="{{$client->id ?? $selected_client->id}}">
+        @isset($client)
+        <input type="hidden" name="client_id" value="{{$client->id ?? isset($selected_client) ? $selected_client->id : null}}">
+        @endisset
     </div>
 </div>

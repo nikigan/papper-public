@@ -1,4 +1,5 @@
 <tr>
+    <?php /** @var $user \Vanguard\User */ ?>
     <td style="width: 40px;">
         <a href="{{ route('clients.show', $user->id) }}">
             <img
@@ -14,8 +15,11 @@
         </a>
     </td>
     <td class="align-middle">{{ $user->first_name . ' ' . $user->last_name }}</td>
-    <td class="align-middle">{{ $user->email }}</td>
-    <td class="align-middle">{{ $user->created_at->format(config('app.date_format')) }}</td>
+{{--    <td class="align-middle">{{ $user->email }}</td>--}}
+    <td class="align-middle">{{ $user->documents()->waiting()->count() }}</td>
+    <td class="align-middle">{{ $user->documents()->currentYear()->count() }}</td>
+    {{--    <td class="align-middle">{{ $user->created_at->format(config('app.date_format')) }}</td>--}}
+    <td class="align-middle">{{ $user->organization_type->name ?? __('N/A') }}</td>
     <td class="align-middle">{{ $user->accountant->username ?? __('N/A') }}</td>
     {{--<td class="align-middle">
         <span class="badge badge-lg badge-{{ $user->present()->labelClass }}">
@@ -25,7 +29,9 @@
     <td class="text-center align-middle">
         @isset($add)
             @if($add)
-                <form class="d-inline-block" action="{{ route('clients.edit.accountant', ['client' => $user->id, 'accountant' => $accountant->id]) }}" method="POST">
+                <form class="d-inline-block"
+                      action="{{ route('clients.edit.accountant', ['client' => $user->id, 'accountant' => $accountant->id]) }}"
+                      method="POST">
                     @csrf
                     @method('PUT')
                     <button type="submit" class="btn btn-icon edit"

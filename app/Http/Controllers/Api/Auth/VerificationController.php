@@ -4,6 +4,7 @@ namespace Vanguard\Http\Controllers\Api\Auth;
 
 use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Auth\Events\Verified;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Routing\Exceptions\InvalidSignatureException;
@@ -26,7 +27,8 @@ class VerificationController extends ApiController
      * Mark the authenticated user's email address as verified.
      *
      * @param ApiVerifyEmailRequest $request
-     * @return \Illuminate\Http\JsonResponse
+     *
+     * @return JsonResponse
      *
      * @throws AuthorizationException
      */
@@ -77,7 +79,7 @@ class VerificationController extends ApiController
     }
 
     /**
-     * @return \Illuminate\Http\JsonResponse
+     * @return JsonResponse
      */
     protected function emailAlreadyVerifiedResponse()
     {
@@ -88,8 +90,9 @@ class VerificationController extends ApiController
     /**
      * Resend the email verification notification.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\JsonResponse
+     * @param Request $request
+     *
+     * @return JsonResponse
      */
     public function resend(Request $request)
     {

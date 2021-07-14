@@ -3,14 +3,14 @@
 namespace Vanguard\Http\Controllers\Api\Auth;
 
 use Illuminate\Auth\Events\Registered;
+use Illuminate\Http\JsonResponse;
 use Vanguard\Http\Controllers\Api\ApiController;
 use Vanguard\Http\Requests\Auth\RegisterRequest;
 use Vanguard\Repositories\Role\RoleRepository;
 use Vanguard\Repositories\User\UserRepository;
 use Vanguard\Support\Enum\UserStatus;
 
-class RegistrationController extends ApiController
-{
+class RegistrationController extends ApiController {
     /**
      * @var UserRepository
      */
@@ -34,7 +34,8 @@ class RegistrationController extends ApiController
 
     /**
      * @param RegisterRequest $request
-     * @return \Illuminate\Http\JsonResponse
+     *
+     * @return JsonResponse
      */
     public function index(RegisterRequest $request)
     {
@@ -54,8 +55,10 @@ class RegistrationController extends ApiController
 
     /**
      * Verify email via email confirmation token.
+     *
      * @param $token
-     * @return \Illuminate\Http\JsonResponse
+     *
+     * @return JsonResponse
      */
     public function verifyEmail($token)
     {

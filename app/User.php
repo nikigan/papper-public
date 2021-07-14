@@ -116,6 +116,8 @@ use Vanguard\Support\Enum\UserStatus;
  * @property int $notification_rate
  * @method static \Illuminate\Database\Eloquent\Builder|\Vanguard\User whereNotificationRate($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\Vanguard\User whereNotify($value)
+ * @property-read \Illuminate\Database\Eloquent\Collection|User[] $clients
+ * @property-read int|null $clients_count
  */
 class User extends Authenticatable implements TwoFactorAuthenticatableContract, MustVerifyEmail, Sortable
 {
@@ -199,7 +201,7 @@ class User extends Authenticatable implements TwoFactorAuthenticatableContract, 
 
     public function documents()
     {
-        return $this->hasMany('Vanguard\Document');
+        return $this->hasMany(Document::class);
     }
 
     public function invoices()
