@@ -30,7 +30,8 @@
         <div class="form-group">
             <label for="customer_vat_number">@lang('VAT Number')</label>
             <input type="text" class="form-control input-solid" id="customer_vat_number"
-                   name="vat_number" placeholder="@lang('VAT Number')" value="{{ $edit ? $customer->vat_number : old('vat_number') }}">
+                   name="vat_number" placeholder="@lang('VAT Number')"
+                   value="{{ $edit ? $customer->vat_number : old('vat_number') }}">
         </div>
         @if(!isset($client) && (auth()->user()->hasRole('Auditor') || auth()->user()->hasRole('Accountant')) && isset($clients))
             <div class="form-group">
@@ -40,7 +41,9 @@
             </div>
         @endif
         @isset($client)
-        <input type="hidden" name="client_id" value="{{$client->id ?? isset($selected_client) ? $selected_client->id : null}}">
-        @endisset
+            <input type="hidden" name="client_id" value="{{$client->id}}">
+        @else
+            <input type="hidden" name="client_id" value="{{isset($selected_client) ? $selected_client->id : null}}">
+        @endif
     </div>
 </div>

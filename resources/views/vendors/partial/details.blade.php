@@ -44,6 +44,8 @@
         @endif
         @isset($client)
             <input type="hidden" name="client_id" value="{{$client->id}}">
+        @else
+            <input type="hidden" name="client_id" value="{{isset($selected_client) ? $selected_client->id : null}}">
         @endif
     </div>
 </div>

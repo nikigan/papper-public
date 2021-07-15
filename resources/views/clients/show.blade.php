@@ -142,6 +142,7 @@
                     </thead>
                     <tbody>
                     @if (count($invoices))
+                        @php($sum = 0)
                         @foreach ($invoices as $invoice)
                             <tr>
                                 <td>{{ $invoice->invoice_date }}</td>
@@ -166,7 +167,16 @@
                                     </a>
                                 </td>
                             </tr>
+                            @php($sum += $invoice->grand_total)
                         @endforeach
+                        <tr>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td>
+                                {{number_format($sum, 2)}}
+                            </td>
+                        </tr>
                     @else
                         <tr>
                             <td colspan="5"><em>@lang('No records found.')</em></td>

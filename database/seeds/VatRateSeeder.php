@@ -16,7 +16,7 @@ class VatRateSeeder extends Seeder
             'vat_rate' => 1
         ]);
         VatRate::query()->create([
-            'vat_rate' => 0.66
+            'vat_rate' => 0.67
         ]);
         VatRate::query()->create([
             'vat_rate' => 0

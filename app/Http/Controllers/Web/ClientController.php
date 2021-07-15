@@ -3,7 +3,9 @@
 namespace Vanguard\Http\Controllers\Web;
 
 use Carbon\Carbon;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Crypt;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Session;
@@ -70,9 +72,9 @@ class ClientController extends Controller {
     /**
      * Store a newly created resource in storage.
      *
-     * @param \Illuminate\Http\Request $request
+     * @param Request $request
      *
-     * @return \Illuminate\Http\Response
+     * @return Response
      */
     public function store( Request $request ) {
         $request->validate( [
@@ -183,7 +185,7 @@ class ClientController extends Controller {
             $invoices     = $invoices->paginate();
             $documents    = $documents->paginate();
 
-            $last_card      = new ClientCard( 'Last documents', route( 'clients.last', [ 'client' => $user ] ), 'Show', 20 );
+            $last_card      = new ClientCard( 'Waiting documents', route( 'clients.waiting', [ 'client' => $user ] ), 'Show', $user->documents->where( 'status', DocumentStatus::UNCONFIRMED )->count() );
             $customers_card = new ClientCard( 'Customers', route( 'clients.customers', [ 'client' => $user ] ), 'Show', Customer::query()->where( 'creator_id', $id )->count() );
             $vendors_card   = new ClientCard( 'Vendors', route( 'clients.vendors', [ 'client' => $user ] ), 'Show', Vendor::query()->where( 'creator_id', $id )->count() );
 
@@ -257,7 +259,7 @@ class ClientController extends Controller {
      *
      * @param int $id
      *
-     * @return \Illuminate\Http\Response
+     * @return Response
      */
     public function edit( $id ) {
         //
@@ -266,10 +268,10 @@ class ClientController extends Controller {
     /**
      * Update the specified resource in storage.
      *
-     * @param \Illuminate\Http\Request $request
+     * @param Request $request
      * @param int $id
      *
-     * @return \Illuminate\Http\RedirectResponse
+     * @return RedirectResponse
      */
     public function update( Request $request, int $id ) {
         $this->users->update( $id, $request->except( 'role_id', 'status' ) );
@@ -282,7 +284,7 @@ class ClientController extends Controller {
      *
      * @param int $id
      *
-     * @return \Illuminate\Http\Response
+     * @return Response
      */
     public function destroy( $id ) {
         //

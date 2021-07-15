@@ -18,18 +18,6 @@
                 <div class="row align-items-center">
                     <div class="col-md-6">
                         <div class="input-group custom-search-form">
-                            <div class="dropdown">
-                                <input type="text"
-                                       class="form-control input-solid dropdown-toggle"
-                                       id="search"
-                                       name="query"
-                                       data-toggle="dropdown"
-                                       value="{{ Request::get('query') }}"
-                                       placeholder="@lang('Search...')">
-                                <ul id="search_items" class="dropdown-menu"></ul>
-                            </div>
-
-
                             <span class="input-group-append">
                                 @if (Request::has('query') && Request::get('query') != '')
                                     <a href="{{ route('search.index') }}"
@@ -42,6 +30,17 @@
                                     <i class="fas fa-search text-muted"></i>
                                 </button>
                             </span>
+                            <div class="dropdown">
+                                <input type="text"
+                                       class="form-control input-solid dropdown-toggle"
+                                       id="search"
+                                       name="query"
+                                       data-toggle="dropdown"
+                                       value="{{ Request::get('query') }}"
+                                       placeholder="@lang('Search...')">
+                                <ul id="search_items" class="dropdown-menu"></ul>
+                            </div>
+
                         </div>
                     </div>
                     <div class="col-md-6">
