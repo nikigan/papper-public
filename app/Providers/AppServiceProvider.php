@@ -2,8 +2,11 @@
 
 namespace Vanguard\Providers;
 
+use Barryvdh\LaravelIdeHelper\IdeHelperServiceProvider;
 use Carbon\Carbon;
+use Illuminate\Database\Schema\Builder;
 use Illuminate\Support\Facades\Blade;
+use Illuminate\Support\ServiceProvider;
 use Vanguard\Repositories\Country\CountryRepository;
 use Vanguard\Repositories\Country\EloquentCountry;
 use Vanguard\Repositories\Document\DocumentRepository;
@@ -16,7 +19,6 @@ use Vanguard\Repositories\Session\DbSession;
 use Vanguard\Repositories\Session\SessionRepository;
 use Vanguard\Repositories\User\EloquentUser;
 use Vanguard\Repositories\User\UserRepository;
-use Illuminate\Support\ServiceProvider;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -25,20 +27,19 @@ class AppServiceProvider extends ServiceProvider
      *
      * @return void
      */
-    public function boot()
-    {
+    public function boot() {
 
-        Carbon::setLocale(config('app.locale'));
-        config(['app.name' => setting('app_name')]);
-        \Illuminate\Database\Schema\Builder::defaultStringLength(191);
+        Carbon::setLocale( config( 'app.locale' ) );
+        config( [ 'app.name' => setting( 'app_name' ) ] );
+        Carbon::setToStringFormat( config( 'app.date_format' ) );
+        Builder::defaultStringLength( 191 );
 
 
-
-        Blade::directive('money', function ($amount) {
+        Blade::directive( 'money', function ( $amount ) {
 //            $string = numfmt_format_currency($nf, $amount, 'ILS');
             /*return "<?php echo number_format($amount, 2, '.', ','); ?>";*/
             return "<?php echo numfmt_format_currency(numfmt_create('he_IL', \NumberFormatter::CURRENCY), $amount, 'ILS');?>";
-        });
+        } );
     }
 
     /**
@@ -46,8 +47,7 @@ class AppServiceProvider extends ServiceProvider
      *
      * @return void
      */
-    public function register()
-    {
+    public function register() {
         $this->app->singleton(UserRepository::class, EloquentUser::class);
         $this->app->singleton(RoleRepository::class, EloquentRole::class);
         $this->app->singleton(PermissionRepository::class, EloquentPermission::class);
@@ -56,8 +56,8 @@ class AppServiceProvider extends ServiceProvider
         $this->app->singleton(DocumentRepository::class, EloquentDocument::class);
 
         if ($this->app->environment('local')) {
-            $this->app->register(\Barryvdh\LaravelIdeHelper\IdeHelperServiceProvider::class);
-            $this->app->register(\Barryvdh\Debugbar\ServiceProvider::class);
+            $this->app->register( IdeHelperServiceProvider::class );
+            $this->app->register( \Barryvdh\Debugbar\ServiceProvider::class );
         }
     }
 }

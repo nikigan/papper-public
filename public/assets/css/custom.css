@@ -126,14 +126,22 @@ a:hover {
 }
 
 .sidebar-hidden .pr-280 {
-  padding-right: 0 !important;
+    padding-right: 0 !important;
 }
 
 .sidebar-hidden #sidebar {
-  transform: translateX(200%);
+    transform: translateX(200%);
 }
 
 .block-item {
-  margin-bottom: 30px;
+    margin-bottom: 30px;
+}
+
+.ui-datepicker {
+    z-index: 1001;
+}
+
+.datepicker {
+    z-index: 1033;
 }
 

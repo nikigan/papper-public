@@ -10,7 +10,8 @@ $(document).ready(function () {
             oJS.type = 'text/javascript';
             oJS.src = '//ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js';
             oJS.onload = function () {
-                $(dateClass).datepicker({dateFormat: "dd-mm-yy", changeMonth: true});
+                $(dateClass).datepicker({dateFormat: "dd-mm-yy", changeMonth: true, isRTL: true});
+                $("#ui-datepicker-div").css({"z-index": 1200});
             }
             document.body.appendChild(oJS);
         }

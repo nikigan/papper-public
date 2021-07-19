@@ -2,10 +2,11 @@
 
 namespace Vanguard\Http\Controllers\Web;
 
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Response;
 use Maatwebsite\Excel\Facades\Excel;
+use PDF;
 use Vanguard\Document;
 use Vanguard\Exports\ExcelReport;
 use Vanguard\Http\Controllers\Controller;
@@ -18,97 +19,93 @@ use Vanguard\User;
 class ReportController extends Controller
 {
 
-    private function report1_data(Request $request, User $client): array
-    {
-        $start_date = $request->get('start_date') ?? date('Y-m-d', strtotime(date('Y-m-d') . "-{$client->report_period} month"));
-        $end_date = $request->get('end_date') ?? date('Y-m-d');
+    private function report1_data(Request $request, User $client): array {
+        $start_date = $request->get( 'start_date' ) ?? date( ( config( 'app.date_format' ) ), strtotime( date( ( config( 'app.date_format' ) ) ) . "-{$client->report_period} month" ) );
+        $end_date   = $request->get( 'end_date' ) ?? date( ( config( 'app.date_format' ) ) );
 
-        $expenses = $client->documents()->where('document_type', '=', 0)->orderByDesc('document_date')->where('status', DocumentStatus::CONFIRMED);
+        $expenses = $client->documents()->where( 'document_type', '=', 0 )->orderByDesc( 'document_date' )->where( 'status', DocumentStatus::CONFIRMED );
 
-        $incomes = $client->documents()->where('document_type', '=', 1)->orderByDesc('document_date')->where('status', DocumentStatus::CONFIRMED);
+        $incomes = $client->documents()->where( 'document_type', '=', 1 )->orderByDesc( 'document_date' )->where( 'status', DocumentStatus::CONFIRMED );
 
         $invoices = $client->invoices();
 
 
-        if ($end_date) {
-            $expenses = $expenses->where('document_date', '<=', $end_date);
-            $incomes = $incomes->where('document_date', '<=', $end_date);
+        if ( $end_date ) {
+            $expenses = $expenses->where( 'document_date', '<=', $end_date );
+            $incomes  = $incomes->where('document_date', '<=', $end_date);
             $invoices = $invoices->where('invoice_date', '<=', $end_date);
         }
 
         if ($start_date) {
             $expenses = $expenses->where('document_date', '>=', $start_date);
-            $incomes = $incomes->where('document_date', '>=', $start_date);
+            $incomes  = $incomes->where('document_date', '>=', $start_date);
             $invoices = $invoices->where('invoice_date', '>=', $start_date);
         }
 
         $expenses = $expenses->get();
-        $incomes = $incomes->get();
+        $incomes  = $incomes->get();
 
         $invoices = $invoices->get();
 
-        $incomes_with_vat = $incomes->where('vat', '<>', 0)->where('document_type_id', '<>', 3);
+        $incomes_with_vat    = $incomes->where('vat', '<>', 0)->where('document_type_id', '<>', 3);
         $incomes_without_vat = $incomes->where('vat', '=', 0)->where('document_type_id', '<>', 3);
 
         $invoices_without_vat = $invoices->where('tax_percent', '=', 0)->where('document_type', '<>', 3);
-        $invoices_with_vat = $invoices->where('tax_percent', '<>', 0)->where('document_type', '<>', 3);
+        $invoices_with_vat    = $invoices->where('tax_percent', '<>', 0)->where('document_type', '<>', 3);
 
-        $acceptances = $invoices->where('document_type', '=', 3);
+        $acceptances          = $invoices->where('document_type', '=', 3);
         $document_acceptances = $incomes->where('document_type_id', '=', 3);
 
 
         return compact('expenses', 'invoices', 'incomes', 'client', 'incomes_with_vat', 'incomes_without_vat', 'invoices_with_vat', 'invoices_without_vat', 'acceptances', 'document_acceptances');
     }
 
-    public function report1(Request $request, User $client)
-    {
+    public function report1(Request $request, User $client) {
         $data = $this->report1_data($request, $client);
 
         return view('reports.report1', $data);
     }
 
-    public function report1_excel(Request $request, User $client)
-    {
-        $date = date('Y-m-d');
-        $data = $this->report1_data($request, $client);
+    public function report1_excel(Request $request, User $client) {
+        $date = date( ( config( 'app.date_format' ) ) );
+        $data = $this->report1_data( $request, $client );
+
         return Excel::download(new ExcelReport($data, 'reports.excel.report1'), "report1-{$client->present()->name}-{$date}.xlsx");
     }
 
-    public function report1_pdf(Request $request, User $client)
-    {
-        $date = date('Y-m-d');
-        $data = $this->report1_data($request, $client);
+    public function report1_pdf(Request $request, User $client) {
+        $date = date( ( config( 'app.date_format' ) ) );
+        $data = $this->report1_data( $request, $client );
 
-        $pdf = \PDF::loadView('reports.excel.report1', $data);
+        $pdf = PDF::loadView( 'reports.excel.report1', $data );
 
         return $pdf->download("report1-{$client->present()->name}-{$date}.pdf");
     }
 
-    private function report2_data(Request $request, User $client): array
-    {
-        $start_date = $request->get('start_date') ?? date('Y-m-d', strtotime(date('Y-m-d') . "-{$client->report_period} month"));
-        $end_date = $request->get('end_date') ?? date('Y-m-d');
+    private function report2_data(Request $request, User $client): array {
+        $start_date = $request->get( 'start_date' ) ?? date( ( config( 'app.date_format' ) ), strtotime( date( ( config( 'app.date_format' ) ) ) . "-{$client->report_period} month" ) );
+        $end_date   = $request->get( 'end_date' ) ?? date( ( config( 'app.date_format' ) ) );
 
-        $expenses = $client->documents()->with('expense_type')->where('document_type', '=', 0)->orderByDesc('document_date')->where('status', DocumentStatus::CONFIRMED);
+        $expenses = $client->documents()->with( 'expense_type' )->where( 'document_type', '=', 0 )->orderByDesc( 'document_date' )->where( 'status', DocumentStatus::CONFIRMED );
 
-        $incomes = $client->documents()->where('document_type', '=', 1)->orderByDesc('document_date')->where('status', DocumentStatus::CONFIRMED)->with('income_type');
+        $incomes = $client->documents()->where( 'document_type', '=', 1 )->orderByDesc( 'document_date' )->where( 'status', DocumentStatus::CONFIRMED )->with( 'income_type' );
 
-        $invoices = $client->invoices()->with('income_type')->orderByDesc('invoice_date');
+        $invoices = $client->invoices()->with( 'income_type' )->orderByDesc( 'invoice_date' );
 
-        if ($end_date) {
-            $expenses = $expenses->where('document_date', '<=', $end_date);
-            $incomes = $incomes->where('document_date', '<=', $end_date);
+        if ( $end_date ) {
+            $expenses = $expenses->where( 'document_date', '<=', $end_date );
+            $incomes  = $incomes->where( 'document_date', '<=', $end_date );
             $invoices = $invoices->where('invoice_date', '<=', $end_date);
         }
 
         if ($start_date) {
             $expenses = $expenses->where('document_date', '>=', $start_date);
-            $incomes = $incomes->where('document_date', '>=', $start_date);
+            $incomes  = $incomes->where('document_date', '>=', $start_date);
             $invoices = $invoices->where('invoice_date', '>=', $start_date);
         }
 
-        $expense_groups = $expenses->get()->groupBy('expense_type.name');
-        $income_groups = $incomes->get()->groupBy('income_type.name');
+        $expense_groups  = $expenses->get()->groupBy('expense_type.name');
+        $income_groups   = $incomes->get()->groupBy('income_type.name');
         $invoices_groups = $invoices->get()->groupBy('income_type.name');
 
 
@@ -117,42 +114,40 @@ class ReportController extends Controller
         return compact('expense_groups', 'client', 'income_groups');
     }
 
-    public function report2(Request $request, User $client)
-    {
+    public function report2(Request $request, User $client) {
         $data = $this->report2_data($request, $client);
+
         return view('reports.report2', $data);
     }
 
-    public function report2_excel(Request $request, User $client)
-    {
-        $date = date('Y-m-d');
-        $data = $this->report2_data($request, $client);
+    public function report2_excel(Request $request, User $client) {
+        $date = date( ( config( 'app.date_format' ) ) );
+        $data = $this->report2_data( $request, $client );
+
         return Excel::download(new ExcelReport($data, 'reports.excel.report2'), "report2-{$client->present()->name}-{$date}.xlsx");
     }
 
-    public function report2_pdf(Request $request, User $client)
-    {
-        $date = date('Y-m-d');
-        $data = $this->report2_data($request, $client);
+    public function report2_pdf(Request $request, User $client) {
+        $date = date( ( config( 'app.date_format' ) ) );
+        $data = $this->report2_data( $request, $client );
 
-        $pdf = \PDF::loadView('reports.excel.report2', $data);
+        $pdf = PDF::loadView( 'reports.excel.report2', $data );
 
         return $pdf->download("report2-{$client->present()->name}-{$date}.pdf");
 
     }
 
-    private function report3_data(Request $request, User $client)
-    {
-        $start_date = $request->get('start_date') ?? date('Y-m-d', strtotime(date('Y-m-d') . "-{$client->report_period} month"));
-        $end_date = $request->get('end_date') ?? date('Y-m-d');
+    private function report3_data(Request $request, User $client) {
+        $start_date = $request->get( 'start_date' ) ?? date( ( config( 'app.date_format' ) ), strtotime( date( ( config( 'app.date_format' ) ) ) . "-{$client->report_period} month" ) );
+        $end_date   = $request->get( 'end_date' ) ?? date( ( config( 'app.date_format' ) ) );
 
-        $income_groups = $client->documents()->where('document_type', '=', 1)->where('status', DocumentStatus::CONFIRMED)->getQuery();
+        $income_groups = $client->documents()->where( 'document_type', '=', 1 )->where( 'status', DocumentStatus::CONFIRMED )->getQuery();
 
-        (new DateSearch)($income_groups, compact('end_date', 'start_date'), 'document_date');
+        ( new DateSearch )( $income_groups, compact( 'end_date', 'start_date' ), 'document_date' );
 
-        $income_groups = $income_groups->leftJoin('currencies as c', 'documents.currency_id', '=', 'c.id')->leftJoin('income_types as it', 'documents.income_type_id', '=', 'it.id')->leftJoin('income_groups as ig', 'it.income_group_id', '=', 'ig.id')->select('ig.name', 'ig.id as group_id', 'it.name', DB::raw('SUM(documents.sum / c.value) as sum'))->groupBy('it.name', 'ig.name')->get();
+        $income_groups = $income_groups->leftJoin( 'currencies as c', 'documents.currency_id', '=', 'c.id' )->leftJoin( 'income_types as it', 'documents.income_type_id', '=', 'it.id' )->leftJoin( 'income_groups as ig', 'it.income_group_id', '=', 'ig.id' )->select( 'ig.name', 'ig.id as group_id', 'it.name', DB::raw( 'SUM(documents.sum / c.value) as sum' ) )->groupBy( 'it.name', 'ig.name' )->get();
 
-        $income_groups = $income_groups->groupBy('group_id');
+        $income_groups = $income_groups->groupBy( 'group_id' );
 
 
         $invoice_groups = $client->invoices()->with('income_type')->getQuery();
@@ -182,20 +177,20 @@ class ReportController extends Controller
 
         $income_groups = $income_groups->mergeRecursive($invoice_groups);
 
-        $groups = [];
+        $groups     = [];
         $income_sum = 0;
         foreach ($income_groups as $name => $group) {
             foreach ($group as $item) {
                 if ($item instanceof Document || $item instanceof Invoice) {
                     $groups['Other Income Group']['subgroups']['Other']['sum'] = ($groups[$name]['subgroups']['Other']['sum'] ?? 0) + $item->sum;
-                    $groups['Other Income Group']['sum'] = ($groups['Other Income Group']['sum'] ?? 0) + $item->sum;
-                    $income_sum += $item->sum;
+                    $groups['Other Income Group']['sum']                       = ($groups['Other Income Group']['sum'] ?? 0) + $item->sum;
+                    $income_sum                                                += $item->sum;
                 }
                 if (is_array($item)) {
                     foreach ($item as $i) {
                         $groups[$name]['subgroups'][$i->name]['sum'] = ($groups[$name]['subgroups'][$i->name]['sum'] ?? 0) + $i->sum;
-                        $groups[$name]['sum'] = ($groups[$name]['sum'] ?? 0) + $i->sum;
-                        $income_sum += $i->sum;
+                        $groups[$name]['sum']                        = ($groups[$name]['sum'] ?? 0) + $i->sum;
+                        $income_sum                                  += $i->sum;
 
                     }
                 }
@@ -227,7 +222,7 @@ class ReportController extends Controller
                 $sum += $subgroup[0]['sum'];
             }
             $expense_groups[$key]['sum'] = $sum;
-            $expense_sum += $sum;
+            $expense_sum                 += $sum;
         }
 
         foreach ($expense_groups as $k => $expense_group) {
@@ -242,82 +237,84 @@ class ReportController extends Controller
         return compact('client', 'groups', 'expense_groups', 'income_sum', 'expense_sum', 'diff', 'start_date', 'end_date');
     }
 
-    public function report3(Request $request, User $client)
-    {
+    public function report3(Request $request, User $client) {
         $data = $this->report3_data($request, $client);
+
         return view('reports.report3', $data);
     }
 
-    public function report3_excel(Request $request, User $client)
-    {
-        $date = date('Y-m-d');
-        $data = $this->report3_data($request, $client);
+    public function report3_excel(Request $request, User $client) {
+        $date               = date( ( config( 'app.date_format' ) ) );
+        $data               = $this->report3_data( $request, $client );
         $data['percentage'] = $request->get('percentage') === "on";
+
         return Excel::download(new ExcelReport($data, 'reports.excel.report3'), "report3-{$client->present()->name}-{$date}.xlsx");
     }
 
-    public function report3_pdf(Request $request, User $client)
-    {
-        $date = date('Y-m-d');
-        $data = $this->report3_data($request, $client);
+    public function report3_pdf(Request $request, User $client) {
+        $date               = date( ( config( 'app.date_format' ) ) );
+        $data               = $this->report3_data( $request, $client );
         $data['percentage'] = $request->get('percentage') === "on";
 
-        $pdf = \PDF::loadView('reports.excel.report3', $data);
+        $pdf = PDF::loadView( 'reports.excel.report3', $data );
 
         return $pdf->download("report3-{$client->present()->name}-{$date}.pdf");
     }
 
-    private function report_vendors_data(Request $request, User $client): array
-    {
-        $start_date = $request->get('start_date') ?? date('Y-m-d', strtotime(date('Y-m-d') . "-{$client->report_period} month"));
-        $end_date = $request->get('end_date') ?? date('Y-m-d');
+    private function report_vendors_data(Request $request, User $client): array {
+        $start_date = $request->get( 'start_date' ) ?? date( ( config( 'app.date_format' ) ), strtotime( date( ( config( 'app.date_format' ) ) ) . "-{$client->report_period} month" ) );
+        $end_date   = $request->get( 'end_date' ) ?? date( ( config( 'app.date_format' ) ) );
 
-        $expenses = $client->documents()->where('document_type', '=', 0)->where('status', DocumentStatus::CONFIRMED)->getQuery();
+        $expenses = $client->documents()->where( 'document_type', '=', 0 )->where( 'status', DocumentStatus::CONFIRMED )->getQuery();
 
-        (new DateSearch)($expenses, compact('end_date', 'start_date'), 'document_date');
+        ( new DateSearch )( $expenses, compact( 'end_date', 'start_date' ), 'document_date' );
 
-        $vendor_groups = $expenses->leftJoin('currencies as c', 'documents.currency_id', '=', 'c.id')->leftJoin('vendors as v', 'documents.vendor_id', '=', 'v.id')->groupBy(['v.name', 'v.vat_number'])->select('v.name', 'v.vat_number', DB::raw('count(*) as amount'), DB::raw('sum(documents.sum / c.value) as sum'), DB::raw('AVG(sum) as avg'))->get();
+        $vendor_groups = $expenses->leftJoin( 'currencies as c', 'documents.currency_id', '=', 'c.id' )->leftJoin( 'vendors as v', 'documents.vendor_id', '=', 'v.id' )->groupBy( [
+            'v.name',
+            'v.vat_number'
+        ] )->select( 'v.name', 'v.vat_number', DB::raw( 'count(*) as amount' ), DB::raw( 'sum(documents.sum / c.value) as sum' ), DB::raw( 'AVG(sum) as avg' ) )->get();
 
-        return compact('client', 'vendor_groups');
+        return compact( 'client', 'vendor_groups' );
     }
 
-    public function report_vendors(Request $request, User $client)
-    {
+    public function report_vendors(Request $request, User $client) {
         $data = $this->report_vendors_data($request, $client);
+
         return view('reports.report_vendors', $data);
     }
 
-    public function report_vendors_excel(Request $request, User $client)
-    {
-        $date = date('Y-m-d');
-        $data = $this->report_vendors_data($request, $client);
+    public function report_vendors_excel(Request $request, User $client) {
+        $date = date( ( config( 'app.date_format' ) ) );
+        $data = $this->report_vendors_data( $request, $client );
+
         return Excel::download(new ExcelReport($data, 'reports.excel.report_vendors'), "report_vendors-{$client->present()->name}-{$date}.xlsx");
     }
 
-    public function report_vendors_pdf(Request $request, User $client)
-    {
-        $date = date('Y-m-d');
-        $data = $this->report_vendors_data($request, $client);
+    public function report_vendors_pdf(Request $request, User $client) {
+        $date = date( ( config( 'app.date_format' ) ) );
+        $data = $this->report_vendors_data( $request, $client );
 
-        $pdf = \PDF::loadView('reports.excel.report_vendors', $data);
+        $pdf = PDF::loadView( 'reports.excel.report_vendors', $data );
 
         return $pdf->download("report_vendors-{$client->present()->name}-{$date}.pdf");
     }
 
-    private function report_customers_data(Request $request, User $client)
-    {
-        $start_date = $request->get('start_date') ?? date('Y-m-d', strtotime(date('Y-m-d') . "-{$client->report_period} month"));
-        $end_date = $request->get('end_date') ?? date('Y-m-d');
+    private function report_customers_data(Request $request, User $client) {
+        $start_date = $request->get( 'start_date' ) ?? date( ( config( 'app.date_format' ) ), strtotime( date( ( config( 'app.date_format' ) ) ) . "-{$client->report_period} month" ) );
+        $end_date   = $request->get( 'end_date' ) ?? date( ( config( 'app.date_format' ) ) );
 
-        $income_groups = $client->documents()->where('document_type', '=', 1)->where('status', DocumentStatus::CONFIRMED)->getQuery();
+        $income_groups = $client->documents()->where( 'document_type', '=', 1 )->where( 'status', DocumentStatus::CONFIRMED )->getQuery();
 
-        (new DateSearch)($income_groups, compact('end_date', 'start_date'), 'document_date');
+        ( new DateSearch )( $income_groups, compact( 'end_date', 'start_date' ), 'document_date' );
 
-        $income_customers = $income_groups->leftJoin('currencies as c', 'documents.currency_id', '=', 'c.id')->leftJoin('customers as cu', 'documents.customer_id', '=', 'cu.id')->groupBy(['cu.name', 'cu.vat_number'])->select('cu.name', 'cu.vat_number', DB::raw('count(*) as amount'), DB::raw('sum(documents.sum / c.value) as sum'), DB::raw('AVG(sum) as avg'))->get()->groupBy(['name'])->toArray();
+        $income_customers = $income_groups->leftJoin( 'currencies as c', 'documents.currency_id', '=', 'c.id' )->leftJoin( 'customers as cu', 'documents.customer_id', '=', 'cu.id' )->groupBy( [
+            'cu.name',
+            'cu.vat_number'
+        ] )->select( 'cu.name', 'cu.vat_number', DB::raw( 'count(*) as amount' ), DB::raw( 'sum(documents.sum / c.value) as sum' ), DB::raw( 'AVG(sum) as avg' ) )->get()->groupBy( [ 'name' ] )->toArray();
 
         $invoice_customers = $client->invoices()->getQuery();
 
-        (new DateSearch)($invoice_customers, compact('end_date', 'start_date'), 'invoice_date');
+        ( new DateSearch )( $invoice_customers, compact( 'end_date', 'start_date' ), 'invoice_date' );
 
         $invoice_customers = $invoice_customers->leftJoin('currencies as c', 'invoices.currency_id', '=', 'c.id')->leftJoin('customers as cu', 'invoices.customer_id', '=', 'cu.id')->groupBy(['cu.name', 'cu.vat_number'])->leftJoin('invoices_items as ii', 'invoices.id', '=', 'ii.invoice_id')->select('cu.name', 'cu.vat_number', DB::raw('count(*) as amount'), DB::raw('sum(ii.price*ii.quantity / c.value) as sum'))->get()->groupBy(['name'])->toArray();
 
@@ -326,10 +323,10 @@ class ReportController extends Controller
         $result = [];
         foreach ($customers as $name => $customer) {
             foreach ($customer as $item) {
-                $result[$name]['name'] = $item['name'];
+                $result[$name]['name']       = $item['name'];
                 $result[$name]['vat_number'] = $item['vat_number'];
-                $result[$name]['sum'] = ($result[$name]['sum'] ?? 0) + $item['sum'];
-                $result[$name]['amount'] = ($result[$name]['amount'] ?? 0) + $item['amount'];
+                $result[$name]['sum']        = ($result[$name]['sum'] ?? 0) + $item['sum'];
+                $result[$name]['amount']     = ($result[$name]['amount'] ?? 0) + $item['amount'];
 
             }
         }
@@ -341,44 +338,42 @@ class ReportController extends Controller
         return ['customers' => $result, 'client' => $client];
     }
 
-    public function report_customers(Request $request, User $client)
-    {
+    public function report_customers(Request $request, User $client) {
         $data = $this->report_customers_data($request, $client);
+
         return view('reports.report_customers', $data);
     }
 
-    public function report_customers_excel(Request $request, User $client)
-    {
-        $date = date('Y-m-d');
-        $data = $this->report_customers_data($request, $client);
+    public function report_customers_excel(Request $request, User $client) {
+        $date = date( ( config( 'app.date_format' ) ) );
+        $data = $this->report_customers_data( $request, $client );
+
         return Excel::download(new ExcelReport($data, 'reports.excel.report_customers'), "report_customers-{$client->present()->name}-{$date}.xlsx");
     }
 
-    public function report_customers_pdf(Request $request, User $client)
-    {
-        $date = date('Y-m-d');
-        $data = $this->report_customers_data($request, $client);
+    public function report_customers_pdf(Request $request, User $client) {
+        $date = date( ( config( 'app.date_format' ) ) );
+        $data = $this->report_customers_data( $request, $client );
 
-        $pdf = \PDF::loadView('reports.excel.report_customers', $data);
+        $pdf = PDF::loadView( 'reports.excel.report_customers', $data );
 
         return $pdf->download("report_customers-{$client->present()->name}-{$date}.pdf");
 
     }
 
 
+    public function report_tax(Request $request, User $client) {
+        $start_date = $request->get( 'start_date' ) ?? Carbon::now()->startOfMonth()->subMonths( $client->report_period )->format( config( 'app.date_format' ) );
+        $end_date   = $request->get( 'end_date' ) ?? Carbon::now()->startOfMonth()->format( config( 'app.date_format' ) );
 
-    public function report_tax(Request $request, User $client)
-    {
-        $start_date = $request->get('start_date') ?? date('Y-m-d', strtotime(date('Y-m-d') . "-{$client->report_period} month"));
-        $end_date = $request->get('end_date') ?? date('Y-m-d');
+        $income = $client->documents()->where( 'status', DocumentStatus::CONFIRMED )->getQuery();
 
-        $income = $client->documents()->where('status', DocumentStatus::CONFIRMED)->getQuery();
 
-        (new DateSearch)($income, compact('start_date', 'end_date'), 'document_date');
+        ( new DateSearch )( $income, compact( 'start_date', 'end_date' ), 'document_date' );
 
-        $document_vat = $income->leftJoin('currencies as c', 'documents.currency_id', '=', 'c.id')->select(DB::raw('SUM(vat/c.value) as vat, SUM(sum/c.value) as sum, document_type'))->groupBy('document_type')->get()->toArray();
+        $document_vat = $income->leftJoin( 'currencies as c', 'documents.currency_id', '=', 'c.id' )->select( DB::raw( 'SUM(vat/c.value) as vat, SUM(sum/c.value) as sum, document_type' ) )->groupBy( 'document_type' )->get()->toArray();
 
-        $equipment_vat = $income->leftJoin('currencies as cur', 'documents.currency_id', '=', 'cur.id')->select(DB::raw("SUM(vat/cur.value) as vat, SUM(sum/cur.value) as sum, expense_type_id"))->groupBy('expense_type_id')->where('expense_type_id', 700)->get();
+        $equipment_vat = $income->leftJoin( 'currencies as cur', 'documents.currency_id', '=', 'cur.id' )->select( DB::raw( "SUM(vat/cur.value) as vat, SUM(sum/cur.value) as sum, expense_type_id" ) )->groupBy( 'expense_type_id' )->where( 'expense_type_id', 700 )->get();
 
         $invoices = $client->invoices()->getQuery();
 
@@ -401,24 +396,24 @@ class ReportController extends Controller
 
         if (!isset($document_vat[0])) {
             $document_vat[0] = [
-                    'vat' => 0,
-                    'sum' => 0];
+                'vat' => 0,
+                'sum' => 0];
         }
 
 
         if (!isset($document_vat[1])) {
             $document_vat[1] = [
-                    'vat' => 0,
-                    'sum' => 0];
+                'vat' => 0,
+                'sum' => 0];
         }
 
-        $in_vat = $document_vat[1]['vat'] + $invoices_vat->sum('vat');
-        $exp_vat = $document_vat[0]['vat'];
+        $in_vat   = $document_vat[1]['vat'] + $invoices_vat->sum('vat');
+        $exp_vat  = $document_vat[0]['vat'];
         $diff_vat = $in_vat - $exp_vat;
 
-        $in_vat = number_format($in_vat, 2);
-        $exp_vat = number_format($exp_vat, 2);
-        $diff_vat = number_format($diff_vat, 2);
+        $in_vat        = number_format($in_vat, 2);
+        $exp_vat       = number_format($exp_vat, 2);
+        $diff_vat      = number_format($diff_vat, 2);
         $equipment_vat = number_format($equipment_vat->sum('vat'), 2);
 
         $in_sum = $document_vat[1]['sum'] + $invoices_vat->sum('sum');
@@ -428,6 +423,6 @@ class ReportController extends Controller
         $in_tax = number_format($in_tax, 2);
 
 
-        return view('reports.report_tax', compact('in_vat', 'exp_vat', 'diff_vat', 'client', 'in_tax', 'in_sum', 'equipment_vat'));
+        return view( 'reports.report_tax', compact( 'in_vat', 'exp_vat', 'diff_vat', 'client', 'in_tax', 'in_sum', 'equipment_vat', 'start_date', 'end_date' ) );
     }
 }

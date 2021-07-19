@@ -2,6 +2,7 @@
 
 namespace Vanguard;
 
+use Eloquent;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
@@ -19,8 +20,8 @@ use Vanguard\Support\Enum\DocumentStatus;
  * @property string|null $file
  * @property int $user_id
  * @property string|null $document_text
- * @property \Illuminate\Support\Carbon|null $created_at
- * @property \Illuminate\Support\Carbon|null $updated_at
+ * @property Carbon|null $created_at
+ * @property Carbon|null $updated_at
  * @property string $status
  * @property string|null $document_number
  * @property int|null $document_type
@@ -35,48 +36,50 @@ use Vanguard\Support\Enum\DocumentStatus;
  * @property int|null $document_type_id
  * @property int|null $income_type_id
  * @property int|null $customer_id
- * @property-read \Vanguard\Currency|null $currency
- * @property-read \Vanguard\Customer|null $customer
- * @property-read \Vanguard\DocumentType|null $dt
- * @property-read \Vanguard\ExpenseGroup $expense_group
- * @property-read \Vanguard\ExpenseType|null $expense_type
- * @property-read \Vanguard\IncomeType|null $income_type
- * @property-read \Vanguard\User $user
- * @property-read \Vanguard\Vendor|null $vendor
- * @method static \Illuminate\Database\Eloquent\Builder|\Vanguard\Document newModelQuery()
- * @method static \Illuminate\Database\Eloquent\Builder|\Vanguard\Document newQuery()
- * @method static \Illuminate\Database\Eloquent\Builder|\Vanguard\Document query()
- * @method static \Illuminate\Database\Eloquent\Builder|\Vanguard\Document whereCreatedAt( $value )
- * @method static \Illuminate\Database\Eloquent\Builder|\Vanguard\Document whereCurrencyId( $value )
- * @method static \Illuminate\Database\Eloquent\Builder|\Vanguard\Document whereCustomerId( $value )
- * @method static \Illuminate\Database\Eloquent\Builder|\Vanguard\Document whereDocumentDate( $value )
- * @method static \Illuminate\Database\Eloquent\Builder|\Vanguard\Document whereDocumentNumber( $value )
- * @method static \Illuminate\Database\Eloquent\Builder|\Vanguard\Document whereDocumentText( $value )
- * @method static \Illuminate\Database\Eloquent\Builder|\Vanguard\Document whereDocumentType( $value )
- * @method static \Illuminate\Database\Eloquent\Builder|\Vanguard\Document whereDocumentTypeId( $value )
- * @method static \Illuminate\Database\Eloquent\Builder|\Vanguard\Document whereExpenseTypeId( $value )
- * @method static \Illuminate\Database\Eloquent\Builder|\Vanguard\Document whereFile( $value )
- * @method static \Illuminate\Database\Eloquent\Builder|\Vanguard\Document whereId( $value )
- * @method static \Illuminate\Database\Eloquent\Builder|\Vanguard\Document whereIncomeTypeId( $value )
- * @method static \Illuminate\Database\Eloquent\Builder|\Vanguard\Document whereNote( $value )
- * @method static \Illuminate\Database\Eloquent\Builder|\Vanguard\Document whereStatus( $value )
- * @method static \Illuminate\Database\Eloquent\Builder|\Vanguard\Document whereSum( $value )
- * @method static \Illuminate\Database\Eloquent\Builder|\Vanguard\Document whereSumWithoutVat( $value )
- * @method static \Illuminate\Database\Eloquent\Builder|\Vanguard\Document whereUpdatedAt( $value )
- * @method static \Illuminate\Database\Eloquent\Builder|\Vanguard\Document whereUserId( $value )
- * @method static \Illuminate\Database\Eloquent\Builder|\Vanguard\Document whereVat( $value )
- * @method static \Illuminate\Database\Eloquent\Builder|\Vanguard\Document whereVendorId( $value )
- * @mixin \Eloquent
+ * @property-read Currency|null $currency
+ * @property-read Customer|null $customer
+ * @property-read DocumentType|null $dt
+ * @property-read ExpenseGroup $expense_group
+ * @property-read ExpenseType|null $expense_type
+ * @property-read IncomeType|null $income_type
+ * @property-read User $user
+ * @property-read Vendor|null $vendor
+ * @method static Builder|Document newModelQuery()
+ * @method static Builder|Document newQuery()
+ * @method static Builder|Document query()
+ * @method static Builder|Document whereCreatedAt( $value )
+ * @method static Builder|Document whereCurrencyId( $value )
+ * @method static Builder|Document whereCustomerId( $value )
+ * @method static Builder|Document whereDocumentDate( $value )
+ * @method static Builder|Document whereDocumentNumber( $value )
+ * @method static Builder|Document whereDocumentText( $value )
+ * @method static Builder|Document whereDocumentType( $value )
+ * @method static Builder|Document whereDocumentTypeId( $value )
+ * @method static Builder|Document whereExpenseTypeId( $value )
+ * @method static Builder|Document whereFile( $value )
+ * @method static Builder|Document whereId( $value )
+ * @method static Builder|Document whereIncomeTypeId( $value )
+ * @method static Builder|Document whereNote( $value )
+ * @method static Builder|Document whereStatus( $value )
+ * @method static Builder|Document whereSum( $value )
+ * @method static Builder|Document whereSumWithoutVat( $value )
+ * @method static Builder|Document whereUpdatedAt( $value )
+ * @method static Builder|Document whereUserId( $value )
+ * @method static Builder|Document whereVat( $value )
+ * @method static Builder|Document whereVendorId( $value )
+ * @mixin Eloquent
  * @property Carbon|null $deleted_at
  * @method static Builder|Document currentYear()
  * @method static \Illuminate\Database\Query\Builder|Document onlyTrashed()
  * @method static Builder|Document waiting()
- * @method static Builder|Document whereDeletedAt($value)
+ * @method static Builder|Document whereDeletedAt( $value )
  * @method static \Illuminate\Database\Query\Builder|Document withTrashed()
  * @method static \Illuminate\Database\Query\Builder|Document withoutTrashed()
  */
 class Document extends Model implements Sortable {
     use Presentable, SoftDeletes;
+
+    protected $dateFormat = 'd-m-Y';
 
     protected $presenter = DocumentPresenter::class;
     protected $fillable = [

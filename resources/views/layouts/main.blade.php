@@ -14,7 +14,8 @@
     <link rel="stylesheet" href="{{ asset('assets/plugins/owl/owl.theme.default.css') }}">
     <link rel="stylesheet" href="{{ asset('assets/plugins/slick/slick.css') }}">
     <link rel="stylesheet" href="{{ asset('assets/plugins/slick/slick-theme.css') }}">
-{{--    <link rel="stylesheet" href="{{ asset('assets/css/bootstrap.min.css') }}">--}}
+    <link rel="stylesheet" href="{{asset('assets/plugins/datepicker.min.css')}}">
+    {{--    <link rel="stylesheet" href="{{ asset('assets/css/bootstrap.min.css') }}">--}}
     <link rel="stylesheet" href="{{ asset('assets/plugins/flaticon/flaticon.css') }}">
     <link rel="stylesheet" href="https://cdn.linearicons.com/free/1.0.0/icon-font.min.css">
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.15.1/css/all.css">
@@ -130,6 +131,8 @@
 <script src="{{asset('vendor/chartjs-plugin-datalabels.min.js')}}"></script>
 <script src="{{ asset('assets/plugins/slick/slick.min.js') }}"></script>
 <script src="{{ asset('assets/plugins/owl/owl.carousel.min.js') }}"></script>
+<script src="{{asset('assets/js/datepicker.min.js')}}"></script>
+<script src="{{asset('assets/js/i18n/datepicker.en.js')}}"></script>
 <script src="{{ url('assets/js/custom.js') }}"></script>
 <script src="{{ asset('assets/js/main.js') }}"></script>
 <script src="{{asset('assets/js/table-sort.js')}}"></script>

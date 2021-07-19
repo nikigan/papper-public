@@ -7,15 +7,19 @@
                         <div class="col">
                             <div class="form-group">
                                 <label for="startDate">@lang('From'):</label>
-                                <input name="start_date" class="form-control datechk" id="startDate"
-                                       value="{{Request::get('start_date') ?? \Carbon\Carbon::now()->format('Y-m-d', strtotime(date('Y-m-d') . "-{$client->report_period} month"))}}">
+                                <input name="start_date" class="form-control datepicker-here" data-language="en"
+                                       data-min-view="months" data-view="months" data-date-format="dd-mm-yyyy"
+                                       id="startDate"
+                                       value="{{Request::get('start_date') ?? $start_date}}">
                             </div>
                         </div>
                         <div class="col">
                             <div class="form-group">
                                 <label for="endDate">@lang('To'):</label>
-                                <input name="end_date" class="form-control datechk" id="endDate"
-                                       value="{{ Request::get('end_date') ?? date('Y-m-d') }}">
+                                <input name="end_date" class="form-control datepicker-here" data-language="en"
+                                       data-min-view="months" data-view="months" data-date-format="dd-mm-yyyy"
+                                       id="endDate"
+                                       value="{{ Request::get('end_date') ?? $end_date }}">
                             </div>
                         </div>
                         <div class="col">
