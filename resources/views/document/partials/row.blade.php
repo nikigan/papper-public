@@ -1,4 +1,4 @@
-<tr>
+<tr data-href="{{ route('documents.show', $document) }}">
     <td class="align-middle">
         <a href="{{ route('documents.show', $document) }}">
             {{ $document->document_number ?: __('N/A') }}
@@ -29,7 +29,7 @@
     <td class="align-middle">
         <span class="{{$document->present()->sumClass()}}">{{$document->present()->sum_without_vat()}}</span>
     </td>
-    <td class="text-center align-middle">
+    <td class="text-center align-middle action-cell">
         {{--<div class="dropdown show d-inline-block">
             <a class="btn btn-icon"
                href="#" role="button" id="dropdownMenuLink"
@@ -91,5 +91,16 @@
                 </a>
             @endif
         @endif
+        <a href="{{ route('documents.duplicate', ['document' => $document ]) }}"
+           class="btn btn-icon"
+           title="@lang('Duplicate Document')"
+           data-toggle="tooltip"
+           data-placement="top"
+           data-method="GET"
+           data-confirm-title="@lang('Please Confirm')"
+           data-confirm-text="@lang('Are you sure that you want to duplicate this document?')"
+           data-confirm-get="@lang('Yes, duplicate it!')">
+            <i class="fas fa-clone"></i>
+        </a>
     </td>
 </tr>

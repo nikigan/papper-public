@@ -44,15 +44,19 @@
                             <div class="col">
                                 <div class="form-group mb-4">
                                     <label for="startDate">@lang('From'):</label>
-                                    <input type="date" name="start_date" class="form-control datechk" id="startDate"
-                                           value="{{Request::get('start_date') ?? date('Y-m-d', strtotime(date('Y-m-d') . "-1 year"))}}">
+                                    <input name="start_date" class="form-control datepicker-here" id="startDate"
+                                           data-language="en"
+                                           data-min-view="months" data-view="months" data-date-format="dd-mm-yyyy"
+                                           value="{{Request::get('start_date') ?? date(config('app.date_format'), strtotime(date(config('app.date_format')) . "-1 year"))}}">
                                 </div>
                             </div>
                             <div class="col">
                                 <div class="form-group mb-4">
                                     <label for="endDate">@lang('To'):</label>
-                                    <input type="date" name="end_date" class="form-control datechk" id="endDate"
-                                           value="{{ Request::get('end_date') ?? date('Y-m-d') }}">
+                                    <input name="end_date" class="form-control datepicker-here" id="endDate"
+                                           data-language="en"
+                                           data-min-view="months" data-view="months" data-date-format="dd-mm-yyyy"
+                                           value="{{ Request::get('end_date') ?? date(config('app.date_format')) }}">
                                 </div>
                             </div>
                         </div>
@@ -113,8 +117,8 @@
                     @endif
                 </div>
             </div>
-                        @include('document.partials.table')
-{{--            {{$table}}--}}
+            @include('document.partials.table')
+            {{--            {{$table}}--}}
         </div>
     </div>
 @endsection
@@ -122,8 +126,25 @@
 
 @section('scripts')
     <script>
-        $('input[type=\'date\']').change(function () {
-            $('#search-form').submit();
+        // $('.datepicker-here').datepicker({
+        //     language: "en",
+        //     minView: "months",
+        //     view: "months",
+        //     dateFormat: "dd-mm-yyyy",
+        //     onSelect: function () {
+        //         $('#search-form').submit();
+        //     }
+        // });
+
+        $('tr[data-href]').on("click", function (event) {
+            console.log('tr');
+            // document.location = $(this).data('href');
+
         });
+
+        document.querySelectorAll(".action-cell").forEach(btn => btn.addEventListener('click', function (event) {
+            // event.cancelBubble = true;
+            // event.stopPropagation();
+        }, true));
     </script>
-@stop
+@endsection

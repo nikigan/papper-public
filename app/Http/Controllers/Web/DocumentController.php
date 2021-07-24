@@ -289,12 +289,21 @@ class DocumentController extends Controller {
         $document = Document::onlyTrashed()->findOrFail($id);
         $document->restore();
 
-        return redirect()->back()->withSuccess(__("Document restored successfully"));
+        return redirect()->back()->withSuccess( __( "Document restored successfully" ) );
     }
 
     public function lastModified() {
         $documents = $this->documentRepository->lastModifiedDocuments()->paginate( 10 );
 
         return view( 'document.last', compact( 'documents' ) );
+    }
+
+    public function duplicate( Document $document ) {
+        $newDocument                  = $document->replicate();
+        $newDocument->document_number = "";
+        $newDocument->status          = DocumentStatus::UNCONFIRMED;
+        $newDocument->save();
+
+        return redirect()->back()->withSuccess( __( 'Document duplicated successfully!' ) );
     }
 }

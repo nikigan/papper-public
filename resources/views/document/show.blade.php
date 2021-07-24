@@ -226,20 +226,19 @@
                     @endpermission
                     @if ($document->note)
                         <h6>@lang('Comments')</h6>
-                        <div class="card">
-                            <div class="card-body document-text__card">
-                                <div class="document-text">
-                                    {!! nl2br($document->note ?? '') !!}
-                                </div>
-                            </div>
+                        <div class="document-text">
+                            <textarea name="note" id="note" rows="7"
+                                      class="form-control">{!! nl2br($document->note ?? '') !!}</textarea>
                         </div>
-                    @endif
-                    @permission('document.edit')
-                    <button type="submit" class="btn btn-primary">
-                        @lang('Update Document')
-                    </button>
-                    @endpermission
-                    {!! Form::close() !!}
+                </div>
+            </div>
+            @endif
+            @permission('document.edit')
+            <button type="submit" class="btn btn-primary">
+                @lang('Update Document')
+            </button>
+            @endpermission
+            {!! Form::close() !!}
                 </div>
 
                 <div class="col-lg-6 text-center">

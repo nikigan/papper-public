@@ -79,8 +79,6 @@ use Vanguard\Support\Enum\DocumentStatus;
 class Document extends Model implements Sortable {
     use Presentable, SoftDeletes;
 
-    protected $dateFormat = 'd-m-Y';
-
     protected $presenter = DocumentPresenter::class;
     protected $fillable = [
         'file',

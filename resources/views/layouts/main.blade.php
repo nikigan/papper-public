@@ -133,7 +133,7 @@
 <script src="{{ asset('assets/plugins/owl/owl.carousel.min.js') }}"></script>
 <script src="{{asset('assets/js/datepicker.min.js')}}"></script>
 <script src="{{asset('assets/js/i18n/datepicker.en.js')}}"></script>
-<script src="{{ url('assets/js/custom.js') }}"></script>
+<script src="{{ asset('assets/js/custom.js') }}"></script>
 <script src="{{ asset('assets/js/main.js') }}"></script>
 <script src="{{asset('assets/js/table-sort.js')}}"></script>
 

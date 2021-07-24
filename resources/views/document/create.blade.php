@@ -114,7 +114,8 @@
                         <select name='expense_type_id' class="form-control" id="expense_type">
                             <option value="">@lang('Other Expense')</option>
                             @foreach($expense_types as $type)
-                                <option value="{{$type->id}}">@lang($type->name)</option>
+                                <option value="{{$type->id}}"
+                                        @if($vendors[0]->default_expense_type_id == $type->id) selected @endif>@lang($type->name)</option>
                             @endforeach
                         </select>
                     </div>
@@ -206,7 +207,9 @@
                             <select name='vendor_id' class="form-control" id="vendor">
                                 @foreach($vendors as $vendor)
                                     <option value="{{$vendor->id}}"
-                                            data-vat="{{$vendor->vat_number}}">@lang($vendor->name) -
+                                            data-vat="{{$vendor->vat_number}}"
+                                            data-default-expense="{{$vendor->default_expense_type_id}}">@lang($vendor->name)
+                                        -
                                         ({{$vendor->vat_number}})
                                     </option>
                                 @endforeach
@@ -467,7 +470,8 @@
                 }
                 console.log(found);
 
-                if (!found) { $(this).attr('selected', false);
+                if (!found) {
+                    $(this).attr('selected', false);
                     $("#vendor").val(null);
                 }
             });
@@ -475,17 +479,22 @@
 
         $("#vendor, #customer").change(function () {
             partnerVatInput.val($(this).find(":selected").data('vat'));
+
         });
 
-        $("#sum, #vat, #include_tax").on('input', function () {
-           const sum = $("#sum").val();
-           const tax = $("#vat").val();
-           const includeTax = $("#include_tax").is(':checked');
+        $("#vendor").change(function () {
+            $("#expense_type").val($(this).find(":selected").data('default-expense'));
+        })
 
-           if (includeTax) {
-               $("#vatHelp").html((( sum / ( 1 + tax / 100 ) ) * tax / 100).toFixed(2));
-           } else {
-               $("#vatHelp").html( (sum * tax / 100 ).toFixed(2));
+        $("#sum, #vat, #include_tax").on('input', function () {
+            const sum = $("#sum").val();
+            const tax = $("#vat").val();
+            const includeTax = $("#include_tax").is(':checked');
+
+            if (includeTax) {
+                $("#vatHelp").html(((sum / (1 + tax / 100)) * tax / 100).toFixed(2));
+            } else {
+                $("#vatHelp").html((sum * tax / 100).toFixed(2));
            }
 
         });

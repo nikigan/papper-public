@@ -230,9 +230,10 @@ Route::group(['middleware' => ['auth', 'verified', 'locale']], function () {
      */
     Route::group(['prefix' => 'documents'], function () {
         Route::get('/last-modified', 'DocumentController@lastModified')->name('documents.last')->middleware('role:Auditor,Accountant');
-        Route::get('/{document}/restore', 'DocumentController@restore')->name('documents.restore');
-        Route::get('/upload', 'DocumentController@upload')->name('documents.upload')
-            ->middleware('permission:document.upload');
+        Route::get( '/{document}/restore', 'DocumentController@restore' )->name( 'documents.restore' );
+        Route::get( '/{document}/duplicate', 'DocumentController@duplicate' )->name( 'documents.duplicate' );
+        Route::get( '/upload', 'DocumentController@upload' )->name( 'documents.upload' )
+             ->middleware( 'permission:document.upload' );
         Route::get('/create', 'DocumentController@create')->name('document.create');
         Route::get('/waiting', 'DocumentController@waiting')->name('documents.waiting');
         Route::post('/create', 'DocumentController@manualStore')->name('document.manualStore');

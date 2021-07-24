@@ -22,6 +22,7 @@
                     <td colspan="4"></td>
                     <td><strong class="{{$sum_class}}">{{number_format($sum, 2)}} ₪</strong></td>
                     <td><strong class="{{$sum_class}}">{{number_format($vat, 2)}} ₪</strong></td>
+                    <td><strong class="{{$sum_class}}">{{number_format($sum - $vat, 2)}} ₪</strong></td>
                     <td></td>
                 </tr>
             @endisset
