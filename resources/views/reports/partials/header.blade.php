@@ -7,8 +7,7 @@
                         <div class="col">
                             <div class="form-group">
                                 <label for="startDate">@lang('From'):</label>
-                                <input name="start_date" class="form-control datepicker-here" data-language="en"
-                                       data-min-view="months" data-view="months" data-date-format="dd-mm-yyyy"
+                                <input name="start_date" class="form-control dp"
                                        id="startDate"
                                        value="{{Request::get('start_date') ?? $start_date}}">
                             </div>
@@ -16,8 +15,7 @@
                         <div class="col">
                             <div class="form-group">
                                 <label for="endDate">@lang('To'):</label>
-                                <input name="end_date" class="form-control datepicker-here" data-language="en"
-                                       data-min-view="months" data-view="months" data-date-format="dd-mm-yyyy"
+                                <input name="end_date" class="form-control dp"
                                        id="endDate"
                                        value="{{ Request::get('end_date') ?? $end_date }}">
                             </div>
@@ -34,10 +32,10 @@
                         <input type="hidden" name="start_date" value="{{Request::get('start_date')}}">
                         <input type="hidden" name="end_date" value="{{Request::get('end_date')}}">
                         <button type="submit" class="btn btn-primary"
-                           formaction="{{route($route.'.excel', [$client])}}"><i
+                                formaction="{{route($route.'.excel', [$client])}}"><i
                                 class="far fa-file-excel"></i></button>
                         <button type="submit" class="btn btn-danger"
-                           formaction="{{route($route.'.pdf', [$client])}}"><i
+                                formaction="{{route($route.'.pdf', [$client])}}"><i
                                 class="far fa-file-pdf"></i></button>
                         <div class="custom-control custom-checkbox">
                             <input type="checkbox" class="custom-control-input" id="percentage" name="percentage">
@@ -49,3 +47,46 @@
         </div>
     </div>
 </div>
+
+@section('scripts')
+    <script>
+        $(document).ready(function () {
+            const options = {
+                language: "en",
+                minView: "months",
+                view: "months",
+                dateFormat: "mm-yyyy"
+            };
+            const reportPeriod = {{$client->report_period}};
+            let flag = true;
+
+            const startDate = $("#startDate").datepicker({
+                ...options,
+                onSelect: function (_, date) {
+                    if (flag) {
+                        flag = false;
+                        const d = date;
+                        d.setMonth(d.getMonth() + reportPeriod);
+                        endDate.selectDate(d);
+                    } else {
+                        flag = true;
+                    }
+                }
+            }).data('datepicker');
+
+            const endDate = $("#endDate").datepicker({
+                ...options,
+                onSelect: function (_, date) {
+                    if (flag) {
+                        flag = false;
+                        const d = date;
+                        d.setMonth(d.getMonth() + reportPeriod);
+                        startDate.selectDate(d);
+                    } else {
+                        flag = true;
+                    }
+                }
+            }).data('datepicker');
+        });
+    </script>
+@endsection

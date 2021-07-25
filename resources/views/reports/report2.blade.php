@@ -37,7 +37,7 @@
                             </thead>
                             <tbody>
                             @foreach ($group as $item)
-                                <tr class="text-danger">
+                                <tr data-href="{{ route('documents.show', $item) }}" class="text-danger">
                                     <td><a class="text-danger"
                                            href="{{ route('documents.show', $item) }}">{{ $item->document_number }}</a>
                                     </td>
@@ -74,27 +74,27 @@
                             <tbody>
                             @foreach ($group as $items)
                                 @if(is_array($items))
-                                @foreach($items as $item)
-                                <tr class="text-success">
-                                    @if ($item instanceof \Vanguard\Document)
-                                        <td><a href="{{route('documents.show', $item)}}"
-                                               class="text-success">{{ $item->document_number }}</a></td>
-                                        <td>{{ $item->document_date }}</td>
-                                        <td>{{ $item->income_type->name ?? __('Other Income') }}</td>
-                                        <td>{{ number_format($item->sum / $item->currency->value, 2) }}</td>
-                                        <td>{{number_format($item->vat / $item->currency->value, 2)}}</td>
-                                    @elseif($item instanceof \Vanguard\Invoice)
-                                        <td><a href="{{route('invoice.show', $item)}}"
-                                               class="text-success">{{ $item->invoice_number }}</a></td>
-                                        <td>{{ $item->invoice_date }}</td>
-                                        <td>{{ $item->income_type->name ?? __('Other Income') }}</td>
-                                        <td>{{ number_format($item->grand_total / $item->currency->value, 2) }}</td>
-                                        <td>{{ number_format($item->grand_total / $item->currency->value * $item->tax_percent / 100, 2) }}</td>
-                                    @endif
-                                </tr>
-                                @endforeach
+                                    @foreach($items as $item)
+                                        <tr data-href="{{ route('documents.show', $item) }}" class="text-success">
+                                            @if ($item instanceof \Vanguard\Document)
+                                                <td><a href="{{route('documents.show', $item)}}"
+                                                       class="text-success">{{ $item->document_number }}</a></td>
+                                                <td>{{ $item->document_date }}</td>
+                                                <td>{{ $item->income_type->name ?? __('Other Income') }}</td>
+                                                <td>{{ number_format($item->sum / $item->currency->value, 2) }}</td>
+                                                <td>{{number_format($item->vat / $item->currency->value, 2)}}</td>
+                                            @elseif($item instanceof \Vanguard\Invoice)
+                                                <td><a href="{{route('invoice.show', $item)}}"
+                                                       class="text-success">{{ $item->invoice_number }}</a></td>
+                                                <td>{{ $item->invoice_date }}</td>
+                                                <td>{{ $item->income_type->name ?? __('Other Income') }}</td>
+                                                <td>{{ number_format($item->grand_total / $item->currency->value, 2) }}</td>
+                                                <td>{{ number_format($item->grand_total / $item->currency->value * $item->tax_percent / 100, 2) }}</td>
+                                            @endif
+                                        </tr>
+                                    @endforeach
                                 @else
-                                    <tr class="text-success">
+                                    <tr data-href="{{ route('documents.show', $item) }}" class="text-success">
                                         @if ($items instanceof \Vanguard\Document)
                                             <td><a href="{{route('documents.show', $items)}}"
                                                    class="text-success">{{ $items->document_number }}</a></td>

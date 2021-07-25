@@ -12,6 +12,7 @@ use Vanguard\ExpenseType;
 use Vanguard\Http\Controllers\Controller;
 use Vanguard\Http\Filters\DateSearch;
 use Vanguard\Http\Filters\DocumentKeywordSearch;
+use Vanguard\Http\Filters\MonthFilter;
 use Vanguard\IncomeType;
 use Vanguard\Jobs\ProcessDocument;
 use Vanguard\Repositories\Document\DocumentRepository;
@@ -40,7 +41,7 @@ class DocumentController extends Controller {
         }
 
         if ( $request->has( 'start_date' ) || $request->has( 'end_date' ) ) {
-            ( new DateSearch )( $documents, $request->only( [ 'start_date', 'end_date' ] ), 'document_date' );
+            ( new MonthFilter )( $documents, $request->only( [ 'start_date', 'end_date' ] ), 'document_date' );
         }
 
         $documents = $documents->paginate( 10 );
@@ -286,14 +287,20 @@ class DocumentController extends Controller {
     }
 
     public function restore( int $id ) {
-        $document = Document::onlyTrashed()->findOrFail($id);
+        $document = Document::onlyTrashed()->findOrFail( $id );
         $document->restore();
 
         return redirect()->back()->withSuccess( __( "Document restored successfully" ) );
     }
 
-    public function lastModified() {
-        $documents = $this->documentRepository->lastModifiedDocuments()->paginate( 10 );
+    public function lastModified( Request $request ) {
+        $documents = $this->documentRepository->lastModifiedDocuments();
+
+        if ( $request->has( 'start_date' ) || $request->has( 'end_date' ) ) {
+            ( new MonthFilter )( $documents, $request->only( [ 'start_date', 'end_date' ] ), 'document_date' );
+        }
+
+        $documents = $documents->paginate();
 
         return view( 'document.last', compact( 'documents' ) );
     }

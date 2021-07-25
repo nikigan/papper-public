@@ -137,6 +137,15 @@
 <script src="{{ asset('assets/js/main.js') }}"></script>
 <script src="{{asset('assets/js/table-sort.js')}}"></script>
 
+<script>
+    $('tr[data-href]').on("click", function (event) {
+        const target = $(event.target);
+        if (!target.is('button') && !target.is('a') && !target.is('i')) {
+            document.location = $(this).data('href');
+        }
+    });
+</script>
+
 @yield('scripts')
 
 @hook('app:scripts')

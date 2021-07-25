@@ -48,15 +48,15 @@
                             <div class="col">
                                 <div class="form-group mb-4">
                                     <label for="startDate">@lang('From'):</label>
-                                    <input type="date" name="start_date" class="form-control datechk" id="startDate"
-                                           value="{{Request::get('start_date') ?? date('Y-m-d', strtotime(date('Y-m-d') . "-1 year"))}}">
+                                    <input name="start_date" class="form-control dp" id="startDate"
+                                           value="{{Request::get('start_date') ?? \Carbon\Carbon::now()->subYear()->format( config('app.date_format'))}}">
                                 </div>
                             </div>
                             <div class="col">
                                 <div class="form-group mb-4">
                                     <label for="endDate">@lang('To'):</label>
-                                    <input type="date" name="end_date" class="form-control datechk" id="endDate"
-                                           value="{{ Request::get('end_date') ?? date('Y-m-d') }}">
+                                    <input name="end_date" class="form-control dp" id="endDate"
+                                           value="{{ Request::get('end_date') ?? \Carbon\Carbon::now()->format( config('app.date_format') ) }}">
                                 </div>
                             </div>
                         </div>
@@ -160,9 +160,21 @@
 
 @section('scripts')
     <script>
-        $('input[type=\'date\']').change(function () {
-            $('#search-form').submit();
-        });
+        // $('input[type=\'date\']').change(function () {
+        //     $('#search-form').submit();
+        // });
+
+        $(document).ready(function () {
+            $(".dp").datepicker({
+                language: "en",
+                minView: "days",
+                view: "days",
+                dateFormat: "dd-mm-yyyy",
+                onSelect: function () {
+                    $('#search-form').submit();
+                }
+            });
+        })
 
         $("#search").on('input', function () {
             $.ajax('{{route('search.autocomplete')}}', {

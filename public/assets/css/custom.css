@@ -145,3 +145,7 @@ a:hover {
     z-index: 1033;
 }
 
+tr[data-href] {
+    cursor: pointer;
+}
+

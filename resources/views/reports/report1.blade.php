@@ -37,7 +37,7 @@
                         </thead>
                         <tbody>
                         @foreach ($expenses as $item)
-                            <tr class="text-danger">
+                            <tr data-href="{{ route('documents.show', $item) }}" class="text-danger">
                                 <td><a class="text-danger"
                                        href="{{ route('documents.show', $item) }}">{{ $item->document_number }}</a></td>
                                 <td>{{ $item->document_date }}</td>
@@ -70,7 +70,7 @@
                         </thead>
                         <tbody>
                         @foreach ($incomes_with_vat as $item)
-                            <tr class="text-success">
+                            <tr data-href="{{ route('documents.show', $item) }}" class="text-success">
                                 <td><a class="text-success"
                                        href="{{ route('documents.show', $item) }}">{{ $item->document_number }}</a></td>
                                 <td>{{ $item->document_date }}</td>
@@ -80,7 +80,7 @@
                             </tr>
                         @endforeach
                         @foreach ($invoices_with_vat as $item)
-                            <tr class="text-success">
+                            <tr data-href="{{ route('invoice.show', $item) }}" class="text-success">
                                 <td><a class="text-success"
                                        href="{{ route('invoice.show', $item) }}">{{ $item->invoice_number }}</a>
                                 </td>
@@ -115,7 +115,7 @@
                         </thead>
                         <tbody>
                         @foreach ($incomes_without_vat as $item)
-                            <tr class="text-success">
+                            <tr data-href="{{ route('documents.show', $item) }}" class="text-success">
                                 <td><a class="text-success"
                                        href="{{ route('documents.show', $item) }}">{{ $item->document_number }}</a></td>
                                 <td>{{ $item->document_date }}</td>
@@ -125,7 +125,7 @@
                             </tr>
                         @endforeach
                         @foreach ($invoices_without_vat as $item)
-                            <tr class="text-success">
+                            <tr data-href="{{ route('invoice.show', $item) }}" class="text-success">
                                 <td><a class="text-success"
                                        href="{{ route('invoice.show', $item) }}">{{ $item->invoice_number }}</a>
                                 </td>
@@ -159,7 +159,7 @@
                         </thead>
                         <tbody>
                         @foreach ($document_acceptances as $item)
-                            <tr class="text-success">
+                            <tr data-href="{{ route('documents.show', $item) }}" class="text-success">
                                 <td><a class="text-success"
                                        href="{{ route('documents.show', $item) }}">{{ $item->document_number }}</a></td>
                                 <td>{{ $item->document_date }}</td>
@@ -169,7 +169,7 @@
                             </tr>
                         @endforeach
                         @foreach ($acceptances as $item)
-                            <tr class="text-success">
+                            <tr data-href="{{ route('documents.show', $item) }}" class="text-success">
                                 <td><a class="text-success"
                                        href="{{ route('invoice.show', $item) }}">{{ $item->invoice_number }}</a>
                                 </td>

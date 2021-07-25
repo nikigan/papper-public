@@ -15,13 +15,13 @@ class DateSearch implements Filter
 
             if ( $end_date ) {
                 $query->where( function ( $q ) use ( $end_date, $property ) {
-                    $q->where( $property, "<=", $end_date );
+                    $q->whereDate( $property, "<=", $end_date );
                 } );
             }
 
             if ( $start_date ) {
                 $query->where( function ( $q ) use ( $start_date, $property ) {
-                    $q->where( $property, ">=", $start_date );
+                    $q->whereDate( $property, ">=", $start_date );
                 } );
             }
         }

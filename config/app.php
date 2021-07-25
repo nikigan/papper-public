@@ -1,5 +1,10 @@
 <?php
 
+use Barryvdh\Snappy\Facades\SnappyPdf;
+use Maatwebsite\Excel\ExcelServiceProvider;
+use Vanguard\Providers\AdminPluginsProvider;
+use Vanguard\Providers\ViewProvider;
+
 return [
 
     /*
@@ -92,6 +97,8 @@ return [
     'date_format' => 'd-m-Y',
 
     'date_time_format' => 'd-m-Y \a\t h:i A',
+
+    'date_month_format' => 'm-Y',
 
     /*
     |--------------------------------------------------------------------------
@@ -198,7 +205,7 @@ return [
         Webpatser\Countries\CountriesServiceProvider::class,
         Intervention\Image\ImageServiceProvider::class,
         Jenssegers\Agent\AgentServiceProvider::class,
-        \Maatwebsite\Excel\ExcelServiceProvider::class,
+        ExcelServiceProvider::class,
         niklasravnsborg\LaravelPdf\PdfServiceProvider::class,
         Barryvdh\Snappy\ServiceProvider::class,
 
@@ -212,8 +219,8 @@ return [
         Vanguard\Providers\RouteServiceProvider::class,
         Vanguard\Services\Auth\TwoFactor\AuthyServiceProvider::class,
         Vanguard\Providers\VanguardServiceProvider::class,
-        \Vanguard\Providers\AdminPluginsProvider::class,
-        \Vanguard\Providers\ViewProvider::class
+        AdminPluginsProvider::class,
+        ViewProvider::class
     ],
 
     /*
@@ -276,7 +283,7 @@ return [
         'JWTAuth' => Tymon\JWTAuth\Facades\JWTAuth::class,
         'Agent' => Jenssegers\Agent\Facades\Agent::class,
         'PDF' => niklasravnsborg\LaravelPdf\Facades\Pdf::class,
-        'SPDF' => \Barryvdh\Snappy\Facades\SnappyPdf::class
+        'SPDF' => SnappyPdf::class
 
     ],
 
