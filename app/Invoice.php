@@ -58,9 +58,11 @@ use Vanguard\Scopes\TableSortScope;
  * @property Carbon|null $deleted_at
  * @method static Builder|Invoice currentUserInvoices()
  * @method static \Illuminate\Database\Query\Builder|Invoice onlyTrashed()
- * @method static Builder|Invoice whereDeletedAt($value)
+ * @method static Builder|Invoice whereDeletedAt( $value )
  * @method static \Illuminate\Database\Query\Builder|Invoice withTrashed()
  * @method static \Illuminate\Database\Query\Builder|Invoice withoutTrashed()
+ * @property float $sale
+ * @method static Builder|Invoice whereSale( $value )
  */
 class Invoice extends Model implements Sortable {
 

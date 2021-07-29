@@ -2,11 +2,18 @@
 
 namespace Vanguard;
 
+use Eloquent;
 use Illuminate\Auth\Passwords\CanResetPassword;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
+use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Foundation\Auth\User as Authenticatable;
+use Illuminate\Notifications\DatabaseNotification;
+use Illuminate\Notifications\DatabaseNotificationCollection;
 use Illuminate\Notifications\Notifiable;
+use Illuminate\Support\Carbon;
 use Laravel\Sanctum\HasApiTokens;
+use Laravel\Sanctum\PersonalAccessToken;
 use Mail;
 use Vanguard\Events\User\RequestedPasswordResetEmail;
 use Vanguard\Interfaces\Sortable;
@@ -35,16 +42,16 @@ use Vanguard\Support\Enum\UserStatus;
  * @property string|null $address
  * @property int|null $country_id
  * @property int $role_id
- * @property \Illuminate\Support\Carbon|null $birthday
- * @property \Illuminate\Support\Carbon|null $last_login
+ * @property Carbon|null $birthday
+ * @property Carbon|null $last_login
  * @property string $status
  * @property int|null $two_factor_country_code
  * @property int|null $two_factor_phone
  * @property string|null $two_factor_options
  * @property string|null $email_verified_at
  * @property string|null $remember_token
- * @property \Illuminate\Support\Carbon|null $created_at
- * @property \Illuminate\Support\Carbon|null $updated_at
+ * @property Carbon|null $created_at
+ * @property Carbon|null $updated_at
  * @property string|null $announcements_last_read_at
  * @property int|null $auditor_id
  * @property int|null $accountant_id
@@ -59,64 +66,64 @@ use Vanguard\Support\Enum\UserStatus;
  * @property string|null $mh_advances
  * @property string|null $mh_deductions
  * @property string|null $portfolio
- * @property-read \Vanguard\User|null $accountant
- * @property-read \Vanguard\User|null $auditor
- * @property-read \Vanguard\Country|null $country
- * @property-read \Illuminate\Database\Eloquent\Collection|\Vanguard\Document[] $documents
+ * @property-read User|null $accountant
+ * @property-read User|null $auditor
+ * @property-read Country|null $country
+ * @property-read Collection|Document[] $documents
  * @property-read int|null $documents_count
  * @property-read bool $using_two_factor_auth
- * @property-read \Illuminate\Database\Eloquent\Collection|\Vanguard\Invoice[] $invoices
+ * @property-read Collection|Invoice[] $invoices
  * @property-read int|null $invoices_count
- * @property-read \Illuminate\Notifications\DatabaseNotificationCollection|\Illuminate\Notifications\DatabaseNotification[] $notifications
+ * @property-read DatabaseNotificationCollection|DatabaseNotification[] $notifications
  * @property-read int|null $notifications_count
- * @property-read \Vanguard\OrganizationType|null $organization_type
- * @property-read \Vanguard\Role $role
- * @property-read \Illuminate\Database\Eloquent\Collection|\Laravel\Sanctum\PersonalAccessToken[] $tokens
+ * @property-read OrganizationType|null $organization_type
+ * @property-read Role $role
+ * @property-read Collection|PersonalAccessToken[] $tokens
  * @property-read int|null $tokens_count
- * @method static \Illuminate\Database\Eloquent\Builder|\Vanguard\User newModelQuery()
- * @method static \Illuminate\Database\Eloquent\Builder|\Vanguard\User newQuery()
- * @method static \Illuminate\Database\Eloquent\Builder|\Vanguard\User query()
- * @method static \Illuminate\Database\Eloquent\Builder|\Vanguard\User whereAccountantId($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\Vanguard\User whereAddress($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\Vanguard\User whereAnnouncementsLastReadAt($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\Vanguard\User whereAuditorId($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\Vanguard\User whereAvatar($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\Vanguard\User whereBirthday($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\Vanguard\User whereCountryId($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\Vanguard\User whereCreatedAt($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\Vanguard\User whereDefaultIncomeTypeId($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\Vanguard\User whereEmail($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\Vanguard\User whereEmailVerifiedAt($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\Vanguard\User whereFirstName($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\Vanguard\User whereId($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\Vanguard\User whereLastLogin($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\Vanguard\User whereLastName($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\Vanguard\User whereMhAdvances($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\Vanguard\User whereMhDeductions($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\Vanguard\User whereOrganizationTypeId($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\Vanguard\User wherePassport($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\Vanguard\User wherePassword($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\Vanguard\User wherePhone($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\Vanguard\User wherePortfolio($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\Vanguard\User whereRememberToken($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\Vanguard\User whereReportPeriod($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\Vanguard\User whereRoleId($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\Vanguard\User whereSocialSecurity($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\Vanguard\User whereSocialSecurityNumber($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\Vanguard\User whereStatus($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\Vanguard\User whereTaxPercent($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\Vanguard\User whereTwoFactorCountryCode($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\Vanguard\User whereTwoFactorOptions($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\Vanguard\User whereTwoFactorPhone($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\Vanguard\User whereUpdatedAt($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\Vanguard\User whereUsername($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\Vanguard\User whereVatNumber($value)
- * @mixin \Eloquent
+ * @method static Builder|User newModelQuery()
+ * @method static Builder|User newQuery()
+ * @method static Builder|User query()
+ * @method static Builder|User whereAccountantId( $value )
+ * @method static Builder|User whereAddress( $value )
+ * @method static Builder|User whereAnnouncementsLastReadAt( $value )
+ * @method static Builder|User whereAuditorId( $value )
+ * @method static Builder|User whereAvatar( $value )
+ * @method static Builder|User whereBirthday( $value )
+ * @method static Builder|User whereCountryId( $value )
+ * @method static Builder|User whereCreatedAt( $value )
+ * @method static Builder|User whereDefaultIncomeTypeId( $value )
+ * @method static Builder|User whereEmail( $value )
+ * @method static Builder|User whereEmailVerifiedAt( $value )
+ * @method static Builder|User whereFirstName( $value )
+ * @method static Builder|User whereId( $value )
+ * @method static Builder|User whereLastLogin( $value )
+ * @method static Builder|User whereLastName( $value )
+ * @method static Builder|User whereMhAdvances( $value )
+ * @method static Builder|User whereMhDeductions( $value )
+ * @method static Builder|User whereOrganizationTypeId( $value )
+ * @method static Builder|User wherePassport( $value )
+ * @method static Builder|User wherePassword( $value )
+ * @method static Builder|User wherePhone( $value )
+ * @method static Builder|User wherePortfolio( $value )
+ * @method static Builder|User whereRememberToken( $value )
+ * @method static Builder|User whereReportPeriod( $value )
+ * @method static Builder|User whereRoleId( $value )
+ * @method static Builder|User whereSocialSecurity( $value )
+ * @method static Builder|User whereSocialSecurityNumber( $value )
+ * @method static Builder|User whereStatus( $value )
+ * @method static Builder|User whereTaxPercent( $value )
+ * @method static Builder|User whereTwoFactorCountryCode( $value )
+ * @method static Builder|User whereTwoFactorOptions( $value )
+ * @method static Builder|User whereTwoFactorPhone( $value )
+ * @method static Builder|User whereUpdatedAt( $value )
+ * @method static Builder|User whereUsername( $value )
+ * @method static Builder|User whereVatNumber( $value )
+ * @mixin Eloquent
  * @property int $notify
  * @property int $notification_rate
- * @method static \Illuminate\Database\Eloquent\Builder|\Vanguard\User whereNotificationRate($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\Vanguard\User whereNotify($value)
- * @property-read \Illuminate\Database\Eloquent\Collection|User[] $clients
+ * @method static Builder|User whereNotificationRate( $value )
+ * @method static Builder|User whereNotify( $value )
+ * @property-read Collection|User[] $clients
  * @property-read int|null $clients_count
  */
 class User extends Authenticatable implements TwoFactorAuthenticatableContract, MustVerifyEmail, Sortable
@@ -162,72 +169,60 @@ class User extends Authenticatable implements TwoFactorAuthenticatableContract, 
      * @param $value
      * @return string
      */
-    public function setPasswordAttribute($value)
-    {
+    public function setPasswordAttribute($value) {
         $this->attributes['password'] = bcrypt($value);
     }
 
-    public function setBirthdayAttribute($value)
-    {
+    public function setBirthdayAttribute($value) {
         $this->attributes['birthday'] = trim($value) ?: null;
     }
 
-    public function gravatar()
-    {
+    public function gravatar() {
         $hash = hash('md5', strtolower(trim($this->attributes['email'])));
 
         return sprintf("https://www.gravatar.com/avatar/%s?size=150", $hash);
     }
 
-    public function isUnconfirmed()
-    {
+    public function isUnconfirmed() {
         return $this->status == UserStatus::UNCONFIRMED;
     }
 
-    public function isActive()
-    {
+    public function isActive() {
         return $this->status == UserStatus::ACTIVE;
     }
 
-    public function isBanned()
-    {
+    public function isBanned() {
         return $this->status == UserStatus::BANNED;
     }
 
-    public function country()
-    {
+    public function country() {
         return $this->belongsTo(Country::class, 'country_id');
     }
 
-    public function documents()
-    {
+    public function documents() {
         return $this->hasMany(Document::class);
     }
 
-    public function invoices()
-    {
+    public function invoices() {
         return $this->hasMany(Invoice::class, 'creator_id');
     }
 
-    public function auditor()
-    {
+    public function auditor() {
         return $this->belongsTo(User::class, 'auditor_id');
     }
 
-    public function accountant()
-    {
+    public function accountant() {
         return $this->belongsTo(User::class, 'accountant_id');
     }
 
-    public function clients()
-    {
+    public function clients() {
         $role = Role::where('name', 'Accountant')->first();
+
         return $this->hasMany(User::class, 'auditor_id')->where('role_id', "<>", $role->id);
     }
 
-    public function organization_type()
-    {
-        return $this->belongsTo(OrganizationType::class);
+    public function organization_type() {
+        return $this->belongsTo( OrganizationType::class, 'organization_type_id' );
     }
 
     /**
@@ -236,15 +231,13 @@ class User extends Authenticatable implements TwoFactorAuthenticatableContract, 
      * @param  string  $token
      * @return void
      */
-    public function sendPasswordResetNotification($token)
-    {
+    public function sendPasswordResetNotification($token) {
         Mail::to($this)->send(new ResetPassword($token));
 
         event(new RequestedPasswordResetEmail($this));
     }
 
-    public function sendEmailAccountCreated($token)
-    {
+    public function sendEmailAccountCreated($token) {
         Mail::to($this)->send(new ClientRegistered($token, $this));
     }
 

@@ -106,25 +106,27 @@ Route::group(['middleware' => ['auth', 'verified', 'locale']], function () {
             Route::delete('sessions/{session}/invalidate', 'Users\SessionsController@destroy')
                 ->name('user.sessions.invalidate')->middleware('session.database');
 
-            Route::post('two-factor/enable', 'TwoFactorController@enable')->name('user.two-factor.enable');
-            Route::post('two-factor/disable', 'TwoFactorController@disable')->name('user.two-factor.disable');
-        });
+            Route::post( 'two-factor/enable', 'TwoFactorController@enable' )->name( 'user.two-factor.enable' );
+            Route::post( 'two-factor/disable', 'TwoFactorController@disable' )->name( 'user.two-factor.disable' );
+        } );
 
-       /* Route::group(['prefix' => 'document_types'], function () {
-            Route::get('/', 'DocumentTypeController@index')->name('document_types.index');
-            Route::post('/', 'DocumentTypeController@update')->name('document_types.update');
-        });*/
-        Route::resource('document_types', 'DocumentTypeController');
+        /* Route::group(['prefix' => 'document_types'], function () {
+             Route::get('/', 'DocumentTypeController@index')->name('document_types.index');
+             Route::post('/', 'DocumentTypeController@update')->name('document_types.update');
+         });*/
+        Route::resource( 'document_types', 'DocumentTypeController' );
 
-        Route::resource('currency', 'CurrencyController');
+        Route::resource( 'document_check', 'DocumentCheckController' );
 
-        Route::resource('payment_types', 'PaymentTypeController');
+        Route::resource( 'currency', 'CurrencyController' );
 
-        Route::resource('organization_types', 'OrganizationTypeController');
+        Route::resource( 'payment_types', 'PaymentTypeController' );
 
-        Route::resource('expense_types', 'ExpenseTypeController');
+        Route::resource( 'organization_types', 'OrganizationTypeController' );
 
-        Route::resource('expense_groups', 'ExpenseGroupController');
+        Route::resource( 'expense_types', 'ExpenseTypeController' );
+
+        Route::resource( 'expense_groups', 'ExpenseGroupController' );
 
         Route::resource('income_groups', 'IncomeGroupController');
 
@@ -232,6 +234,7 @@ Route::group(['middleware' => ['auth', 'verified', 'locale']], function () {
         Route::get('/last-modified', 'DocumentController@lastModified')->name('documents.last')->middleware('role:Auditor,Accountant');
         Route::get( '/{document}/restore', 'DocumentController@restore' )->name( 'documents.restore' );
         Route::get( '/{document}/duplicate', 'DocumentController@duplicate' )->name( 'documents.duplicate' );
+        Route::get( '/{document}/check/{document_check}', 'DocumentController@check' )->name( 'documents.check' );
         Route::get( '/upload', 'DocumentController@upload' )->name( 'documents.upload' )
              ->middleware( 'permission:document.upload' );
         Route::get('/create', 'DocumentController@create')->name('document.create');

@@ -5,13 +5,8 @@ namespace Vanguard\Providers;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\View;
 use Illuminate\Support\ServiceProvider;
-use Vanguard\Announcements\Announcements;
 use Vanguard\Document;
-use Vanguard\Invoice;
-use Vanguard\Support\Plugins\RolesAndPermissions;
-use Vanguard\Support\Plugins\Reports;
-use Vanguard\Support\Plugins\Users;
-use Vanguard\UserActivity\UserActivity;
+use Vanguard\DocumentCheck;
 use function foo\func;
 
 class ViewProvider extends ServiceProvider
@@ -63,8 +58,11 @@ class ViewProvider extends ServiceProvider
             dump($documents);
             dd($invoices);*/
 
-            $view->with(['documents' => $documents, 'sum' => $sum, 'vat' => $vat, 'sum_class' => $sum_class]);
-        });
+            $view->with( [ 'documents' => $documents, 'sum' => $sum, 'vat' => $vat, 'sum_class' => $sum_class ] );
+        } );
+
+        $document_checks = DocumentCheck::all();
+        View::share( 'document_checks', $document_checks );
 
         /*View::composer('partials.sidebar.main', function(\Illuminate\View\View $view) {
            if (auth()->user()->hasRole('Admin')) {

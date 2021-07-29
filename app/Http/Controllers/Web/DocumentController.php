@@ -4,10 +4,12 @@ namespace Vanguard\Http\Controllers\Web;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
+use Mail;
 use Storage;
 use Vanguard\Currency;
 use Vanguard\Customer;
 use Vanguard\Document;
+use Vanguard\DocumentCheck;
 use Vanguard\ExpenseType;
 use Vanguard\Http\Controllers\Controller;
 use Vanguard\Http\Filters\DateSearch;
@@ -15,6 +17,7 @@ use Vanguard\Http\Filters\DocumentKeywordSearch;
 use Vanguard\Http\Filters\MonthFilter;
 use Vanguard\IncomeType;
 use Vanguard\Jobs\ProcessDocument;
+use Vanguard\Mail\DocumentCheckMail;
 use Vanguard\Repositories\Document\DocumentRepository;
 use Vanguard\Support\Enum\DocumentStatus;
 use Vanguard\User;
@@ -71,8 +74,8 @@ class DocumentController extends Controller {
     public function show( Document $document ) {
         $id         = $document->id;
         $currencies = Currency::all();
-        $vendors    = Vendor::query()->where( 'creator_id', $document->user->id )->orWhere('creator_id', auth()->id())->get();
-        $customers  = Customer::query()->where( 'creator_id', $document->user->id )->orWhere('creator_id', auth()->id())->get();
+        $vendors    = Vendor::query()->where( 'creator_id', $document->user->id )->orWhere( 'creator_id', auth()->id() )->get();
+        $customers  = Customer::query()->where( 'creator_id', $document->user->id )->orWhere( 'creator_id', auth()->id() )->get();
         $isPdf      = false;
         if ( $document->file ) {
             $isPdf = mime_content_type( $document->file ) == 'application/pdf';
@@ -168,11 +171,11 @@ class DocumentController extends Controller {
     public function create( ?User $client ) {
         $id             = $client->id ?? auth()->id();
         $currencies     = Currency::all();
-        $vendors        = Vendor::query()->where( 'creator_id', $id )->orWhere('creator_id', auth()->id())->get();
-        $customers      = Customer::query()->where( 'creator_id', $id )->orWhere('creator_id', auth()->id())->get();
+        $vendors        = Vendor::query()->where( 'creator_id', $id )->orWhere( 'creator_id', auth()->id() )->get();
+        $customers      = Customer::query()->where( 'creator_id', $id )->orWhere( 'creator_id', auth()->id() )->get();
         $expense_types  = ExpenseType::all();
         $income_types   = IncomeType::all();
-        $document_types = $client->organization_type->document_types ?? auth()->user()->organization_type->document_types;
+        $document_types = $client ? $client->organization_type->document_types : auth()->user()->organization_type->document_types;
         $error_document = null;
         if ( session()->has( 'error_document_number' ) ) {
             $document = Document::query()->where( 'document_number', '=', session()->get( 'error_document_number' ) )->first();
@@ -199,7 +202,7 @@ class DocumentController extends Controller {
                 $document = $request->get( 'document_number' );
             }
 
-            return redirect( route( 'document.create' ) )->withErrors( $validator )->withInput()->with( 'error_document_number', $document );
+            return redirect()->back()->withErrors( $validator )->withInput()->with( 'error_document_number', $document );
         }
 
 
@@ -312,5 +315,13 @@ class DocumentController extends Controller {
         $newDocument->save();
 
         return redirect()->back()->withSuccess( __( 'Document duplicated successfully!' ) );
+    }
+
+    public function check( Document $document, DocumentCheck $document_check ) {
+
+        Mail::to( $document->user->email )->send( new DocumentCheckMail( $document, $document_check ) );
+
+        return redirect()->back()->with( 'success', __( 'Email with document check send successfully' ) );
+
     }
 }

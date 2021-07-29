@@ -67,31 +67,35 @@ class Settings extends Plugin
             });
 
         $income = Item::create(__('Income'))
-            ->href('#income-dropdown')
-            ->addChildren([
-                Item::create(__('Income group'))
-                    ->route('income_groups.index'),
-                Item::create(__('Income type'))
-                    ->route('income_types.index')
-            ])
-            ->permissions(function (User $user) {
-                return $user->hasRole('Admin');
-            });
+                      ->href('#income-dropdown')
+                      ->addChildren( [
+                          Item::create( __( 'Income group' ) )
+                              ->route( 'income_groups.index' ),
+                          Item::create( __( 'Income type' ) )
+                              ->route( 'income_types.index' )
+                      ] )
+                      ->permissions( function ( User $user ) {
+                          return $user->hasRole( 'Admin' );
+                      } );
 
-        return Item::create(__('Settings'))
-            ->href('#settings-dropdown')
-            ->icon('fas fa-cogs')
-            ->permissions(['settings.general', 'settings.auth', 'settings.notifications'])
-            ->addChildren([
-                $document_types,
-                $currencies,
-                $payment_types,
-                $organization_types,
-                $expense_types,
-                $income,
-                $general,
-                $authAndRegistration,
-                $notifications
-            ]);
+        $document_check = Item::create( __( 'Document check' ) )
+                              ->route( 'document_check.index' );
+
+        return Item::create( __( 'Settings' ) )
+                   ->href( '#settings-dropdown' )
+                   ->icon( 'fas fa-cogs' )
+                   ->permissions( [ 'settings.general', 'settings.auth', 'settings.notifications' ] )
+                   ->addChildren( [
+                       $document_types,
+                       $document_check,
+                       $currencies,
+                       $payment_types,
+                       $organization_types,
+                       $expense_types,
+                       $income,
+                       $general,
+                       $authAndRegistration,
+                       $notifications
+                   ]);
     }
 }

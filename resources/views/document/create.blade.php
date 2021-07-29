@@ -144,21 +144,22 @@
                     </div>
                 </div>
             </div>
-            <div class="form-row">
-                <div class="col-md-6">
-                    <div class="form-group">
-                        <label for="sum">@lang('Sum')</label>
-                        <input type="text" class="form-control" @if($required)required @endif name="sum" id="sum"
-                               value="{{old('sum')}}">
+                <div class="form-row">
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label for="sum">@lang('Sum')</label>
+                            <input type="number" class="form-control" @if($required)required @endif name="sum" id="sum"
+                                   value="{{old('sum')}}">
+                        </div>
+                        <div class="custom-control custom-checkbox">
+                            <input type="checkbox" checked class="custom-control-input" id="include_tax"
+                                   name="include_tax">
+                            <label class="custom-control-label" for="include_tax">@lang('Including tax')</label>
+                        </div>
                     </div>
-                    <div class="custom-control custom-checkbox">
-                        <input type="checkbox" checked class="custom-control-input" id="include_tax" name="include_tax">
-                        <label class="custom-control-label" for="include_tax">@lang('Including tax')</label>
-                    </div>
-                </div>
-                <div class="col-md-6">
-                    <div class="form-group">
-                        <label for="vat">@lang('VAT') %</label>
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label for="vat">@lang('VAT') %</label>
                         <input type="number" min="0" max="100" step="0.1" class="form-control" name="vat" id="vat"
                                value="{{old('vat', 17)}}">
                         <small id="vatHelp" class="form-text text-muted">0</small>

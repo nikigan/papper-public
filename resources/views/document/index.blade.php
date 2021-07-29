@@ -66,7 +66,8 @@
                 </div>
             </div>
             @include('document.partials.table')
-            {{--            {{$table}}--}}
         </div>
     </div>
 @endsection
+
+
