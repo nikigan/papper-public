@@ -102,11 +102,13 @@
            data-confirm-get="@lang('Yes, duplicate it!')">
             <i class="fas fa-clone"></i>
         </a>
-        <button
-            data-toggle="modal" data-target="#documentCheckModal-{{$document->id}}"
-            class="btn btn-icon"
-            title="@lang('Check Document')">
-            <i class="fas fa-question"></i>
-        </button>
+        @if(!auth()->user()->hasRole('User'))
+            <button
+                data-toggle="modal" data-target="#documentCheckModal-{{$document->id}}"
+                class="btn btn-icon"
+                title="@lang('Check Document')">
+                <i class="fas fa-question"></i>
+            </button>
+        @endif
     </td>
 </tr>
