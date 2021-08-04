@@ -43,16 +43,16 @@ class Income extends Widget
      */
     public function render()
     {
-        $client = auth()->user();
-        $start_date = date('Y-m-d', strtotime(date('Y-m-d') . "-{$client->report_period} month"));
-        $end_date = date('Y-m-d');
+        $client     = auth()->user();
+        $start_date = date( config( 'app.date_format' ), strtotime( date( config( 'app.date_format' ) ) . "-{$client->report_period} month" ) );
+        $end_date   = date( config( 'app.date_format' ) );
 
 
-        $income = $client->documents()->where('status', DocumentStatus::CONFIRMED)->getQuery();
+        $income = $client->documents()->where( 'status', DocumentStatus::CONFIRMED )->getQuery();
 
-        (new DateSearch)($income, compact('start_date', 'end_date'), 'document_date');
+        ( new DateSearch )( $income, compact( 'start_date', 'end_date' ), 'document_date' );
 
-        $document_vat = $income->leftJoin('currencies as c', 'documents.currency_id', '=', 'c.id')->select(DB::raw('SUM(vat/c.value) as vat, SUM(sum/c.value) as sum, document_type'))->groupBy('document_type')->get()->toArray();
+        $document_vat = $income->leftJoin( 'currencies as c', 'documents.currency_id', '=', 'c.id' )->select( DB::raw( 'SUM(vat/c.value) as vat, SUM(sum/c.value) as sum, document_type' ) )->groupBy( 'document_type' )->get()->toArray();
 
         $invoices = $client->invoices()->getQuery();
 
@@ -85,21 +85,21 @@ class Income extends Widget
             ];
         }
 
-        $in_sum = $document_vat[1]['sum'] + $invoices_vat->sum('sum');
+        $in_sum  = $document_vat[1]['sum'] + $invoices_vat->sum( 'sum' );
         $exp_sum = $document_vat[0]['sum'];
 
 
         $previos_period = 2 * $client->report_period;
 
-        $start_date = date('Y-m-d', strtotime(date('Y-m-d') . "-{$previos_period} month"));
-        $end_date = date('Y-m-d', strtotime(date('Y-m-d') . "-{$client->report_period} month"));
+        $start_date = date( config( 'app.date_format' ), strtotime( date( config( 'app.date_format' ) ) . "-{$previos_period} month" ) );
+        $end_date   = date( config( 'app.date_format' ), strtotime( date( config( 'app.date_format' ) ) . "-{$client->report_period} month" ) );
 
 
-        $income = $client->documents()->where('status', DocumentStatus::CONFIRMED)->getQuery();
+        $income = $client->documents()->where( 'status', DocumentStatus::CONFIRMED )->getQuery();
 
-        (new DateSearch)($income, compact('start_date', 'end_date'), 'document_date');
+        ( new DateSearch )( $income, compact( 'start_date', 'end_date' ), 'document_date' );
 
-        $document_vat = $income->leftJoin('currencies as c', 'documents.currency_id', '=', 'c.id')->select(DB::raw('SUM(vat/c.value) as vat, SUM(sum/c.value) as sum, document_type'))->groupBy('document_type')->get()->toArray();
+        $document_vat = $income->leftJoin( 'currencies as c', 'documents.currency_id', '=', 'c.id' )->select( DB::raw( 'SUM(vat/c.value) as vat, SUM(sum/c.value) as sum, document_type' ) )->groupBy( 'document_type' )->get()->toArray();
 
         $invoices = $client->invoices()->getQuery();
 

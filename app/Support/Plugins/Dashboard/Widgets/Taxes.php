@@ -45,18 +45,18 @@ class Taxes extends Widget
     {
         $client = auth()->user();
 
-        $start_date = date('Y-m-d', strtotime(date('Y-m-d') . "-{$client->report_period} month"));
-        $end_date = date('Y-m-d');
+        $start_date = date( config( 'app.date_format' ), strtotime( date( config( 'app.date_format' ) ) . "-{$client->report_period} month" ) );
+        $end_date   = date( config( 'app.date_format' ) );
 
-        $income = $client->documents()->where('status', DocumentStatus::CONFIRMED)->getQuery();
+        $income = $client->documents()->where( 'status', DocumentStatus::CONFIRMED )->getQuery();
 
-        (new DateSearch)($income, compact('start_date', 'end_date'), 'document_date');
+        ( new DateSearch )( $income, compact( 'start_date', 'end_date' ), 'document_date' );
 
-        $document_vat = $income->leftJoin('currencies as c', 'documents.currency_id', '=', 'c.id')->select(DB::raw('SUM(vat/c.value) as vat, SUM(sum/c.value) as sum, document_type'))->groupBy('document_type')->get()->toArray();
+        $document_vat = $income->leftJoin( 'currencies as c', 'documents.currency_id', '=', 'c.id' )->select( DB::raw( 'SUM(vat/c.value) as vat, SUM(sum/c.value) as sum, document_type' ) )->groupBy( 'document_type' )->get()->toArray();
 
         $invoices = $client->invoices()->getQuery();
 
-        (new DateSearch())($invoices, compact('start_date', 'end_date'), 'invoice_date');
+        ( new DateSearch() )( $invoices, compact( 'start_date', 'end_date' ), 'invoice_date' );
 
         $invoices_vat = $invoices->leftJoin('currencies as c', 'invoices.currency_id', '=', 'c.id')->leftJoin('invoices_items as ii', 'invoices.id', 'ii.invoice_id')->select(DB::raw('sum(ii.price*ii.quantity / c.value) as sum'), DB::raw('sum(ii.price*ii.quantity / c.value) * invoices.tax_percent / 100 as vat'), 'invoices.id')->groupBy('invoices.id')->get();
 

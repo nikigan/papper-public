@@ -15,17 +15,19 @@
             @foreach ($invoices as $invoice)
                 @php($sum += $invoice->grand_total)
                 <tr>
-                    <td>{{ $invoice->invoice_date }}</td>
+                    <td>{{ (new \Carbon\Carbon($invoice->invoice_date))->format(config('app.date_format')) }}</td>
                     <td>{{ $invoice->invoice_number }}</td>
                     <td>{{ $invoice->customer->name }}</td>
                     <td>{{ number_format($invoice->grand_total, 2) }}</td>
                     <td>
-                        <a href="{{ route('invoice.show', $invoice) }}" class="btn btn-sm btn-primary"><i class="fa fa-eye"></i></a>
-                        <a href="{{ route('invoice.download', $invoice) }}" class="btn btn-sm btn-warning"><i class="fa fa-download"></i></a>
+                        <a href="{{ route('invoice.show', $invoice) }}" class="btn btn-sm btn-primary"><i
+                                class="fa fa-eye"></i></a>
+                        <a href="{{ route('invoice.download', $invoice) }}" class="btn btn-sm btn-warning"><i
+                                class="fa fa-download"></i></a>
                         @if(!$invoice->trashed())
-                        <a href="{{ route('invoice.destroy', $invoice) }}"
-                           class="btn btn-sm btn-danger"
-                           title="@lang('Delete Invoice')"
+                            <a href="{{ route('invoice.destroy', $invoice) }}"
+                               class="btn btn-sm btn-danger"
+                               title="@lang('Delete Invoice')"
                            data-toggle="tooltip"
                            data-placement="top"
                            data-method="DELETE"

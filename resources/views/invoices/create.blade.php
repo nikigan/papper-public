@@ -40,14 +40,17 @@
                                 </div>
                                 <input type="text" name='invoice[invoice_number]' class="form-control"
                                        value="{{$id}}" required
+                                       @unless($first_invoice) readonly @endif
                                        id="invoice_number"/>
                             </div>
                         </div>
                         <div class="form-group">
                             <label for="date">@lang("Document date")*:</label>
-                            <input id="date" type="date" name='invoice[invoice_date]' max="{{ date('Y-m-d') }}"
-                                   class="form-control datechk"
-                                   value="{{ date('Y-m-d') }}" required/>
+                            <input id="date" name='invoice[invoice_date]'
+                                   max="{{ date(config('app.date_format')) }}"
+                                   class="form-control datepicker-here"
+                                   data-date-format="dd-mm-yyyy"
+                                   value="{{ date(config('app.date_format')) }}" required/>
                         </div>
                     </div>
                     <div class="col-md-6 text-center">
@@ -329,16 +332,16 @@
                 sub_total += parseFloat($(this).val());
             });
             const sale = $("#sale").val();
-            const sale_sum = sub_total - sub_total * (100 - parseFloat(sale))/100;
-            sub_total *= (100 - parseFloat(sale))/100;
+            const sale_sum = sub_total - sub_total * (100 - parseFloat(sale)) / 100;
+            sub_total *= (100 - parseFloat(sale)) / 100;
             @if($have_tax)
-                const taxAmount = parseInt($('#tax').val());
-                let tax_sum = 0;
+            const taxAmount = parseInt($('#tax').val());
+            let tax_sum = 0;
             if ($('#include_tax').prop('checked')) {
-                tax_sum = ((sub_total / ((100 + taxAmount)/100))) * (taxAmount/100);
+                tax_sum = ((sub_total / ((100 + taxAmount) / 100))) * (taxAmount / 100);
                 sub_total -= tax_sum;
             } else {
-                tax_sum = (sub_total * (taxAmount/100));
+                tax_sum = (sub_total * (taxAmount / 100));
             }
             $('#sub_total').val((sub_total + tax_sum + sale_sum).toFixed(2));
             $('#tax_amount').val(tax_sum.toFixed(2));

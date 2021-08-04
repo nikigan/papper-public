@@ -127,6 +127,20 @@
     </div>
 
     <h4>@lang('Invoices')</h4>
+    @unless($user->can_change_invoice_number)
+        <div class="row py-3">
+            <div class="col-lg-12">
+                <form action="{{route('clients.update', $user)}}" method="POST">
+                    @method('PUT')
+                    @csrf
+                    <input type="hidden" name="can_change_invoice_number" value="1">
+                    <button type="submit" class="btn btn-primary">
+                        @lang('Allow to change invoice number')
+                    </button>
+                </form>
+            </div>
+        </div>
+    @endunless
     <div class="card">
         <div class="card-body">
             <div class="table-responsive">

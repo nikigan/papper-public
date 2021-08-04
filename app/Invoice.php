@@ -63,6 +63,8 @@ use Vanguard\Scopes\TableSortScope;
  * @method static \Illuminate\Database\Query\Builder|Invoice withoutTrashed()
  * @property float $sale
  * @method static Builder|Invoice whereSale( $value )
+ * @property int|null $custom_id
+ * @method static Builder|Invoice whereCustomId( $value )
  */
 class Invoice extends Model implements Sortable {
 
@@ -108,8 +110,8 @@ class Invoice extends Model implements Sortable {
         $tax   = $this->tax_percent / 100;
         $total = $this->getTotalAmountAttribute();
 
-        if ($this->sale) {
-            $total *= (100 - $this->sale)/100;
+        if ( $this->sale ) {
+            $total *= ( 100 - $this->sale ) / 100;
         }
 
         if ( $this->include_tax ) {
@@ -142,6 +144,10 @@ class Invoice extends Model implements Sortable {
         } else {
             return $query->where( 'creator_id', $current_user->id );
         }
+    }
+
+    public function setInvoiceDateAttribute( $value ) {
+        $this->attributes['invoice_date'] = ( new \Carbon\Carbon( $value ) )->format( 'Y-m-d' );
     }
 
 }
