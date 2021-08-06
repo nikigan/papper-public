@@ -37,7 +37,8 @@
                         <tbody>
                         @foreach ($customers as $customer)
                             <tr>
-                                <td>{{ $customer['name'] ?? 'N/A'}}
+                                <td>
+                                    <a href="{{ route('customers.show', ['customer' => $customer['id']]) }}">{{ $customer['name'] ?? 'N/A'}}</a>
                                 <td>{{ $customer['vat_number'] ?? 'N/A'}}</td>
                                 <td>{{ $customer['amount'] ?? 'N/A'}}</td>
                                 <td>{{ number_format($customer['sum'], 2) ?? 'N/A'}}</td>

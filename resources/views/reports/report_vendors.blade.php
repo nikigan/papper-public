@@ -38,7 +38,8 @@
                         <tbody>
                         @foreach ($vendor_groups as $vendor)
                             <tr>
-                                <td>{{ $vendor->name ?? 'N/A'}}
+                                <td>
+                                    <a @if($vendor['id'])href="{{ route('vendors.show', ['vendor' => $vendor['id']]) }}"@endif>{{ $vendor->name ?? 'N/A'}}</a>
                                 <td>{{ $vendor->vat_number ?? 'N/A'}}</td>
                                 <td>{{ $vendor->amount ?? 'N/A'}}</td>
                                 <td>{{ number_format($vendor->sum, 2) ?? 'N/A'}}</td>

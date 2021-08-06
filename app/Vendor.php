@@ -2,7 +2,11 @@
 
 namespace Vanguard;
 
+use Eloquent;
+use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Carbon;
 
 /**
  * Vanguard\Vendor
@@ -14,33 +18,33 @@ use Illuminate\Database\Eloquent\Model;
  * @property string|null $phone
  * @property string|null $address
  * @property int $creator_id
- * @property \Illuminate\Support\Carbon|null $created_at
- * @property \Illuminate\Support\Carbon|null $updated_at
- * @property-read \Illuminate\Database\Eloquent\Collection|\Vanguard\Document[] $documents
+ * @property Carbon|null $created_at
+ * @property Carbon|null $updated_at
+ * @property-read Collection|Document[] $documents
  * @property-read int|null $documents_count
- * @method static \Illuminate\Database\Eloquent\Builder|\Vanguard\Vendor newModelQuery()
- * @method static \Illuminate\Database\Eloquent\Builder|\Vanguard\Vendor newQuery()
- * @method static \Illuminate\Database\Eloquent\Builder|\Vanguard\Vendor query()
- * @method static \Illuminate\Database\Eloquent\Builder|\Vanguard\Vendor whereAddress($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\Vanguard\Vendor whereCreatedAt($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\Vanguard\Vendor whereCreatorId($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\Vanguard\Vendor whereEmail($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\Vanguard\Vendor whereId($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\Vanguard\Vendor whereName($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\Vanguard\Vendor wherePhone($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\Vanguard\Vendor whereUpdatedAt($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\Vanguard\Vendor whereVatNumber($value)
- * @mixin \Eloquent
+ * @method static Builder|Vendor newModelQuery()
+ * @method static Builder|Vendor newQuery()
+ * @method static Builder|Vendor query()
+ * @method static Builder|Vendor whereAddress( $value )
+ * @method static Builder|Vendor whereCreatedAt( $value )
+ * @method static Builder|Vendor whereCreatorId( $value )
+ * @method static Builder|Vendor whereEmail( $value )
+ * @method static Builder|Vendor whereId( $value )
+ * @method static Builder|Vendor whereName( $value )
+ * @method static Builder|Vendor wherePhone( $value )
+ * @method static Builder|Vendor whereUpdatedAt( $value )
+ * @method static Builder|Vendor whereVatNumber( $value )
+ * @mixin Eloquent
  * @property int|null $default_expense_type_id
- * @method static \Illuminate\Database\Eloquent\Builder|Vendor whereDefaultExpenseTypeId($value)
- * @property-read \Vanguard\ExpenseType|null $default_expense_type
+ * @method static Builder|Vendor whereDefaultExpenseTypeId( $value )
+ * @property-read ExpenseType|null $default_expense_type
  */
 class Vendor extends Model
 {
     protected $guarded = [];
 
     public function documents() {
-        return $this->belongsToMany(Document::class);
+        return $this->hasMany( Document::class );
     }
 
     public function default_expense_type() {

@@ -24,6 +24,31 @@
                             <button class="btn btn-primary" type="submit">{{ __('Make report')}}</button>
                         </div>
                     </div>
+                    <div class="form-row">
+                        <div class="col">
+                            <div class="input-group custom-search-form">
+                            <span class="input-group-prepend">
+                                @if (Request::has('query') && Request::get('query') != '')
+                                    <a href="{{ url()->current()}}"
+                                       class="btn btn-light d-flex align-items-center text-muted"
+                                       role="button">
+                                                            <i class="fas fa-times"></i>
+                                                        </a>
+                                @endif
+                                <button class="btn btn-light" type="submit" id="search-users-btn">
+                                    <i class="fas fa-search text-muted"></i>
+                                </button>
+                            </span>
+                                <input type="text"
+                                       class="form-control input-solid"
+                                       id="search"
+                                       name="query"
+                                       value="{{ Request::get('query') }}"
+                                       placeholder="@lang('Search...')">
+
+                            </div>
+                        </div>
+                    </div>
                 </form>
             </div>
             @isset($route)

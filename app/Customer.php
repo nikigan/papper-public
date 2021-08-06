@@ -2,7 +2,10 @@
 
 namespace Vanguard;
 
+use Eloquent;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Carbon;
 
 /**
  * Vanguard\Customer
@@ -14,31 +17,37 @@ use Illuminate\Database\Eloquent\Model;
  * @property string|null $phone
  * @property string|null $address
  * @property int $creator_id
- * @property \Illuminate\Support\Carbon|null $created_at
- * @property \Illuminate\Support\Carbon|null $updated_at
- * @method static \Illuminate\Database\Eloquent\Builder|\Vanguard\Customer newModelQuery()
- * @method static \Illuminate\Database\Eloquent\Builder|\Vanguard\Customer newQuery()
- * @method static \Illuminate\Database\Eloquent\Builder|\Vanguard\Customer query()
- * @method static \Illuminate\Database\Eloquent\Builder|\Vanguard\Customer whereAddress($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\Vanguard\Customer whereCreatedAt($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\Vanguard\Customer whereCreatorId($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\Vanguard\Customer whereEmail($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\Vanguard\Customer whereId($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\Vanguard\Customer whereName($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\Vanguard\Customer wherePhone($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\Vanguard\Customer whereUpdatedAt($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\Vanguard\Customer whereVatNumber($value)
- * @mixin \Eloquent
+ * @property Carbon|null $created_at
+ * @property Carbon|null $updated_at
+ * @method static Builder|Customer newModelQuery()
+ * @method static Builder|Customer newQuery()
+ * @method static Builder|Customer query()
+ * @method static Builder|Customer whereAddress( $value )
+ * @method static Builder|Customer whereCreatedAt( $value )
+ * @method static Builder|Customer whereCreatorId( $value )
+ * @method static Builder|Customer whereEmail( $value )
+ * @method static Builder|Customer whereId( $value )
+ * @method static Builder|Customer whereName( $value )
+ * @method static Builder|Customer wherePhone( $value )
+ * @method static Builder|Customer whereUpdatedAt( $value )
+ * @method static Builder|Customer whereVatNumber( $value )
+ * @mixin Eloquent
  */
-class Customer extends Model
-{
+class Customer extends Model {
     protected $table = 'customers';
 
-    protected $fillable = ['name', 'email', 'phone', 'address', 'creator_id', 'vat_number'];
+    protected $fillable = [ 'name', 'email', 'phone', 'address', 'creator_id', 'vat_number' ];
 
 
-    public function creator()
-    {
-        $this->belongsTo(User::class, 'creator_id');
+    public function creator() {
+        $this->belongsTo( User::class, 'creator_id' );
+    }
+
+    public function invoices() {
+        return $this->hasMany( Invoice::class );
+    }
+
+    public function documents() {
+        return $this->hasMany( Document::class );
     }
 }

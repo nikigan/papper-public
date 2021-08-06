@@ -25,14 +25,20 @@
         </div>
     </div>
 
-    <div class="row">
-        <div class="col-md-12">
-            <button type="submit" class="btn btn-primary">
-                @lang('Update Vendor')
-            </button>
+        <div class="row">
+            <div class="col-md-12">
+                <button type="submit" class="btn btn-primary">
+                    @lang('Update Vendor')
+                </button>
+            </div>
+        </div>
+    </form>
+
+    <div class="card mt-3">
+        <div class="card-body">
+            @include('document.partials.table')
         </div>
     </div>
-    </form>
 
     <br>
 @stop
