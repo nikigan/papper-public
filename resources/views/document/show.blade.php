@@ -251,6 +251,15 @@
                 @lang('Update Document')
             </button>
             @endpermission
+            @if(!auth()->user()->hasRole('User'))
+                <button
+                    type="button"
+                    data-toggle="modal" data-target="#documentCheckModal-{{$document->id}}"
+                    class="btn btn-icon"
+                    title="@lang('Check Document')">
+                    <i class="fas fa-question"></i>
+                </button>
+            @endif
             {!! Form::close() !!}
         </div>
 
@@ -270,8 +279,6 @@
                 @endif
             @endisset
         </div>
-    </div>
-    </div>
     </div>
 
     <div class="modal" tabindex="-1" role="dialog" id="vendorsModal">
@@ -329,6 +336,28 @@
                         </div>
                     </div>
                     {!! Form::close() !!}
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal" tabindex="-1" id="documentCheckModal-{{$document->id}}">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">@lang("Document check")</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <ul class="list-group">
+                        @foreach($document_checks as $check)
+                            <li class="list-group-item">
+                                <a href="{{route('documents.check', ['document_check' => $check, 'document' => $document])}}">{{$check->title}}</a>
+                            </li>
+                        @endforeach
+                    </ul>
                 </div>
             </div>
         </div>
