@@ -75,6 +75,8 @@ use Vanguard\Support\Enum\DocumentStatus;
  * @method static Builder|Document whereDeletedAt( $value )
  * @method static \Illuminate\Database\Query\Builder|Document withTrashed()
  * @method static \Illuminate\Database\Query\Builder|Document withoutTrashed()
+ * @property string|null $report_month
+ * @method static Builder|Document whereReportMonth( $value )
  */
 class Document extends Model implements Sortable {
     use Presentable, SoftDeletes;
@@ -96,7 +98,8 @@ class Document extends Model implements Sortable {
         'note',
         'document_type_id',
         'income_type_id',
-        'customer_id'
+        'customer_id',
+        'report_month'
     ];
 
     public function user() {
@@ -137,6 +140,10 @@ class Document extends Model implements Sortable {
 
     public function getDocumentDate() {
         return Carbon::parse( $this->document_date )->format( config( 'app.date_format' ) );
+    }
+
+    public function setDocumentDate( $value ) {
+        $this->attributes['document_date'] = Carbon::parse( $value )->format( "YYYY-mm-dd" );
     }
 
     public function getDocumentDateAttribute( $value ) {

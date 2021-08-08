@@ -160,16 +160,16 @@
                     <div class="col-md-6">
                         <div class="form-group">
                             <label for="vat">@lang('VAT') %</label>
-                        <input type="number" min="0" max="100" step="0.1" class="form-control" name="vat" id="vat"
-                               value="{{old('vat', 17)}}">
-                        <small id="vatHelp" class="form-text text-muted">0</small>
+                            <input type="number" min="0" max="100" step="0.1" class="form-control" name="vat" id="vat"
+                                   value="{{old('vat', 17)}}">
+                            <small id="vatHelp" class="form-text text-muted">0</small>
+                        </div>
                     </div>
                 </div>
-            </div>
-            <div class="form-row">
-                <div class="col-md-6"></div>
-                <div class="col-md-6">
-                    <div class="form-group" id="document_type_block" style="display: none;">
+                <div class="form-row">
+                    <div class="col-md-6"></div>
+                    <div class="col-md-6">
+                        <div class="form-group" id="document_type_block" style="display: none;">
                         <label for="document_type">@lang("Document type"):</label>
                         <select name='document_type_id' class="form-control" id="document_type">
                             <option value="">@lang('Other Type')</option>
@@ -177,27 +177,39 @@
                                 <option value="{{$type->id}}">@lang($type->name)</option>
                             @endforeach
                         </select>
+                        </div>
                     </div>
                 </div>
-            </div>
-            <div class="form-row">
-                <div class="col-md-6">
-                    <div class="form-group">
-                        <label for="document_date">@lang('Document date')</label>
-                        <input type="date" max="{{ date('Y-m-d') }}" value="{{ date('Y-m-d') }}" class="form-control"
-                               id="document_date" name="document_date">
+                <div class="form-row">
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label for="document_date">@lang('Document date')</label>
+                            <input value="{{ \Carbon\Carbon::now() }}" class="form-control datepicker-here"
+                                   id="document_date" name="document_date" data-language="en"
+                                   data-date-format="dd-mm-yyyy">
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label for="report_month">@lang('Report month')</label>
+                            <input value="{{ \Carbon\Carbon::now()->format('m-Y') }}"
+                                   class="form-control datepicker-here"
+                                   id="report_month" data-date-format="mm-yyyy" data-min-view="months"
+                                   data-view="months" data-language="en" name="report_month">
+                        </div>
                     </div>
                 </div>
-                <div class="col-md-6">
-                    <div class="form-group">
-                        <label for="currency">@lang("Currency"):</label>
-                        <select name='currency_id' class="form-control" id="currency">
-                            @foreach($currencies as $currency)
-                                <option value="{{$currency->id}}"
-                                        data-currency="{{$currency->ISO_code}}">@lang($currency->name)</option>
-                            @endforeach
-                        </select>
-                    </div>
+                <div class="form-row">
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label for="currency">@lang("Currency"):</label>
+                            <select name='currency_id' class="form-control" id="currency">
+                                @foreach($currencies as $currency)
+                                    <option value="{{$currency->id}}"
+                                            data-currency="{{$currency->ISO_code}}">@lang($currency->name)</option>
+                                @endforeach
+                            </select>
+                        </div>
                 </div>
             </div>
             <div class="form-row">
@@ -496,7 +508,7 @@
                 $("#vatHelp").html(((sum / (1 + tax / 100)) * tax / 100).toFixed(2));
             } else {
                 $("#vatHelp").html((sum * tax / 100).toFixed(2));
-           }
+            }
 
         });
     </script>

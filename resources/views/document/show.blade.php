@@ -105,12 +105,25 @@
                         <div class="col-md-6">
                             <div class="form-group">
                                 <label for="document_date">@lang('Document date')</label>
-                                <input type="date" max="{{ date('Y-m-d') }}"
-                                       value="{{ \Carbon\Carbon::parse($document->document_date)->format('Y-m-d') }}"
-                                       class="form-control" id="document_date" name="document_date"
-                                       required>
+                                <input
+                                    value="{{ \Carbon\Carbon::parse($document->document_date)->format(config('app.date_format')) }}"
+                                    class="form-control datepicker-here"
+                                    id="document_date" name="document_date" data-language="en"
+                                    data-date-format="dd-mm-yyyy">
                             </div>
                         </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label for="report_month">@lang('Report month')</label>
+                                <input
+                                    value="{{ (new \Carbon\Carbon($document->report_month))->format(config('app.date_month_format')) }}"
+                                    class="form-control datepicker-here"
+                                    id="report_month" data-date-format="mm-yyyy" data-min-view="months"
+                                    data-view="months" data-language="en" name="report_month">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-row">
                         <div class="col-md-6">
                             <div class="form-group">
                                 <label for="currency">@lang("Currency"):</label>
@@ -239,26 +252,26 @@
             </button>
             @endpermission
             {!! Form::close() !!}
-                </div>
-
-                <div class="col-lg-6 text-center">
-                    @isset($document->file)
-                        @if($isPdf)
-                            <iframe
-                                src='{{ asset("assets/pdf-js/web/viewer.html") . "?file=" . asset($document->file) }}'
-                                width="100%"
-                                height="600px"
-                                style="border: none;"></iframe>
-                            <a href="{{ asset($document->file) }}">PDF file</a>
-                        @else
-                            <div class="document-image-zoom">
-                                <img class="img-responsive document-image" src="{{ asset($document->file) }}" alt="">
-                            </div>
-                        @endif
-                    @endisset
-                </div>
-            </div>
         </div>
+
+        <div class="col-lg-6 text-center">
+            @isset($document->file)
+                @if($isPdf)
+                    <iframe
+                        src='{{ asset("assets/pdf-js/web/viewer.html") . "?file=" . asset($document->file) }}'
+                        width="100%"
+                        height="600px"
+                        style="border: none;"></iframe>
+                    <a href="{{ asset($document->file) }}">PDF file</a>
+                @else
+                    <div class="document-image-zoom">
+                        <img class="img-responsive document-image" src="{{ asset($document->file) }}" alt="">
+                    </div>
+                @endif
+            @endisset
+        </div>
+    </div>
+    </div>
     </div>
 
     <div class="modal" tabindex="-1" role="dialog" id="vendorsModal">

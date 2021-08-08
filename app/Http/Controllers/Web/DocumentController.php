@@ -2,6 +2,7 @@
 
 namespace Vanguard\Http\Controllers\Web;
 
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use Mail;
@@ -93,10 +94,10 @@ class DocumentController extends Controller {
             $prev      = $documents->where( 'id', '>', $id )->last();
         } else {
             $documents = Document::query()
-                                 ->with( 'user' )
-                                 ->where( 'user_id', '=', $current_user->id )
-                                 ->orderByDesc( 'created_at' )
-                                 ->get();
+                ->with( 'user' )
+                ->where( 'user_id', '=', $current_user->id )
+                ->orderByDesc( 'created_at' )
+                ->get();
             $next      = $documents->where( 'id', '<', $id )->first();
             $prev      = $documents->where( 'id', '>', $id )->last();
         }
@@ -245,23 +246,23 @@ class DocumentController extends Controller {
         }
 
         Document::query()
-                ->create( $request->except( [
-                        'file',
-                        'expense_type_id',
-                        'income_type_id',
-                        'customer_id',
-                        'vendor_id',
-                        'vat'
-                    ] ) + [
-                              'vat'             => $vat,
-                              'file'            => $file,
-                              'sum_without_vat' => $sum_without_vat,
-                              'user_id'         => $request->query( 'client' ) ?? auth()->id(),
-                              'vendor_id'       => $isExpense ? $vendor->id ?? $request->get( 'vendor_id' ) : null,
-                              'customer_id'     => $isIncome ? $customer->id ?? $request->get( 'customer_id' ) : null,
-                              'expense_type_id' => $isExpense ? $request->get( 'expense_type_id' ) : null,
-                              'income_type_id'  => $isIncome ? $request->get( 'income_type_id' ) : null
-                          ] );
+            ->create( $request->except( [
+                    'file',
+                    'expense_type_id',
+                    'income_type_id',
+                    'customer_id',
+                    'vendor_id',
+                    'vat'
+                ] ) + [
+                          'vat'             => $vat,
+                          'file'            => $file,
+                          'sum_without_vat' => $sum_without_vat,
+                          'user_id'         => $request->query( 'client' ) ?? auth()->id(),
+                          'vendor_id'       => $isExpense ? $vendor->id ?? $request->get( 'vendor_id' ) : null,
+                          'customer_id'     => $isIncome ? $customer->id ?? $request->get( 'customer_id' ) : null,
+                          'expense_type_id' => $isExpense ? $request->get( 'expense_type_id' ) : null,
+                          'income_type_id'  => $isIncome ? $request->get( 'income_type_id' ) : null
+                      ] );
 
         return redirect()->route( 'documents.index' )->withSuccess( __( 'Document created successfully' ) );
     }
@@ -269,13 +270,19 @@ class DocumentController extends Controller {
     public function update( Request $request, Document $document ) {
         $sum_without_vat = $request->sum - $request->vat;
 
-        $document->update( $request->all() + [
+
+        $document->fill( $request->except( 'document_date' ) + [
                 'sum_without_vat' => $sum_without_vat,
                 'vendor_id'       => $request->get( 'document_type' ) == 0 ? $request->get( 'vendor_id' ) : null,
                 'customer_id'     => $request->get( 'document_type' ) == 1 ? $request->get( 'customer_id' ) : null,
                 'expense_type_id' => $request->get( 'document_type' ) == 0 ? $request->get( 'expense_type_id' ) : null,
                 'income_type_id'  => $request->get( 'document_type' ) == 1 ? $request->get( 'income_type_id' ) : null
             ] );
+
+        $document->document_date = ( new Carbon( $request->get( 'document_date' ) ) )->format( 'Y-m-d' );
+        $document->report_month  = Carbon::createFromFormat( 'm-Y', $request->get( 'report_month' ) )->format( 'Y-m-d' );
+
+        $document->save();
 
         return redirect()->route( 'documents.show', $document )->withSuccess( __( 'Document updated successfully.' ) );
     }

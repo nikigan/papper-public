@@ -12,7 +12,9 @@ use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Str;
 use Vanguard\Customer;
 use Vanguard\Document;
+use Vanguard\ExpenseType;
 use Vanguard\Http\Controllers\Controller;
+use Vanguard\Http\Filters\DateSearch;
 use Vanguard\IncomeType;
 use Vanguard\Invoice;
 use Vanguard\OrganizationType;
@@ -288,5 +290,20 @@ class ClientController extends Controller {
      */
     public function destroy( $id ) {
         //
+    }
+
+    public function incomes( User $client, IncomeType $income_type ) {
+        dump( $client );
+        dd( $income_type );
+    }
+
+    public function expenses( User $client, ExpenseType $expense_type ) {
+        $documents = $expense_type->documents()->getQuery();
+
+        ( new DateSearch )( $documents, [ 'start_date' => Carbon::now()->startOfYear() ], 'document_date' );
+
+        $documents = $documents->get();
+
+        return view( 'clients.expenses', compact( 'documents', 'client', 'expense_type' ) );
     }
 }

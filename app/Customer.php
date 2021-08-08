@@ -4,6 +4,7 @@ namespace Vanguard;
 
 use Eloquent;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Carbon;
 
@@ -32,6 +33,10 @@ use Illuminate\Support\Carbon;
  * @method static Builder|Customer whereUpdatedAt( $value )
  * @method static Builder|Customer whereVatNumber( $value )
  * @mixin Eloquent
+ * @property-read Collection|Document[] $documents
+ * @property-read int|null $documents_count
+ * @property-read Collection|Invoice[] $invoices
+ * @property-read int|null $invoices_count
  */
 class Customer extends Model {
     protected $table = 'customers';

@@ -369,8 +369,8 @@ class ReportController extends Controller {
 
 
     public function report_tax( Request $request, User $client ) {
-        $start_date = $request->get( 'start_date' ) ?? Carbon::now()->startOfMonth()->subMonths( $client->report_period )->format( config( 'app.date_format' ) );
-        $end_date   = $request->get( 'end_date' ) ?? Carbon::now()->startOfMonth()->format( config( 'app.date_format' ) );
+        $start_date = $request->get( 'start_date' ) ?? Carbon::now()->startOfMonth()->subMonths( $client->report_period )->format( config( 'app.date_month_format' ) );
+        $end_date   = $request->get( 'end_date' ) ?? Carbon::now()->startOfMonth()->format( config( 'app.date_month_format' ) );
 
         $income = $client->documents()->where( 'status', DocumentStatus::CONFIRMED )->getQuery();
 

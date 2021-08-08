@@ -4,17 +4,19 @@
  * Authentication
  */
 
-Route::group(['prefix' => 'client'], function () {
-    Route::get('login', 'Auth\LoginController@show')->name('login');
-    Route::post('login', 'Auth\LoginController@login')->name('login');
-});
+use Vanguard\Http\Controllers\Web\ClientController;
 
-Route::group(['prefix' => 'admin', 'as' => 'admin.'], function () {
-    Route::get('login', 'Auth\LoginController@showAdmin')->name('login');
-    Route::post('login', 'Auth\LoginController@loginAdmin')->name('login');
-});
+Route::group( [ 'prefix' => 'client' ], function () {
+    Route::get( 'login', 'Auth\LoginController@show' )->name( 'login' );
+    Route::post( 'login', 'Auth\LoginController@login' )->name( 'login' );
+} );
 
-Route::get('logout', 'Auth\LoginController@logout')->name('auth.logout');
+Route::group( [ 'prefix' => 'admin', 'as' => 'admin.' ], function () {
+    Route::get( 'login', 'Auth\LoginController@showAdmin' )->name( 'login' );
+    Route::post( 'login', 'Auth\LoginController@loginAdmin' )->name( 'login' );
+} );
+
+Route::get( 'logout', 'Auth\LoginController@logout' )->name( 'auth.logout' );
 
 Route::group(['middleware' => ['registration', 'guest']], function () {
     Route::get('register', 'Auth\RegisterController@show');
@@ -259,6 +261,7 @@ Route::group(['middleware' => ['auth', 'verified', 'locale']], function () {
             Route::get('/create', 'ClientController@create')->name('clients.create');
             Route::post('/create', 'ClientController@store')->name('clients.store');
         });
+        /** Client */
         Route::group(['middleware' => 'view.client', 'prefix' => '/{client}'], function () {
             Route::get('/', 'ClientController@show')->name('clients.show');
             Route::put('/accountant/{accountant}', 'ClientController@editAccountant')->name('clients.edit.accountant');
@@ -284,16 +287,22 @@ Route::group(['middleware' => ['auth', 'verified', 'locale']], function () {
                 Route::get('report3/excel', 'ReportController@report3_excel')->name('reports.report3.excel');
                 Route::get('report3/pdf', 'ReportController@report3_pdf')->name('reports.report3.pdf');
 
-                Route::get('report_vendors', 'ReportController@report_vendors')->name('reports.report_vendors.index');
-                Route::get('report_vendors/excel', 'ReportController@report_vendors_excel')->name('reports.report_vendors.excel');
-                Route::get('report_vendors/pdf', 'ReportController@report_vendors_pdf')->name('reports.report_vendors.pdf');
+                Route::get( 'report_vendors', 'ReportController@report_vendors' )->name( 'reports.report_vendors.index' );
+                Route::get( 'report_vendors/excel', 'ReportController@report_vendors_excel' )->name( 'reports.report_vendors.excel' );
+                Route::get( 'report_vendors/pdf', 'ReportController@report_vendors_pdf' )->name( 'reports.report_vendors.pdf' );
 
-                Route::get('report_customers', 'ReportController@report_customers')->name('reports.report_customers.index');
-                Route::get('report_customers/excel', 'ReportController@report_customers_excel')->name('reports.report_customers.excel');
-                Route::get('report_customers/pdf', 'ReportController@report_customers_pdf')->name('reports.report_customers.pdf');
+                Route::get( 'report_customers', 'ReportController@report_customers' )->name( 'reports.report_customers.index' );
+                Route::get( 'report_customers/excel', 'ReportController@report_customers_excel' )->name( 'reports.report_customers.excel' );
+                Route::get( 'report_customers/pdf', 'ReportController@report_customers_pdf' )->name( 'reports.report_customers.pdf' );
 
-                Route::get('report_tax', 'ReportController@report_tax')->name('reports.report_tax.index');
-            });
+                Route::get( 'report_tax', 'ReportController@report_tax' )->name( 'reports.report_tax.index' );
+            } );
+
+            Route::get( '/incomes/{income_type}', [ ClientController::class, 'incomes' ] )->name( 'clients.incomes' );
+            Route::get( '/expenses/{expense_type}', [
+                ClientController::class,
+                'expenses'
+            ] )->name( 'clients.expenses' );
         });
     });
 
