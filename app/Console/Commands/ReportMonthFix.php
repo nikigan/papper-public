@@ -36,7 +36,7 @@ class ReportMonthFix extends Command {
      * @return int
      */
     public function handle() {
-        $documents = Document::all();
+        $documents = Document::withTrashed()->get();
 
         foreach ( $documents as $document ) {
             $date = ( new Carbon( $document->document_date ) )->startOfMonth();

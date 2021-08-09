@@ -31,14 +31,14 @@ class ReportController extends Controller {
         $start_date = $dates['start_date'];
         $end_date   = $dates['end_date'];
 
-        $expenses = $client->documents()->where( 'document_type', '=', 0 )->orderByDesc( 'document_date' )->where( 'status', DocumentStatus::CONFIRMED );
+        $expenses = $client->documents()->where( 'document_type', '=', 0 )->orderByDesc( 'report_month' )->where( 'status', DocumentStatus::CONFIRMED );
 
-        $incomes = $client->documents()->where( 'document_type', '=', 1 )->orderByDesc( 'document_date' )->where( 'status', DocumentStatus::CONFIRMED );
+        $incomes = $client->documents()->where( 'document_type', '=', 1 )->orderByDesc( 'report_month' )->where( 'status', DocumentStatus::CONFIRMED );
 
         $invoices = $client->invoices();
 
-        ( new MonthFilter )( $expenses->getQuery(), compact( 'start_date', 'end_date' ), 'document_date' );
-        ( new MonthFilter )( $incomes->getQuery(), compact( 'start_date', 'end_date' ), 'document_date' );
+        ( new MonthFilter )( $expenses->getQuery(), compact( 'start_date', 'end_date' ), 'report_month' );
+        ( new MonthFilter )( $incomes->getQuery(), compact( 'start_date', 'end_date' ), 'report_month' );
         ( new MonthFilter )( $invoices->getQuery(), compact( 'start_date', 'end_date' ), 'invoice_date' );
 
         $expenses = $expenses->get();
@@ -86,14 +86,14 @@ class ReportController extends Controller {
         $start_date = $dates['start_date'];
         $end_date   = $dates['end_date'];
 
-        $expenses = $client->documents()->with( 'expense_type' )->where( 'document_type', '=', 0 )->orderByDesc( 'document_date' )->where( 'status', DocumentStatus::CONFIRMED );
+        $expenses = $client->documents()->with( 'expense_type' )->where( 'document_type', '=', 0 )->orderByDesc( 'report_month' )->where( 'status', DocumentStatus::CONFIRMED );
 
-        $incomes = $client->documents()->where( 'document_type', '=', 1 )->orderByDesc( 'document_date' )->where( 'status', DocumentStatus::CONFIRMED )->with( 'income_type' );
+        $incomes = $client->documents()->where( 'document_type', '=', 1 )->orderByDesc( 'report_month' )->where( 'status', DocumentStatus::CONFIRMED )->with( 'income_type' );
 
         $invoices = $client->invoices()->with( 'income_type' )->orderByDesc( 'invoice_date' );
 
-        ( new MonthFilter )( $expenses->getQuery(), compact( 'start_date', 'end_date' ), 'document_date' );
-        ( new MonthFilter )( $incomes->getQuery(), compact( 'start_date', 'end_date' ), 'document_date' );
+        ( new MonthFilter )( $expenses->getQuery(), compact( 'start_date', 'end_date' ), 'report_month' );
+        ( new MonthFilter )( $incomes->getQuery(), compact( 'start_date', 'end_date' ), 'report_month' );
         ( new MonthFilter )( $invoices->getQuery(), compact( 'start_date', 'end_date' ), 'invoice_date' );
 
         $expense_groups  = $expenses->get()->groupBy( 'expense_type.name' );
@@ -136,7 +136,7 @@ class ReportController extends Controller {
 
         $income_groups = $client->documents()->where( 'document_type', '=', 1 )->where( 'status', DocumentStatus::CONFIRMED )->getQuery();
 
-        ( new MonthFilter )( $income_groups, compact( 'end_date', 'start_date' ), 'document_date' );
+        ( new MonthFilter )( $income_groups, compact( 'end_date', 'start_date' ), 'report_month' );
 
         $income_groups = $income_groups->leftJoin( 'currencies as c', 'documents.currency_id', '=', 'c.id' )->leftJoin( 'income_types as it', 'documents.income_type_id', '=', 'it.id' )->leftJoin( 'income_groups as ig', 'it.income_group_id', '=', 'ig.id' )->select( 'ig.name', 'ig.id as group_id', 'it.name', DB::raw( 'SUM(documents.sum / c.value) as sum' ) )->groupBy( 'it.name', 'ig.name' )->get();
 
@@ -203,7 +203,7 @@ class ReportController extends Controller {
 
         $expense_groups = $client->documents()->where( 'document_type', '=', 0 )->where( 'status', DocumentStatus::CONFIRMED )->getQuery();
 
-        ( new MonthFilter )( $expense_groups, compact( 'end_date', 'start_date' ), 'document_date' );
+        ( new MonthFilter )( $expense_groups, compact( 'end_date', 'start_date' ), 'report_month' );
 
         $expense_groups = $expense_groups->leftJoin( 'currencies as c', 'documents.currency_id', '=', 'c.id' )->select( 'eg.name as group', 'et.name as name', DB::raw( 'SUM(documents.sum / c.value) as sum' ) )->leftJoin( 'expense_types as et', 'documents.expense_type_id', '=', 'et.id' )->leftJoin( 'expense_groups as eg', 'et.expense_group_id', '=', 'eg.id' )->groupBy( [
             'group',
@@ -266,7 +266,7 @@ class ReportController extends Controller {
 
         $expenses = $client->documents()->where( 'document_type', '=', 0 )->where( 'status', DocumentStatus::CONFIRMED )->getQuery();
 
-        ( new MonthFilter )( $expenses, compact( 'end_date', 'start_date' ), 'document_date' );
+        ( new MonthFilter )( $expenses, compact( 'end_date', 'start_date' ), 'report_month' );
 
         $vendor_groups = $expenses->leftJoin( 'currencies as c', 'documents.currency_id', '=', 'c.id' )->leftJoin( 'vendors as v', 'documents.vendor_id', '=', 'v.id' )->groupBy( [
             'v.name',
@@ -307,7 +307,7 @@ class ReportController extends Controller {
 
         $income_groups = $client->documents()->where( 'document_type', '=', 1 )->where( 'status', DocumentStatus::CONFIRMED )->getQuery();
 
-        ( new MonthFilter )( $income_groups, compact( 'end_date', 'start_date' ), 'document_date' );
+        ( new MonthFilter )( $income_groups, compact( 'end_date', 'start_date' ), 'report_month' );
 
         $income_customers = $income_groups->leftJoin( 'currencies as c', 'documents.currency_id', '=', 'c.id' )->leftJoin( 'customers as cu', 'documents.customer_id', '=', 'cu.id' )->groupBy( [
             'cu.name',
@@ -375,7 +375,7 @@ class ReportController extends Controller {
         $income = $client->documents()->where( 'status', DocumentStatus::CONFIRMED )->getQuery();
 
 
-        ( new MonthFilter )( $income, compact( 'start_date', 'end_date' ), 'document_date' );
+        ( new MonthFilter )( $income, compact( 'start_date', 'end_date' ), 'report_month' );
 
         $document_vat = $income->leftJoin( 'currencies as c', 'documents.currency_id', '=', 'c.id' )->select( DB::raw( 'SUM(vat/c.value) as vat, SUM(sum/c.value) as sum, document_type' ) )->groupBy( 'document_type' )->get()->toArray();
 

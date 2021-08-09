@@ -32,7 +32,9 @@
         <div class="card-body">
             <div class="row py-3">
                 <div class="col-lg-6">
-                    <h3>@lang('Client'): {{$document->user->present()->name}}</h3>
+                    <h3>@lang('Client'): <a
+                            href="{{route('clients.show', $document->user)}}">{{$document->user->present()->name}}</a>
+                    </h3>
                     {!! Form::open(['route' => ['documents.update', 'document' => $document], 'files' => true, 'id' => 'document-form', 'method' => 'PUT']) !!}
                     <div class="my-3">
                         <div class="form-row align-items-center">
