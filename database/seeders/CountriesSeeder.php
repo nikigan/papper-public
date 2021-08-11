@@ -2,7 +2,9 @@
 
 namespace Database\Seeders;
 
+use Countries;
 use Illuminate\Database\Seeder;
+use Illuminate\Support\Facades\DB;
 
 class CountriesSeeder extends Seeder {
     /**

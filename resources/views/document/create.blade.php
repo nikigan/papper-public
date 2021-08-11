@@ -92,7 +92,7 @@
     {!! Form::open(['route' => ['document.manualStore', 'client' => $client], 'files' => true, 'id' => 'document-form']) !!}
     <div class="card">
         <div class="card-body">
-            @isset($client)
+            @isset($client->id)
                 <h3>@lang('Client'): {{$client->present()->name}}</h3>
             @endisset
             <div class="form-row my-3 align-items-center">

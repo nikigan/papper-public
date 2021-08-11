@@ -105,7 +105,7 @@
                     if (flag) {
                         flag = false;
                         const d = date;
-                        d.setMonth(d.getMonth() + reportPeriod);
+                        d.setMonth(d.getMonth() - reportPeriod);
                         startDate.selectDate(d);
                     } else {
                         flag = true;

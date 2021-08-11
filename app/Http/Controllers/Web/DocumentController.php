@@ -94,10 +94,10 @@ class DocumentController extends Controller {
             $prev      = $documents->where( 'id', '>', $id )->last();
         } else {
             $documents = Document::query()
-                ->with( 'user' )
-                ->where( 'user_id', '=', $current_user->id )
-                ->orderByDesc( 'created_at' )
-                ->get();
+                                 ->with( 'user' )
+                                 ->where( 'user_id', '=', $current_user->id )
+                                 ->orderByDesc( 'created_at' )
+                                 ->get();
             $next      = $documents->where( 'id', '<', $id )->first();
             $prev      = $documents->where( 'id', '>', $id )->last();
         }
@@ -176,7 +176,7 @@ class DocumentController extends Controller {
         $customers      = Customer::query()->where( 'creator_id', $id )->orWhere( 'creator_id', auth()->id() )->get();
         $expense_types  = ExpenseType::all();
         $income_types   = IncomeType::all();
-        $document_types = $client ? $client->organization_type->document_types : auth()->user()->organization_type->document_types;
+        $document_types = $client->id ? $client->organization_type->document_types : auth()->user()->organization_type->document_types;
         $error_document = null;
         if ( session()->has( 'error_document_number' ) ) {
             $document = Document::query()->where( 'document_number', '=', session()->get( 'error_document_number' ) )->first();
@@ -213,8 +213,10 @@ class DocumentController extends Controller {
             $vat = $request->sum * $request->vat / 100;
         }
 
+
         if ( $request->has( 'expense_type_id' ) ) {
             $expense_type = ExpenseType::find( $request->get( 'expense_type_id' ) );
+
             $vat          *= $expense_type->vat_rate->vat_rate ?? 1;
         }
 
@@ -245,24 +247,29 @@ class DocumentController extends Controller {
             ] );
         }
 
+
         Document::query()
-            ->create( $request->except( [
-                    'file',
-                    'expense_type_id',
-                    'income_type_id',
-                    'customer_id',
-                    'vendor_id',
-                    'vat'
-                ] ) + [
-                          'vat'             => $vat,
-                          'file'            => $file,
-                          'sum_without_vat' => $sum_without_vat,
-                          'user_id'         => $request->query( 'client' ) ?? auth()->id(),
-                          'vendor_id'       => $isExpense ? $vendor->id ?? $request->get( 'vendor_id' ) : null,
-                          'customer_id'     => $isIncome ? $customer->id ?? $request->get( 'customer_id' ) : null,
-                          'expense_type_id' => $isExpense ? $request->get( 'expense_type_id' ) : null,
-                          'income_type_id'  => $isIncome ? $request->get( 'income_type_id' ) : null
-                      ] );
+                ->create( $request->except( [
+                        'file',
+                        'expense_type_id',
+                        'income_type_id',
+                        'customer_id',
+                        'vendor_id',
+                        'vat',
+                        'document_date',
+                        'report_month'
+                    ] ) + [
+                              'vat'             => $vat,
+                              'file'            => $file,
+                              'sum_without_vat' => $sum_without_vat,
+                              'user_id'         => $request->query( 'client' ) ?? auth()->id(),
+                              'vendor_id'       => $isExpense ? $vendor->id ?? $request->get( 'vendor_id' ) : null,
+                              'customer_id'     => $isIncome ? $customer->id ?? $request->get( 'customer_id' ) : null,
+                              'expense_type_id' => $isExpense ? $request->get( 'expense_type_id' ) : null,
+                              'income_type_id'  => $isIncome ? $request->get( 'income_type_id' ) : null,
+                              'document_date'   => new Carbon( $request->get( 'document_date' ) ),
+                              'report_month'    => Carbon::createFromFormat( "m-Y", $request->get( 'report_month' ) )
+                          ] );
 
         return redirect()->route( 'documents.index' )->withSuccess( __( 'Document created successfully' ) );
     }
