@@ -85,7 +85,10 @@
                                     @continue
                                 @endif
                                 <tr>
-                                    <td>{{$n != "" && $n != null ? $n :'Other'}}</td>
+                                    <td>@if($n != "" && $n != null)
+                                            <a href="{{route('clients.expenses', ['client' => $client, 'expense_type' => $subgroup[0]['id']])}}">{{$n}}</a>
+                                        @else Other @endif
+                                    </td>
                                     <td>{{number_format($subgroup[0]['sum'], 2)}}</td>
                                     <td>{{number_format($subgroup[0]['percentage'], 2)}}%</td>
                                 </tr>
@@ -109,6 +112,6 @@
                 @lang('Report 3 Expense')
                 ({{number_format($diff, 2)}})
             @endif
-            </b>
+        </b>
     @endif
 @endsection

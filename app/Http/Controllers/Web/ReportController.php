@@ -205,7 +205,7 @@ class ReportController extends Controller {
 
         ( new MonthFilter )( $expense_groups, compact( 'end_date', 'start_date' ), 'report_month' );
 
-        $expense_groups = $expense_groups->leftJoin( 'currencies as c', 'documents.currency_id', '=', 'c.id' )->select( 'eg.name as group', 'et.name as name', DB::raw( 'SUM(documents.sum / c.value) as sum' ) )->leftJoin( 'expense_types as et', 'documents.expense_type_id', '=', 'et.id' )->leftJoin( 'expense_groups as eg', 'et.expense_group_id', '=', 'eg.id' )->groupBy( [
+        $expense_groups = $expense_groups->leftJoin( 'currencies as c', 'documents.currency_id', '=', 'c.id' )->select( 'eg.name as group', 'et.name as name', DB::raw( 'SUM(documents.sum / c.value) as sum' ), 'et.id as id' )->leftJoin( 'expense_types as et', 'documents.expense_type_id', '=', 'et.id' )->leftJoin( 'expense_groups as eg', 'et.expense_group_id', '=', 'eg.id' )->groupBy( [
             'group',
             'name'
         ] )->get()->groupBy( [ 'group', 'name' ] )->toArray();
@@ -217,6 +217,7 @@ class ReportController extends Controller {
             foreach ( $expense_group as $subgroup ) {
                 $sum += $subgroup[0]['sum'];
             }
+//            $expense_groups[ $key ]['id'] = $
             $expense_groups[ $key ]['sum'] = $sum;
             $expense_sum                   += $sum;
         }

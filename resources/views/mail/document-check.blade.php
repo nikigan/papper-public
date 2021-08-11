@@ -3,7 +3,7 @@
  */ ?>
 <div>
     <p>
-        {{ $document_check->text }}
+        {{ $custom_text ?? $document_check->text }}
     </p>
 </div>
 <div>

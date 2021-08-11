@@ -239,11 +239,28 @@
                         </div>
                     @endif
                     @endpermission
-                        <h6>@lang('Comments')</h6>
-                        <div class="document-text">
+                    <h6>@lang('Comments')</h6>
+                    <div class="document-text">
                             <textarea name="note" id="note" rows="7"
                                       class="form-control">{!! nl2br($document->note ?? '') !!}</textarea>
-                        </div>
+                    </div>
+
+                </div>
+                <div class="col-lg-6 text-center">
+                    @isset($document->file)
+                        @if($isPdf)
+                            <iframe
+                                src='{{ asset("assets/pdf-js/web/viewer.html") . "?file=" . asset($document->file) }}'
+                                width="100%"
+                                height="600px"
+                                style="border: none;"></iframe>
+                            <a href="{{ asset($document->file) }}">PDF file</a>
+                        @else
+                            <div class="document-image-zoom">
+                                <img class="img-responsive document-image" src="{{ asset($document->file) }}" alt="">
+                            </div>
+                        @endif
+                    @endisset
                 </div>
             </div>
             @permission('document.edit')
@@ -261,23 +278,8 @@
                 </button>
             @endif
             {!! Form::close() !!}
-        </div>
 
-        <div class="col-lg-6 text-center">
-            @isset($document->file)
-                @if($isPdf)
-                    <iframe
-                        src='{{ asset("assets/pdf-js/web/viewer.html") . "?file=" . asset($document->file) }}'
-                        width="100%"
-                        height="600px"
-                        style="border: none;"></iframe>
-                    <a href="{{ asset($document->file) }}">PDF file</a>
-                @else
-                    <div class="document-image-zoom">
-                        <img class="img-responsive document-image" src="{{ asset($document->file) }}" alt="">
-                    </div>
-                @endif
-            @endisset
+
         </div>
     </div>
 
@@ -341,27 +343,7 @@
         </div>
     </div>
 
-    <div class="modal" tabindex="-1" id="documentCheckModal-{{$document->id}}">
-        <div class="modal-dialog modal-lg">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title">@lang("Document check")</h5>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
-                <div class="modal-body">
-                    <ul class="list-group">
-                        @foreach($document_checks as $check)
-                            <li class="list-group-item">
-                                <a href="{{route('documents.check', ['document_check' => $check, 'document' => $document])}}">{{$check->title}}</a>
-                            </li>
-                        @endforeach
-                    </ul>
-                </div>
-            </div>
-        </div>
-    </div>
+    @include('document_check.partial.modal')
 @endsection
 
 @section('scripts')

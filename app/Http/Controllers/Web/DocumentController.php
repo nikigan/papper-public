@@ -331,9 +331,9 @@ class DocumentController extends Controller {
         return redirect()->back()->withSuccess( __( 'Document duplicated successfully!' ) );
     }
 
-    public function check( Document $document, DocumentCheck $document_check ) {
+    public function check( Document $document, DocumentCheck $document_check, Request $request ) {
 
-        Mail::to( $document->user->email )->send( new DocumentCheckMail( $document, $document_check ) );
+        Mail::to( $document->user->email )->send( new DocumentCheckMail( $document, $document_check, $request->get( 'custom_text' ) ) );
 
         return redirect()->back()->with( 'success', __( 'Email with document check send successfully' ) );
 

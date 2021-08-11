@@ -42,7 +42,7 @@
                                        href="{{ route('documents.show', $item) }}">{{ $item->document_number }}</a></td>
                                 <td>{{ $item->document_date }}</td>
                                 <td>
-                                    <a href="{{route('clients.expenses', ['client' => $client, 'expense_type' => $item->expense_type])}}">{{ $item->expense_type->name ?? __('Other Expense') }}</a>
+                                    <a @if($item->expense_type)href="{{route('clients.expenses', ['client' => $client, 'expense_type' => $item->expense_type])}}"@endif>{{ $item->expense_type->name ?? __('Other Expense') }}</a>
                                 </td>
                                 <td>{{ number_format($item->sum / $item->currency->value, 2) }}</td>
                                 <td>{{number_format($item->vat / $item->currency->value, 2)}}</td>

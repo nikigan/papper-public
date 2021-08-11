@@ -41,26 +41,4 @@
     {{ $documents->onEachSide(0)->withQueryString()->links() }}
 @endif
 
-@foreach($documents as $document)
-    <div class="modal" tabindex="-1" id="documentCheckModal-{{$document->id}}">
-        <div class="modal-dialog modal-lg">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title">@lang("Document check")</h5>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
-                <div class="modal-body">
-                    <ul class="list-group">
-                        @foreach($document_checks as $check)
-                            <li class="list-group-item">
-                                <a href="{{route('documents.check', ['document_check' => $check, 'document' => $document])}}">{{$check->title}}</a>
-                            </li>
-                        @endforeach
-                    </ul>
-                </div>
-            </div>
-        </div>
-    </div>
-@endforeach
+@each('document_check.partial.modal', $documents, 'document')
