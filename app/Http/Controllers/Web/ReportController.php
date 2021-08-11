@@ -272,7 +272,7 @@ class ReportController extends Controller {
         $vendor_groups = $expenses->leftJoin( 'currencies as c', 'documents.currency_id', '=', 'c.id' )->leftJoin( 'vendors as v', 'documents.vendor_id', '=', 'v.id' )->groupBy( [
             'v.name',
             'v.vat_number'
-        ] )->select( 'v.name', 'v.vat_number', DB::raw( 'count(*) as amount' ), DB::raw( 'sum(documents.sum / c.value) as sum' ), DB::raw( 'AVG(sum) as avg' ), 'v.id' )->where( 'v.name', 'like', "%{$query}%" )->get();
+        ] )->select( 'v.name', 'v.vat_number', DB::raw( 'count(*) as amount' ), DB::raw( 'sum(documents.sum / c.value) as sum' ), DB::raw( 'AVG(sum) as avg' ), 'v.id as id' )->where( 'v.name', 'like', "%{$query}%" )->get();
 
         return compact( 'client', 'vendor_groups', 'start_date', 'end_date' );
     }
@@ -313,7 +313,7 @@ class ReportController extends Controller {
         $income_customers = $income_groups->leftJoin( 'currencies as c', 'documents.currency_id', '=', 'c.id' )->leftJoin( 'customers as cu', 'documents.customer_id', '=', 'cu.id' )->groupBy( [
             'cu.name',
             'cu.vat_number'
-        ] )->select( 'cu.name', 'cu.vat_number', DB::raw( 'count(*) as amount' ), DB::raw( 'sum(documents.sum / c.value) as sum' ), DB::raw( 'AVG(sum) as avg' ), 'cu.id' )->where( 'cu.name', 'like', "%{$query}%" )->get()->groupBy( [ 'name' ] )->toArray();
+        ] )->select( 'cu.name', 'cu.vat_number', DB::raw( 'count(*) as amount' ), DB::raw( 'sum(documents.sum / c.value) as sum' ), DB::raw( 'AVG(sum) as avg' ), 'cu.id as id' )->where( 'cu.name', 'like', "%{$query}%" )->get()->groupBy( [ 'name' ] )->toArray();
 
         $invoice_customers = $client->invoices()->getQuery();
 
@@ -322,7 +322,7 @@ class ReportController extends Controller {
         $invoice_customers = $invoice_customers->leftJoin( 'currencies as c', 'invoices.currency_id', '=', 'c.id' )->leftJoin( 'customers as cu', 'invoices.customer_id', '=', 'cu.id' )->groupBy( [
             'cu.name',
             'cu.vat_number'
-        ] )->leftJoin( 'invoices_items as ii', 'invoices.id', '=', 'ii.invoice_id' )->select( 'cu.name', 'cu.vat_number', DB::raw( 'count(*) as amount' ), DB::raw( 'sum(ii.price*ii.quantity / c.value) as sum' ), 'cu.id' )->where( 'cu.name', 'like', "%{$query}%" )->get()->groupBy( [ 'name' ] )->toArray();
+        ] )->leftJoin( 'invoices_items as ii', 'invoices.id', '=', 'ii.invoice_id' )->select( 'cu.name', 'cu.vat_number', DB::raw( 'count(*) as amount' ), DB::raw( 'sum(ii.price*ii.quantity / c.value) as sum' ), 'cu.id as id' )->where( 'cu.name', 'like', "%{$query}%" )->get()->groupBy( [ 'name' ] )->toArray();
 
         $customers = array_merge_recursive( $invoice_customers, $income_customers );
 
