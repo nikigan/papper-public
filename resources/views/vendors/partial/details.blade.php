@@ -35,6 +35,11 @@
                    name="vat_number" placeholder="@lang('VAT Number')"
                    value="{{ $edit ? $vendor->vat_number : old('vat_number') }}">
         </div>
+        <div class="form-group">
+            <label for="default_expense_type_id">@lang('Default expense type')</label>
+            {!! Form::select('default_expense_type_id', $expense_types->pluck('name', 'id'), old('default_expense_type_id', $vendor->default_expense_type_id ?? null),
+            ['class' => 'form-control input-solid', 'id' => 'default_expense_type_id']) !!}
+        </div>
         @if(!isset($client) && (auth()->user()->hasRole('Auditor') || auth()->user()->hasRole('Accountant')) && isset($clients))
             <div class="form-group">
                 <label for="client_id">@lang('Client')</label>

@@ -239,7 +239,6 @@
                         </div>
                     @endif
                     @endpermission
-                    @if ($document->note)
                         <h6>@lang('Comments')</h6>
                         <div class="document-text">
                             <textarea name="note" id="note" rows="7"
@@ -247,7 +246,6 @@
                         </div>
                 </div>
             </div>
-            @endif
             @permission('document.edit')
             <button type="submit" class="btn btn-primary">
                 @lang('Update Document')

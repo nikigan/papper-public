@@ -8,17 +8,20 @@
         <div class="form-group">
             <label for="last_name">@lang('Last Name')</label>
             <input type="text" class="form-control input-solid" id="last_name"
-                   name="last_name" placeholder="@lang('Last Name')" value="{{ $edit ? $user->last_name : old('last_name') }}">
+                   name="last_name" placeholder="@lang('Last Name')"
+                   value="{{ $edit ? $user->last_name : old('last_name') }}">
         </div>
         <div class="form-group">
             <label for="tax">@lang('Tax Percent')</label>
             <input type="number" step="0.1" min="0" max="50" class="form-control input-solid" id="tax"
-                   name="tax_percent" placeholder="@lang('Tax Percent')" value="{{ $edit ? $user->tax_percent : old('tax_percent') }}">
+                   name="tax_percent" placeholder="@lang('Tax Percent')"
+                   value="{{ $edit ? $user->tax_percent : old('tax_percent') }}">
         </div>
         <div class="form-group">
             <label for="social_security">@lang('Social Security')</label>
             <input type="number" step="0.1" min="0" class="form-control input-solid" id="social_security"
-                   name="social_security" placeholder="@lang('Social Security')" value="{{ $edit ? $user->social_security : old('social_security') }}">
+                   name="social_security" placeholder="@lang('Social Security')"
+                   value="{{ $edit ? $user->social_security : old('social_security', 125) }}">
         </div>
         <div class="form-group">
             <label for="report_period">@lang('Report Period')</label>
@@ -27,7 +30,8 @@
         <div class="form-group">
             <label for="mh_advances">@lang('Book of MH Advances')</label>
             <input type="text" class="form-control input-solid" id="mh_advances"
-                   name="mh_advances" placeholder="@lang('Book of MH Advances')" value="{{ $edit ? $user->mh_advances : old('mh_advances') }}">
+                   name="mh_advances" placeholder="@lang('Book of MH Advances')"
+                   value="{{ $edit ? $user->mh_advances : old('mh_advances') }}">
         </div>
         <div class="form-group">
             <label for="mh_deductions">@lang('Book of MH Deductions')</label>
@@ -87,7 +91,8 @@
         <div class="form-group">
             <label for="notification_rate">@lang('Days to notification')</label>
             <input type="text" class="form-control input-solid" id="notification_rate"
-                   name="notification_rate" value="{{ $edit ? $user->notification_rate : old('notification_rate') }}">
+                   name="notification_rate"
+                   value="{{ $edit ? $user->notification_rate : old('notification_rate', 10) }}">
         </div>
     </div>
 

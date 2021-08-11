@@ -8,6 +8,7 @@ use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\View\View;
+use Vanguard\ExpenseType;
 use Vanguard\Http\Controllers\Controller;
 use Vanguard\Repositories\Role\RoleRepository;
 use Vanguard\Repositories\User\UserRepository;
@@ -90,10 +91,11 @@ class VendorController extends Controller {
      * @return Application|Factory|Response|View
      */
     public function show(Vendor $vendor) {
-        $clients   = $this->users->clients()->pluck( 'username', 'id' );
-        $documents = $vendor->documents()->paginate();
+        $clients       = $this->users->clients()->pluck( 'username', 'id' );
+        $documents     = $vendor->documents()->paginate();
+        $expense_types = ExpenseType::all();
 
-        return view( 'vendors.show', compact( 'vendor', 'clients', 'documents' ) );
+        return view( 'vendors.show', compact( 'vendor', 'clients', 'documents', 'expense_types' ) );
     }
 
     /**

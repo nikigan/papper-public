@@ -29,7 +29,7 @@ class Kernel extends ConsoleKernel
         // $schedule->command('inspire')
         //          ->hourly();
 
-        $schedule->command( SetDefaultVendorExpenseType::class )->everySixHours();
+        $schedule->command( SetDefaultVendorExpenseType::class )->everyThirtyMinutes();
     }
 
     /**

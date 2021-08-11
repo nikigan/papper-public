@@ -17,13 +17,13 @@ class MonthFilter implements Filter {
 
             if ( $end_date ) {
                 $query->where( function ( $q ) use ( $end_date, $property ) {
-                    $q->whereMonth( $property, "<=", $end_date->month )->whereYear( $property, "<=", $end_date->year );
+                    $q->whereDate( $property, "<=", $end_date );
                 } );
             }
 
             if ( $start_date ) {
                 $query->where( function ( $q ) use ( $start_date, $property ) {
-                    $q->whereMonth( $property, ">=", $start_date->month )->whereYear( $property, ">=", $start_date->year );
+                    $q->whereDate( $property, ">=", $start_date );
                 } );
             }
         }
