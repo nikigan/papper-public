@@ -63,7 +63,7 @@
                                      @if($document->document_type != 1) style="display: none;" @endif>
                                     <label for="document_type">@lang("Document type"):</label>
                                     <select name='document_type_id' class="form-control" id="document_type">
-                                        <option value="">@lang('Other Type')</option>
+                                        <option value="">@lang('Other type')</option>
                                         @foreach($document_types as $type)
                                             <option value="{{$type->id}}"
                                                     @if($document->document_type_id == $type->id) selected @endif>@lang($type->name)</option>

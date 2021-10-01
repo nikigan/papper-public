@@ -14,7 +14,7 @@ class ClientInfo extends Plugin
         }
 
         if ( isset( $client ) ) {
-            return Item::create( __( 'Client\'s Info' ) )
+            return Item::create( __( "Client's info" ) )
                        ->href( route( 'clients.info', $client ) )
                        ->active( "clients.info" )
                        ->permissions( 'clients.manage' );

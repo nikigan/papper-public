@@ -16,5 +16,6 @@ class DocumentKeywordSearch implements Filter
                 (new UserKeywordSearch)($q, $search);
             });
         });
+
     }
 }

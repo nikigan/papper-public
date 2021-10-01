@@ -8,7 +8,7 @@
         </div>
     </div>
     <div class="block-footer">
-        <a href="{{$link}}"><span>{{$link_title}}</span><i
+        <a href="{{$link}}"><span>@lang($link_title)</span><i
                 class="far fa-arrow-alt-circle-left"></i></a>
     </div>
 </div>

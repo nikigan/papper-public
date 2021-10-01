@@ -8,7 +8,7 @@
         </div>
     </div>
     <div class="block-footer">
-        <a href="{{route('documents.waiting')}}"><span>@lang('Show') @lang('Documents')</span><i
+        <a href="{{route('documents.waiting')}}"><span>@lang('View') @lang('Documents')</span><i
                 class="far fa-arrow-alt-circle-left"></i></a>
     </div>
 </div>

@@ -18,7 +18,7 @@
 @section('content')
     @include('partials.messages')
     <h1>@lang('Report 3')</h1>
-    @include('reports.partials.header', ['route' => 'reports.report3'])
+    @include('reports.partials.header', ['route' => 'reports.report3', 'show_percents' => true])
 
     @if (count($groups))
         <div class="card">

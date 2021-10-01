@@ -1,7 +1,7 @@
 @extends('layouts.main')
 
-@section('page-title', __('Add Document'))
-@section('page-heading', __('Create New Document'))
+@section('page-title', __('Create Document'))
+@section('page-heading', __('Create Document'))
 
 @section('breadcrumbs')
     <li class="breadcrumb-item">

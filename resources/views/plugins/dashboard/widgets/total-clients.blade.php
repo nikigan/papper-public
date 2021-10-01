@@ -8,7 +8,7 @@
         </div>
     </div>
     <div class="block-footer">
-        <a href="{{route('clients.index')}}"><span>@lang('Show') @lang('Clients')</span><i
+        <a href="{{route('clients.index')}}"><span>@lang('View') @lang('Clients')</span><i
                 class="far fa-arrow-alt-circle-left"></i></a>
     </div>
 </div>

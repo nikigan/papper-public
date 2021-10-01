@@ -187,9 +187,9 @@ class ClientController extends Controller {
             $invoices     = $invoices->paginate();
             $documents    = $documents->paginate();
 
-            $last_card      = new ClientCard( 'Waiting documents', route( 'clients.waiting', [ 'client' => $user ] ), 'Show', $user->documents->where( 'status', DocumentStatus::UNCONFIRMED )->count() );
-            $customers_card = new ClientCard( 'Customers', route( 'clients.customers', [ 'client' => $user ] ), 'Show', Customer::query()->where( 'creator_id', $id )->count() );
-            $vendors_card   = new ClientCard( 'Vendors', route( 'clients.vendors', [ 'client' => $user ] ), 'Show', Vendor::query()->where( 'creator_id', $id )->count() );
+            $last_card      = new ClientCard( 'Waiting documents', route( 'clients.waiting', [ 'client' => $user ] ), 'View', $user->documents->where( 'status', DocumentStatus::UNCONFIRMED )->count() );
+            $customers_card = new ClientCard( 'Customers', route( 'clients.customers', [ 'client' => $user ] ), 'View', Customer::query()->where( 'creator_id', $id )->count() );
+            $vendors_card   = new ClientCard( 'Vendors', route( 'clients.vendors', [ 'client' => $user ] ), 'View', Vendor::query()->where( 'creator_id', $id )->count() );
 
             if ( $user->notify && $user->last_login && $user->last_login->diffInDays( Carbon::now() ) >= $user->notification_rate ) {
                 $flash = __( "User hasn't been logged in for :days days", [ 'days' => $user->notification_rate ] );
@@ -302,7 +302,7 @@ class ClientController extends Controller {
 
         ( new DateSearch )( $documents, [ 'start_date' => Carbon::now()->startOfYear() ], 'document_date' );
 
-        $documents = $documents->get();
+        $documents = $documents->where( 'user_id', $client->id )->get();
 
         return view( 'clients.expenses', compact( 'documents', 'client', 'expense_type' ) );
     }

@@ -62,10 +62,12 @@
                         <button type="submit" class="btn btn-danger"
                                 formaction="{{route($route.'.pdf', [$client])}}"><i
                                 class="far fa-file-pdf"></i></button>
+                        @if($show_percents ?? false)
                         <div class="custom-control custom-checkbox">
                             <input type="checkbox" class="custom-control-input" id="percentage" name="percentage">
                             <label class="custom-control-label" for="percentage">@lang("Include percents")</label>
                         </div>
+                        @endif
                     </form>
                 </div>
             @endif

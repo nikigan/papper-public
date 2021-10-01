@@ -3,7 +3,6 @@
 namespace Vanguard\Http\Controllers\Web;
 
 use Illuminate\Http\Request;
-use PhpOffice\PhpSpreadsheet\Document\Security;
 use Vanguard\Http\Controllers\Controller;
 use Vanguard\Http\Filters\DateSearch;
 use Vanguard\Http\Filters\DocumentKeywordSearch;
@@ -51,16 +50,6 @@ class SearchController extends Controller
         })->orderByDesc('invoice_date');
 
         (new InvoiceSearch)($invoices, $query);
-
-        if ($end_date) {
-            $documents = $documents->where('document_date', '<=', $end_date);
-            $invoices = $invoices->where('invoice_date', '<=', $end_date);
-        }
-
-        if ($start_date) {
-            $documents = $documents->where('document_date', '>=', $start_date);
-            $invoices = $invoices->where('invoice_date', '>=', $start_date);
-        }
 
         $documents = $documents->paginate(10, ['*'], 'document_page');
 
