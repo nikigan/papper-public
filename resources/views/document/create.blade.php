@@ -115,7 +115,7 @@
                             <option value="">@lang('Other Expense')</option>
                             @foreach($expense_types as $type)
                                 <option value="{{$type->id}}"
-                                        @if($vendors[0]->default_expense_type_id == $type->id) selected @endif>@lang($type->name)</option>
+                                        @if(count($vendors) && $vendors[0]->default_expense_type_id == $type->id) selected @endif>@lang($type->name)</option>
                             @endforeach
                         </select>
                     </div>
@@ -249,17 +249,18 @@
                 <div class="col-md-6">
                     <div class="form-group">
                         <label for="partner_vat">@lang("VAT"):</label>
-                        <input type="text" name='partner_vat' value="{{$vendors[0]->vat_number}}" class="form-control"
+                        <input type="text" name='partner_vat' value="{{$vendors[0]->vat_number ?? ""}}"
+                               class="form-control"
                                id="partner_vat">
                     </div>
                 </div>
             </div>
-            <div class="col-lg-6" id="drop-area">
-                <label for="file" id="file-label">@lang('Upload file')</label>
-                <input type="file" accept="image/png, image/jpeg, .pdf" name="file" id="file">
-                <div id="gallery"></div>
-            </div>
-            <div class="col-lg-8 mx-auto">
+                <div class="col-lg-6" id="drop-area">
+                    <label for="file" id="file-label">@lang('Upload file')</label>
+                    <input type="file" accept="image/png, image/jpeg, .pdf" name="file" id="file">
+                    <div id="gallery"></div>
+                </div>
+                <div class="col-lg-8 mx-auto">
                 <label for="note" id="file-label">@lang('Comments')</label>
                 <textarea name="note" id="note" rows="7" class="form-control"></textarea>
             </div>

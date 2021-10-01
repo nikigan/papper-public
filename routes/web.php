@@ -313,8 +313,8 @@ Route::group(['middleware' => ['auth', 'verified', 'locale']], function () {
     Route::group(['prefix' => 'accountants', 'middleware' => 'permission:client.assign'], function () {
         Route::get('/', 'AccountantController@index')->name('accountants.index');
         Route::get('/create', 'AccountantController@create')->name('accountants.create');
-        Route::post('/create', 'AccountantController@store')->name('accountants.store');
-        Route::get('/{client}', 'AccountantController@show')->name('accountants.show');
+        Route::post( '/create', 'AccountantController@store' )->name( 'accountants.store' );
+        Route::get( '/{accountant}', 'AccountantController@show' )->name( 'accountants.show' );
     });
 
 

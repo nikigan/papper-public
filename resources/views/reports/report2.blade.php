@@ -94,7 +94,7 @@
                                         </tr>
                                     @endforeach
                                 @else
-                                    <tr data-href="{{ route('documents.show', $item) }}" class="text-success">
+                                    <tr data-href="{{ route('documents.show', $items) }}" class="text-success">
                                         @if ($items instanceof \Vanguard\Document)
                                             <td><a href="{{route('documents.show', $items)}}"
                                                    class="text-success">{{ $items->document_number }}</a></td>

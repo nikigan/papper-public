@@ -3,12 +3,14 @@
         <div class="form-group">
             <label for="first_name">@lang('First Name')</label>
             <input type="text" class="form-control input-solid" id="first_name"
+                   required
                    name="first_name" placeholder="@lang('First Name')" value="{{ $edit ? $user->first_name : old('first_name') }}">
         </div>
         <div class="form-group">
             <label for="last_name">@lang('Last Name')</label>
             <input type="text" class="form-control input-solid" id="last_name"
                    name="last_name" placeholder="@lang('Last Name')"
+                   required
                    value="{{ $edit ? $user->last_name : old('last_name') }}">
         </div>
         <div class="form-group">
