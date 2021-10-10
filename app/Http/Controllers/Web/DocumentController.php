@@ -91,21 +91,21 @@ class DocumentController extends Controller {
         if ( $current_user->hasRole( 'Auditor' ) || $current_user->hasRole( 'Accountant' ) ) {
             $documents = $this->documentRepository->documentsAuditor();
 
+            $documents->getQuery()->orders = null;
             if ( $client->id ) {
-                $documents = $documents->where( 'user_id', $client->id )->orderByDesc( "id" );
+                $documents = $documents->where( 'user_id', $client->id );
             }
 
-            $documents = $documents->get();
         } else {
             $documents = Document::query()
                                  ->with( 'user' )
                                  ->where( 'user_id', '=', $current_user->id )
-                                 ->orderByDesc( 'id' )
-                                 ->get();
+                                 ->orderByDesc( 'id' );
         }
 
-        $next = $documents->where( 'id', '>', $id )->last();
-        $prev = $documents->where( 'id', '<', $id )->first();
+
+        $next = $documents->clone()->where( 'id', '>', $id )->orderBy( "id" )->first();
+        $prev = $documents->clone()->where( 'id', '<', $id )->orderByDesc( "id" )->first();
 
         return view( 'document.show', [
                                           'document'      => $document,
