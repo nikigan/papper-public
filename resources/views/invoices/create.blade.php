@@ -246,6 +246,14 @@
                                         </td>
                                     </tr>
                                     <tr>
+                                        <th class="text-center">@lang("Sum without tax")
+                                            (<span class="currency">{{$currencies[0]->ISO_code}}</span>)
+                                        </th>
+                                        <td class="text-center"><input type="number" name='tax_amount'
+                                                                       id="sum_without_tax" placeholder='0.00'
+                                                                       class="form-control" readonly/></td>
+                                    </tr>
+                                    <tr>
                                         <th class="text-center">@lang("Tax Amount")
                                             (<span class="currency">{{$currencies[0]->ISO_code}}</span>)
                                         </th>
@@ -343,6 +351,7 @@
             } else {
                 tax_sum = (sub_total * (taxAmount / 100));
             }
+            $('#sum_without_tax').val((sub_total + sale_sum).toFixed(2));
             $('#sub_total').val((sub_total + tax_sum + sale_sum).toFixed(2));
             $('#tax_amount').val(tax_sum.toFixed(2));
             $('#total_amount').val((tax_sum + parseFloat(sub_total)).toFixed(2));

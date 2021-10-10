@@ -73,7 +73,7 @@ return [
     ],
     'string'               => 'The :attribute must be a string.',
     'timezone'             => 'The :attribute must be a valid zone.',
-    'unique'               => 'זה attribute: כבר נלקח',
+    'unique'               => 'זה :attribute כבר נלקח',
     'url'                  => 'The :attribute format is invalid.',
     'captcha'              => 'reCAPTCHA value is invalid.',
 

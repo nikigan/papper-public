@@ -72,7 +72,7 @@ class DocumentController extends Controller {
 
     }
 
-    public function show( Document $document ) {
+    public function show( User $client, Document $document ) {
         $id         = $document->id;
         $currencies = Currency::all();
         $vendors    = Vendor::query()->where( 'creator_id', $document->user->id )->orWhere( 'creator_id', auth()->id() )->get();
@@ -89,18 +89,23 @@ class DocumentController extends Controller {
         $current_user   = auth()->user();
 
         if ( $current_user->hasRole( 'Auditor' ) || $current_user->hasRole( 'Accountant' ) ) {
-            $documents = $this->documentRepository->documentsAuditor()->get();
-            $next      = $documents->where( 'id', '<', $id )->first();
-            $prev      = $documents->where( 'id', '>', $id )->last();
+            $documents = $this->documentRepository->documentsAuditor();
+
+            if ( $client->id ) {
+                $documents = $documents->where( 'user_id', $client->id )->orderByDesc( "id" );
+            }
+
+            $documents = $documents->get();
         } else {
             $documents = Document::query()
                                  ->with( 'user' )
                                  ->where( 'user_id', '=', $current_user->id )
-                                 ->orderByDesc( 'created_at' )
+                                 ->orderByDesc( 'id' )
                                  ->get();
-            $next      = $documents->where( 'id', '<', $id )->first();
-            $prev      = $documents->where( 'id', '>', $id )->last();
         }
+
+        $next = $documents->where( 'id', '>', $id )->last();
+        $prev = $documents->where( 'id', '<', $id )->first();
 
         return view( 'document.show', [
                                           'document'      => $document,
@@ -109,7 +114,7 @@ class DocumentController extends Controller {
                                           'currencies'    => $currencies,
                                           'vendors'       => $vendors,
                                           'expense_types' => $expense_types
-                                      ] + compact( 'prev', 'next', 'document_types', 'income_types', 'customers' ) );
+                                      ] + compact( 'prev', 'next', 'document_types', 'income_types', 'customers', 'client' ) );
     }
 
     public function upload() {

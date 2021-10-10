@@ -4,7 +4,7 @@
             <div class="row align-items-center">
                 <div class="col-md-6">
                     <div class="input-group custom-search-form">
-                            <span class="input-group-prepend">
+                            <span class="input-group-append">
                                 @if (Request::has('query') && Request::get('query') != '')
                                     <a href="{{ url()->current()}}"
                                        class="btn btn-light d-flex align-items-center text-muted"
@@ -12,12 +12,9 @@
                                                             <i class="fas fa-times"></i>
                                                         </a>
                                 @endif
-                                <button class="btn btn-light" type="submit" id="search-users-btn">
-                                    <i class="fas fa-search text-muted"></i>
-                                </button>
                             </span>
                         <input type="text"
-                               class="form-control input-solid"
+                               class="form-control input-solid search-input"
                                id="search"
                                name="query"
                                value="{{ Request::get('query') }}"
@@ -26,20 +23,25 @@
                     </div>
                 </div>
                 <div class="col-md-6">
-                    <div class="form-row">
-                        <div class="col">
+                    <div class="form-row align-items-center">
+                        <div class="col-5">
                             <div class="form-group mb-4">
                                 <label for="startDate">@lang('From'):</label>
                                 <input name="start_date" class="form-control dp" id="startDate"
                                        value="{{Request::get('start_date') ?? \Carbon\Carbon::now()->subYear()->format( "m-Y")}}">
                             </div>
                         </div>
-                        <div class="col">
+                        <div class="col-5">
                             <div class="form-group mb-4">
                                 <label for="endDate">@lang('To'):</label>
                                 <input name="end_date" class="form-control dp" id="endDate"
                                        value="{{ Request::get('end_date') ?? \Carbon\Carbon::now()->format( "m-Y") }}">
                             </div>
+                        </div>
+                        <div class="col-2">
+                            <button class="btn btn-light search-btn" type="submit" id="search-users-btn">
+                                <i class="fas fa-search text-muted"></i>
+                            </button>
                         </div>
                     </div>
                 </div>

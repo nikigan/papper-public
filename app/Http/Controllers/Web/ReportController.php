@@ -19,8 +19,8 @@ use Vanguard\User;
 class ReportController extends Controller {
 
     private function dates( Request $request, User $client ) {
-        $start_date = $request->get( 'start_date' ) ?? Carbon::now()->subMonths( $client->report_period )->format( config( 'app.date_month_format' ) );
-        $end_date   = $request->get( 'end_date' ) ?? Carbon::now()->format( config( 'app.date_month_format' ) );
+        $start_date = $request->get( 'start_date' ) ?? Carbon::now()->format( config( 'app.date_month_format' ) );
+        $end_date   = $request->get( 'end_date' ) ?? Carbon::now()->addMonth( $client->report_period )->format( config( 'app.date_month_format' ) );
 
         return compact( 'start_date', 'end_date' );
     }
@@ -373,8 +373,9 @@ class ReportController extends Controller {
 
 
     public function report_tax( Request $request, User $client ) {
-        $start_date = $request->get( 'start_date' ) ?? Carbon::now()->startOfMonth()->subMonths( $client->report_period )->format( config( 'app.date_month_format' ) );
-        $end_date   = $request->get( 'end_date' ) ?? Carbon::now()->startOfMonth()->format( config( 'app.date_month_format' ) );
+        $dates      = $this->dates( $request, $client );
+        $start_date = $dates['start_date'];
+        $end_date   = $dates['end_date'];
 
         $income = $client->documents()->where( 'status', DocumentStatus::CONFIRMED )->getQuery();
 

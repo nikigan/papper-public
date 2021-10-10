@@ -88,13 +88,35 @@
                 view: "months",
                 dateFormat: "mm-yyyy"
             };
+            const reportPeriod = {{$client->report_period}};
+            let flag = true;
 
             const startDate = $("#startDate").datepicker({
-                ...options
+                ...options,
+                onSelect: function (_, date) {
+                    if (flag) {
+                        flag = false;
+                        const d = date;
+                        d.setMonth(d.getMonth() + reportPeriod);
+                        endDate.selectDate(d);
+                    } else {
+                        flag = true;
+                    }
+                }
             }).data('datepicker');
 
             const endDate = $("#endDate").datepicker({
-                ...options
+                ...options,
+                onSelect: function (_, date) {
+                    if (flag) {
+                        flag = false;
+                        const d = date;
+                        d.setMonth(d.getMonth() - reportPeriod);
+                        startDate.selectDate(d);
+                    } else {
+                        flag = true;
+                    }
+                }
             }).data('datepicker');
         });
     </script>

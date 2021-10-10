@@ -18,12 +18,14 @@
         <ul class="pagination justify-content-end">
             @if($prev)
                 <li class="page-item">
-                    <a class="page-link" href="{{route('documents.show', $prev->id)}}">@lang('Previous')</a>
+                    <a class="page-link"
+                       href="{{$client->id ? route('clients.documents.show', ['client' => $client, 'document' => $prev->id]) : route('documents.show', $prev->id)}}">@lang('Previous')</a>
                 </li>
             @endif
             @if($next)
                 <li class="page-item">
-                    <a class="page-link" href="{{route('documents.show', $next->id)}}">@lang('Next')</a>
+                    <a class="page-link"
+                       href="{{$client->id ? route('clients.documents.show', ['client' => $client, 'document' => $next->id]) : route('documents.show', $next->id)}}">@lang('Next')</a>
                 </li>
             @endif
         </ul>

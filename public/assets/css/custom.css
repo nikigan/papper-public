@@ -153,3 +153,7 @@ tr[data-href] {
     cursor: pointer;
 }
 
+tr[data-href]:hover {
+    background-color: #6777EF20 !important;
+}
+

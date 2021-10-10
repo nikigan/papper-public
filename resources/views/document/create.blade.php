@@ -92,177 +92,189 @@
     {!! Form::open(['route' => ['document.manualStore', 'client' => $client], 'files' => true, 'id' => 'document-form']) !!}
     <div class="card">
         <div class="card-body">
-            @isset($client->id)
-                <h3>@lang('Client'): {{$client->present()->name}}</h3>
-            @endisset
-            <div class="form-row my-3 align-items-center">
-                <div class="col-md-6 form-group">
-                    <div class="custom-control custom-radio custom-control-inline">
-                        <input type="radio" id="document_type_0" name="document_type" class="custom-control-input"
-                               value="0" checked>
-                        <label class="custom-control-label" for="document_type_0">@lang('Expense')</label>
-                    </div>
-                    <div class="custom-control custom-radio custom-control-inline">
-                        <input type="radio" id="document_type_1" name="document_type" class="custom-control-input"
-                               value="1">
-                        <label class="custom-control-label" for="document_type_1">@lang('Income')</label>
-                    </div>
-                </div>
-                <div class="col-md-6">
-                    <div class="form-group" id="expense_type_block">
-                        <label for="expense_type">@lang("Expense type"):</label>
-                        <select name='expense_type_id' class="form-control" id="expense_type">
-                            <option value="">@lang('Other Expense')</option>
-                            @foreach($expense_types as $type)
-                                <option value="{{$type->id}}"
-                                        @if(count($vendors) && $vendors[0]->default_expense_type_id == $type->id) selected @endif>@lang($type->name)</option>
-                            @endforeach
-                        </select>
-                    </div>
-                    <div class="form-group" id="income_type_block" style="display: none">
-                        <label for="income_type">@lang("Income type"):</label>
-                        <select name='income_type_id' class="form-control" id="income_type">
-                            <option value="">@lang('Other Income')</option>
-                            @foreach($income_types as $type)
-                                <option value="{{$type->id}}"
-                                        @if(auth()->user()->default_income_type_id == $type->id) selected @endif>@lang($type->name)</option>
-                            @endforeach
-                        </select>
-                    </div>
-                </div>
-            </div>
-            <div class="form-row align-items-center">
-                <div class="col-lg-12">
-                    <div class="form-group">
-                        <label for="document_number">@lang('Document number')</label>
-                        <input type="text" class="form-control" @if($required)required @endif name="document_number"
-                               id="document_number"
-                               value="{{old('document_number')}}">
-                        @if($error_document)
-                            <a href="{{$error_document}}">@lang('Document with this number')</a>
-                        @endif
-                    </div>
-                </div>
-            </div>
-                <div class="form-row">
-                    <div class="col-md-6">
-                        <div class="form-group">
-                            <label for="sum">@lang('Sum')</label>
-                            <input type="number" class="form-control" @if($required)required @endif name="sum" id="sum"
-                                   value="{{old('sum')}}">
+            <div class="row">
+                <div class="col-lg-6">
+                    @isset($client->id)
+                        <h3>@lang('Client'): {{$client->present()->name}}</h3>
+                    @endisset
+                    <div class="form-row my-3 align-items-center">
+                        <div class="col-md-6 form-group">
+                            <div class="custom-control custom-radio custom-control-inline">
+                                <input type="radio" id="document_type_0" name="document_type"
+                                       class="custom-control-input"
+                                       value="0" checked>
+                                <label class="custom-control-label" for="document_type_0">@lang('Expense')</label>
+                            </div>
+                            <div class="custom-control custom-radio custom-control-inline">
+                                <input type="radio" id="document_type_1" name="document_type"
+                                       class="custom-control-input"
+                                       value="1">
+                                <label class="custom-control-label" for="document_type_1">@lang('Income')</label>
+                            </div>
                         </div>
-                        <div class="custom-control custom-checkbox">
-                            <input type="checkbox" checked class="custom-control-input" id="include_tax"
-                                   name="include_tax">
-                            <label class="custom-control-label" for="include_tax">@lang('Including tax')</label>
+                        <div class="col-md-6">
+                            <div class="form-group" id="expense_type_block">
+                                <label for="expense_type">@lang("Expense type"):</label>
+                                <select name='expense_type_id' class="form-control" id="expense_type">
+                                    <option value="">@lang('Other Expense')</option>
+                                    @foreach($expense_types as $type)
+                                        <option value="{{$type->id}}"
+                                                @if(count($vendors) && $vendors[0]->default_expense_type_id == $type->id) selected @endif>@lang($type->name)</option>
+                                    @endforeach
+                                </select>
+                            </div>
+                            <div class="form-group" id="income_type_block" style="display: none">
+                                <label for="income_type">@lang("Income type"):</label>
+                                <select name='income_type_id' class="form-control" id="income_type">
+                                    <option value="">@lang('Other Income')</option>
+                                    @foreach($income_types as $type)
+                                        <option value="{{$type->id}}"
+                                                @if(auth()->user()->default_income_type_id == $type->id) selected @endif>@lang($type->name)</option>
+                                    @endforeach
+                                </select>
+                            </div>
                         </div>
                     </div>
-                    <div class="col-md-6">
-                        <div class="form-group">
-                            <label for="vat">@lang('VAT') %</label>
-                            <input type="number" min="0" max="100" step="0.1" class="form-control" name="vat" id="vat"
-                                   value="{{old('vat', 17)}}">
-                            <small id="vatHelp" class="form-text text-muted">0</small>
+                    <div class="form-row align-items-center">
+                        <div class="col-lg-12">
+                            <div class="form-group">
+                                <label for="document_number">@lang('Document number')</label>
+                                <input type="text" class="form-control" @if($required)required
+                                       @endif name="document_number"
+                                       id="document_number"
+                                       value="{{old('document_number')}}">
+                                @if($error_document)
+                                    <a href="{{$error_document}}">@lang('Document with this number')</a>
+                                @endif
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label for="sum">@lang('Sum')</label>
+                                <input type="number" class="form-control" @if($required)required @endif name="sum"
+                                       id="sum"
+                                       value="{{old('sum')}}">
+                            </div>
+                            <div class="custom-control custom-checkbox">
+                                <input type="checkbox" checked class="custom-control-input" id="include_tax"
+                                       name="include_tax">
+                                <label class="custom-control-label" for="include_tax">@lang('Including tax')</label>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label for="vat">@lang('VAT') %</label>
+                                <input type="number" min="0" max="100" step="0.1" class="form-control" name="vat"
+                                       id="vat"
+                                       value="{{old('vat', 17)}}">
+                                <small id="vatHelp" class="form-text text-muted">0</small>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="col-md-6"></div>
+                        <div class="col-md-6">
+                            <div class="form-group" id="document_type_block" style="display: none;">
+                                <label for="document_type">@lang("Document type"):</label>
+                                <select name='document_type_id' class="form-control" id="document_type">
+                                    <option value="">@lang('Other Type')</option>
+                                    @foreach($document_types as $type)
+                                        <option value="{{$type->id}}">@lang($type->name)</option>
+                                    @endforeach
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label for="document_date">@lang('Document date')</label>
+                                <input value="{{ \Carbon\Carbon::now() }}" class="form-control datepicker-here"
+                                       id="document_date" name="document_date" data-language="en"
+                                       data-date-format="dd-mm-yyyy">
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label for="report_month">@lang('Report month')</label>
+                                <input value="{{ \Carbon\Carbon::now()->format('m-Y') }}"
+                                       class="form-control datepicker-here"
+                                       id="report_month" data-date-format="mm-yyyy" data-min-view="months"
+                                       data-view="months" data-language="en" name="report_month">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label for="currency">@lang("Currency"):</label>
+                                <select name='currency_id' class="form-control" id="currency">
+                                    @foreach($currencies as $currency)
+                                        <option value="{{$currency->id}}"
+                                                data-currency="{{$currency->ISO_code}}">@lang($currency->name)</option>
+                                    @endforeach
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="col-md-6">
+                            <div id="vendors-block">
+                                <div class="form-group">
+                                    <label for="vendor">@lang("Vendor"):</label>
+                                    <select name='vendor_id' class="form-control" id="vendor">
+                                        @foreach($vendors as $vendor)
+                                            <option value="{{$vendor->id}}"
+                                                    data-vat="{{$vendor->vat_number}}"
+                                                    data-default-expense="{{$vendor->default_expense_type_id}}">@lang($vendor->name)
+                                                -
+                                                ({{$vendor->vat_number}})
+                                            </option>
+                                        @endforeach
+                                    </select>
+                                </div>
+                                <button type="button" class="btn btn-link" data-toggle="modal"
+                                        data-target="#vendorsModal">@lang('Add a new vendor')</button>
+                            </div>
+                            <div id="customers-block" style="display: none;">
+                                <div class="form-group">
+                                    <label for="customer">@lang("Customer"):</label>
+                                    <select name='customer_id' class="form-control" id="customer">
+                                        @foreach($customers as $customer)
+                                            <option value="{{$customer->id}}"
+                                                    data-vat="{{$customer->vat_number}}">@lang($customer->name)
+                                                - {{$customer->vat_number}}</option>
+                                        @endforeach
+                                    </select>
+                                </div>
+                                <button type="button" class="btn btn-link" data-toggle="modal"
+                                        data-target="#customersModal">@lang('Add a new customer')</button>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label for="partner_vat">@lang("VAT"):</label>
+                                <input type="text" name='partner_vat' value="{{$vendors[0]->vat_number ?? ""}}"
+                                       class="form-control"
+                                       id="partner_vat">
+                            </div>
+                        </div>
+                        <div class="col-lg-12 mx-auto">
+                            <label for="note">@lang('Comments')</label>
+                            <textarea name="note" id="note" rows="7" class="form-control"></textarea>
                         </div>
                     </div>
                 </div>
-                <div class="form-row">
-                    <div class="col-md-6"></div>
-                    <div class="col-md-6">
-                        <div class="form-group" id="document_type_block" style="display: none;">
-                        <label for="document_type">@lang("Document type"):</label>
-                        <select name='document_type_id' class="form-control" id="document_type">
-                            <option value="">@lang('Other Type')</option>
-                            @foreach($document_types as $type)
-                                <option value="{{$type->id}}">@lang($type->name)</option>
-                            @endforeach
-                        </select>
-                        </div>
+                <div class="col-lg-6">
+                    <div class="col-lg-12" id="drop-area">
+                        <label for="file" id="file-label">@lang('Upload file')</label>
+                        <input type="file" accept="image/png, image/jpeg, .pdf" name="file" id="file">
+                        <div id="gallery" class="document-image-zoom"></div>
                     </div>
+                    <label for="file" style="display: none" id="file-label2">@lang('Upload file')</label>
                 </div>
-                <div class="form-row">
-                    <div class="col-md-6">
-                        <div class="form-group">
-                            <label for="document_date">@lang('Document date')</label>
-                            <input value="{{ \Carbon\Carbon::now() }}" class="form-control datepicker-here"
-                                   id="document_date" name="document_date" data-language="en"
-                                   data-date-format="dd-mm-yyyy">
-                        </div>
-                    </div>
-                    <div class="col-md-6">
-                        <div class="form-group">
-                            <label for="report_month">@lang('Report month')</label>
-                            <input value="{{ \Carbon\Carbon::now()->format('m-Y') }}"
-                                   class="form-control datepicker-here"
-                                   id="report_month" data-date-format="mm-yyyy" data-min-view="months"
-                                   data-view="months" data-language="en" name="report_month">
-                        </div>
-                    </div>
-                </div>
-                <div class="form-row">
-                    <div class="col-md-6">
-                        <div class="form-group">
-                            <label for="currency">@lang("Currency"):</label>
-                            <select name='currency_id' class="form-control" id="currency">
-                                @foreach($currencies as $currency)
-                                    <option value="{{$currency->id}}"
-                                            data-currency="{{$currency->ISO_code}}">@lang($currency->name)</option>
-                                @endforeach
-                            </select>
-                        </div>
-                </div>
-            </div>
-            <div class="form-row">
-                <div class="col-md-6">
-                    <div id="vendors-block">
-                        <div class="form-group">
-                            <label for="vendor">@lang("Vendor"):</label>
-                            <select name='vendor_id' class="form-control" id="vendor">
-                                @foreach($vendors as $vendor)
-                                    <option value="{{$vendor->id}}"
-                                            data-vat="{{$vendor->vat_number}}"
-                                            data-default-expense="{{$vendor->default_expense_type_id}}">@lang($vendor->name)
-                                        -
-                                        ({{$vendor->vat_number}})
-                                    </option>
-                                @endforeach
-                            </select>
-                        </div>
-                        <button type="button" class="btn btn-link" data-toggle="modal"
-                                data-target="#vendorsModal">@lang('Add a new vendor')</button>
-                    </div>
-                    <div id="customers-block" style="display: none;">
-                        <div class="form-group">
-                            <label for="customer">@lang("Customer"):</label>
-                            <select name='customer_id' class="form-control" id="customer">
-                                @foreach($customers as $customer)
-                                    <option value="{{$customer->id}}"
-                                            data-vat="{{$customer->vat_number}}">@lang($customer->name)
-                                        - {{$customer->vat_number}}</option>
-                                @endforeach
-                            </select>
-                        </div>
-                        <button type="button" class="btn btn-link" data-toggle="modal"
-                                data-target="#customersModal">@lang('Add a new customer')</button>
-                    </div>
-                </div>
-                <div class="col-md-6">
-                    <div class="form-group">
-                        <label for="partner_vat">@lang("VAT"):</label>
-                        <input type="text" name='partner_vat' value="{{$vendors[0]->vat_number ?? ""}}"
-                               class="form-control"
-                               id="partner_vat">
-                    </div>
-                </div>
-            </div>
-                <div class="col-lg-6" id="drop-area">
-                    <label for="file" id="file-label">@lang('Upload file')</label>
-                    <input type="file" accept="image/png, image/jpeg, .pdf" name="file" id="file">
-                    <div id="gallery"></div>
-                </div>
-                <div class="col-lg-8 mx-auto">
-                <label for="note" id="file-label">@lang('Comments')</label>
-                <textarea name="note" id="note" rows="7" class="form-control"></textarea>
             </div>
         </div>
     </div>
@@ -340,7 +352,9 @@
 @stop
 
 @section('scripts')
+    <script src="{{asset('assets/plugins/zoom-master/jquery.zoom.min.js')}}"></script>
     <script>
+        $("#file-label2").hide();
         let dropArea = document.getElementById('drop-area');
         let fileInput = document.getElementById('file');
         ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(eventName => {
@@ -378,22 +392,34 @@
         }
 
         fileInput.addEventListener('change', function (e) {
-            previewFile(e.target.files[0]);
+            previewFile(this.files[0]);
         })
 
         function previewFile(file) {
             let reader = new FileReader()
             reader.readAsDataURL(file)
+            const url = URL.createObjectURL(file);
+            const gallery = document.getElementById('gallery');
             reader.onloadend = function () {
                 if (file.type == 'application/pdf') {
                     document.getElementById('file-label').innerText = file.name;
+                    gallery.innerHTML = "";
                 } else {
                     let img = document.createElement('img')
-                    img.src = reader.result
-                    const gallery = document.getElementById('gallery');
+                    img.src = url
+                    img.className = "img-responsive document-image"
                     gallery.innerHTML = "";
                     document.getElementById('file-label').innerText = "";
                     gallery.appendChild(img);
+                    img.onload = function () {
+                        const ratio = img.naturalHeight / img.naturalWidth;
+                        $('.document-image-zoom').zoom({
+                            url: url,
+                            magnify: ratio
+                        });
+                        gallery.style.zIndex = "100";
+                        $("#file-label2").show();
+                    }
                 }
             }
         }

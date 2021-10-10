@@ -1,6 +1,6 @@
 <tr data-href="{{ route('documents.show', $document) }}">
     <td class="align-middle">
-        <a href="{{ route('documents.show', $document) }}">
+        <a href="{{ isset($client) ? route('clients.documents.show', ['client' => $client, 'document' => $document]) : route('documents.show', $document) }}">
             {{ $document->document_number ?: __('N/A') }}
         </a>
     </td>

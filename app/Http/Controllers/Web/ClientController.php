@@ -231,7 +231,9 @@ class ClientController extends Controller {
             $invoices  = Invoice::query()->where( 'creator_id', $client->id )->paginate( 10 );
         }
 
-        return view( 'clients.documents.show', [ 'user' => $client ] + compact( 'documents', 'year', 'month', 'invoices' ) );
+        return view( 'clients.documents.show', [ 'user'   => $client,
+                                                 'client' => $client
+                                               ] + compact( 'documents', 'year', 'month', 'invoices' ) );
     }
 
     public function editAccountant( $user_id, $accountant_id ) {
