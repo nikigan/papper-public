@@ -195,10 +195,11 @@ class ClientController extends Controller {
                 $flash = __( "User hasn't been logged in for :days days", [ 'days' => $user->notification_rate ] );
                 Session::flash( 'warning', $flash );
             }
+            $client = $user;
 
             return view( 'clients.show',
                 [ 'monthly_docs' => $result, 'sum' => $total_sum, 'vat' => $total_vat ]
-                + compact( 'user', 'current_user', 'sum_class', 'current_user_id', 'invoices', 'documents', 'invoices', 'last_card', 'customers_card', 'vendors_card' ) );
+                + compact( 'user', 'current_user', 'sum_class', 'current_user_id', 'invoices', 'documents', 'invoices', 'last_card', 'customers_card', 'vendors_card', 'client' ) );
         }
 
         return redirect()->back()->withErrors( __( 'You cannot look at client that is not yours' ) );
@@ -248,14 +249,18 @@ class ClientController extends Controller {
         $user      = User::query()->findOrFail( $id );
         $documents = Document::query()->where( 'user_id', $user->id )->orderByDesc( 'updated_at' )->limit( 20 )->get();
 
-        return view( 'clients.documents.last', [ 'waiting' => false ] + compact( 'user', 'documents' ) );
+        $client = $user;
+
+        return view( 'clients.documents.last', [ 'waiting' => false ] + compact( 'user', 'documents', 'client' ) );
     }
 
     public function waiting( $id ) {
         $user      = User::query()->findOrFail( $id );
         $documents = Document::query()->where( 'user_id', $user->id )->where( 'status', '=', DocumentStatus::UNCONFIRMED )->orderByDesc( 'document_date' )->paginate( 10 );
 
-        return view( 'clients.documents.last', [ 'waiting' => true ] + compact( 'user', 'documents' ) );
+        $client = $user;
+
+        return view( 'clients.documents.last', [ 'waiting' => true ] + compact( 'user', 'documents', 'client' ) );
     }
 
     /**
