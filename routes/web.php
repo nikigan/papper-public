@@ -266,10 +266,10 @@ Route::group(['middleware' => ['auth', 'verified', 'locale']], function () {
             Route::get('/', 'ClientController@show')->name('clients.show');
             Route::put('/accountant/{accountant}', 'ClientController@editAccountant')->name('clients.edit.accountant');
             Route::get( '/documents', 'ClientController@documents' )->name( 'clients.documents' );
-            Route::get( '/documents/{document}', 'DocumentController@show' )->name( 'clients.documents.show' )->middleware( 'can:view,document' );
             Route::get( '/documents/create', 'DocumentController@create' )->name( 'clients.documents.create' );
-            Route::post('/documents/create', 'DocumentController@manualStore')->name('clients.documents.store');
-            Route::get('/last', 'ClientController@last')->name('clients.last');
+            Route::post( '/documents/create', 'DocumentController@manualStore' )->name( 'clients.documents.store' );
+            Route::get( '/documents/{document}', 'DocumentController@show' )->name( 'clients.documents.show' )->middleware( 'can:view,document' );
+            Route::get( '/last', 'ClientController@last' )->name( 'clients.last' );
             Route::get('/waiting', 'ClientController@waiting')->name('clients.waiting');
             Route::get('/info', 'ClientController@info')->name('clients.info');
             Route::put('/update', 'ClientController@update')->name('clients.update');
