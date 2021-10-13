@@ -40,23 +40,25 @@ class SearchController extends Controller
 
         $documents = $this->documents->documentsAuditor();
 
-        (new DocumentKeywordSearch)($documents, $query);
+        ( new DocumentKeywordSearch )( $documents, $query );
 
-        (new DateSearch)($documents, compact('end_date', 'start_date'), 'document_date');
+        ( new DateSearch )( $documents, compact( 'end_date', 'start_date' ), 'document_date' );
 
-        $invoices = Invoice::query()->whereHas('creator', function($q){
-            $q->where('auditor_id', auth()->id())
-                ->orWhere('accountant_id', auth()->id());
-        })->orderByDesc('invoice_date');
+        $invoices = Invoice::query()->whereHas( 'creator', function ( $q ) {
+            $q->where( 'auditor_id', auth()->id() )
+              ->orWhere( 'accountant_id', auth()->id() );
+        } )->orderByDesc( 'invoice_date' );
 
-        (new InvoiceSearch)($invoices, $query);
+        ( new InvoiceSearch )( $invoices, $query );
 
-        $documents = $documents->paginate(10, ['*'], 'document_page');
+        $list = $documents->pluck( "id" );
+
+        $documents = $documents->paginate( 10, [ '*' ], 'document_page' );
 
 
-        $invoices = $invoices->paginate(10, ['*'], 'invoice_page');
+        $invoices = $invoices->paginate( 10, [ '*' ], 'invoice_page' );
 
-        return view('search.index', compact('clients', 'documents', 'invoices'));
+        return view( 'search.index', compact( 'clients', 'documents', 'invoices', 'list' ) );
     }
 
     public function autocomplete(Request $request) {

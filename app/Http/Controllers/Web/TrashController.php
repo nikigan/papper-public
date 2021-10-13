@@ -15,9 +15,12 @@ class TrashController extends Controller {
     }
 
     public function index() {
-        $documents = $this->documentRepository->currentUserDocuments()->onlyTrashed()->paginate();
-        $invoices = Invoice::currentUserInvoices()->onlyTrashed()->paginate();
+        $documents = $this->documentRepository->currentUserDocuments()->onlyTrashed();
+        $invoices  = Invoice::currentUserInvoices()->onlyTrashed()->paginate();
 
-        return view('trash.index', compact('documents', 'invoices'));
+        $list      = $documents->pluck( "id" );
+        $documents = $documents->paginate();
+
+        return view( 'trash.index', compact( 'documents', 'invoices', 'list' ) );
     }
 }

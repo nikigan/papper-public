@@ -1,6 +1,6 @@
-<tr data-href="{{ isset($client) ? route('clients.documents.show', ['client' => $client, 'document' => $document]) : route('documents.show', $document) }}">
+<tr data-href="{{ route('documents.show', [ 'document' => $document, 'list' => $list->toArray()]) }}">
     <td class="align-middle">
-        <a href="{{ isset($client) ? route('clients.documents.show', ['client' => $client, 'document' => $document]) : route('documents.show', $document) }}">
+        <a href="{{ route('documents.show', [ 'document' => $document, 'list' => $list->toArray()]) }}">
             {{ $document->document_number ?: __('N/A') }}
         </a>
     </td>
@@ -47,7 +47,7 @@
         </div>--}}
 
 
-        <a href="{{ isset($client) ? route('clients.documents.show', ['client' => $client, 'document' => $document]) : route('documents.show', $document) }}"
+        <a href="{{ route('documents.show', [ 'document' => $document, 'list' => $list->toArray()]) }}"
            class="btn btn-icon"
            title="@lang('View Document')"
            data-toggle="tooltip"

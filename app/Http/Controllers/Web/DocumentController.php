@@ -48,9 +48,11 @@ class DocumentController extends Controller {
             ( new MonthFilter )( $documents, $request->only( [ 'start_date', 'end_date' ] ), 'document_date' );
         }
 
+        $list = $documents->pluck( "id" );
+
         $documents = $documents->paginate( 10 );
 
-        return view( 'document.index', compact( 'documents' ) );
+        return view( 'document.index', compact( 'documents', 'list' ) );
     }
 
     public function waiting( Request $request ) {
@@ -64,15 +66,16 @@ class DocumentController extends Controller {
             ( new DateSearch )( $documents, $request->only( [ 'start_date', 'end_date' ] ), 'document_date' );
         }
 
+        $list         = $documents->pluck( "id" );
         $documents    = $documents->where( 'status', DocumentStatus::UNCONFIRMED )->paginate( 10 );
         $statuses     = DocumentStatus::lists();
         $current_user = auth()->user();
 
-        return view( 'document.index', compact( 'documents', 'statuses', 'current_user' ) );
+        return view( 'document.index', compact( 'documents', 'statuses', 'current_user', 'list' ) );
 
     }
 
-    public function show( User $client, Document $document ) {
+    public function show( User $client, Document $document, Request $request ) {
         $id         = $document->id;
         $currencies = Currency::all();
         $vendors    = Vendor::query()->where( 'creator_id', $document->user->id )->orWhere( 'creator_id', auth()->id() )->get();
@@ -88,24 +91,38 @@ class DocumentController extends Controller {
         $document_types = $creator->organization_type->document_types;
         $current_user   = auth()->user();
 
-        if ( $current_user->hasRole( 'Auditor' ) || $current_user->hasRole( 'Accountant' ) ) {
-            $documents = $this->documentRepository->documentsAuditor();
+        if ( $request->has( "list" ) ) {
+            $documents = $request->get( "list" );
+            $next      = null;
+            $prev      = null;
 
-            $documents->getQuery()->orders = null;
-            if ( $client->id ) {
-                $documents = $documents->where( 'user_id', $client->id );
+            $index = array_search( $id, $documents );
+
+            if ( $index !== false && $index > 0 ) {
+                $prev = $documents[ $index - 1 ];
+            }
+            if ( $index !== false && $index < count( $documents ) - 1 ) {
+                $next = $documents[ $index + 1 ];
+            }
+        } else {
+            if ( $current_user->hasRole( 'Auditor' ) || $current_user->hasRole( 'Accountant' ) ) {
+                $documents = $this->documentRepository->documentsAuditor();
+
+                $documents->getQuery()->orders = null;
+                if ( $client->id ) {
+                    $documents = $documents->where( 'user_id', $client->id );
+                }
+
+            } else {
+                $documents = Document::query()
+                                     ->with( 'user' )
+                                     ->where( 'user_id', '=', $current_user->id )
+                                     ->orderByDesc( 'id' );
             }
 
-        } else {
-            $documents = Document::query()
-                                 ->with( 'user' )
-                                 ->where( 'user_id', '=', $current_user->id )
-                                 ->orderByDesc( 'id' );
+            $next = $documents->clone()->where( 'id', '>', $id )->orderBy( "id" )->first();
+            $prev = $documents->clone()->where( 'id', '<', $id )->orderByDesc( "id" )->first();
         }
-
-
-        $next = $documents->clone()->where( 'id', '>', $id )->orderBy( "id" )->first();
-        $prev = $documents->clone()->where( 'id', '<', $id )->orderByDesc( "id" )->first();
 
         return view( 'document.show', [
                                           'document'      => $document,
@@ -322,9 +339,10 @@ class DocumentController extends Controller {
             ( new MonthFilter )( $documents, $request->only( [ 'start_date', 'end_date' ] ), 'document_date' );
         }
 
+        $list      = $documents->pluck( "id" );
         $documents = $documents->paginate();
 
-        return view( 'document.last', compact( 'documents' ) );
+        return view( 'document.last', compact( 'documents', 'list' ) );
     }
 
     public function duplicate( Document $document ) {

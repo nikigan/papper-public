@@ -37,9 +37,11 @@
                         </thead>
                         <tbody>
                         @foreach ($expenses as $item)
-                            <tr data-href="{{ route('documents.show', $item) }}" class="text-danger">
+                            <tr data-href="{{route('documents.show', ['document' => $item, 'list' => $expenses->pluck("id")->toArray()])}}"
+                                class="text-danger">
                                 <td><a class="text-danger"
-                                       href="{{ route('documents.show', $item) }}">{{ $item->document_number }}</a></td>
+                                       href="{{route('documents.show', ['document' => $item, 'list' => $expenses->pluck("id")->toArray()])}}">{{ $item->document_number }}</a>
+                                </td>
                                 <td>{{ $item->document_date }}</td>
                                 <td>
                                     <a @if($item->expense_type)href="{{route('clients.expenses', ['client' => $client, 'expense_type' => $item->expense_type])}}"@endif>{{ $item->expense_type->name ?? __('Other Expense') }}</a>

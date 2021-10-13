@@ -18,7 +18,7 @@
 @section('content')
     @include('partials.messages')
     <h1>@lang('Report Taxes') {{$client->present()->name}}</h1>
-    @include('reports.partials.header.tax')
+    @include('reports.partials.header-tax')
 
 
     <h2>@lang('VAT')</h2>

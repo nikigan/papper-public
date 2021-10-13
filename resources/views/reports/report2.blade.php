@@ -37,9 +37,10 @@
                             </thead>
                             <tbody>
                             @foreach ($group as $item)
-                                <tr data-href="{{ route('documents.show', $item) }}" class="text-danger">
+                                <tr data-href="{{ route('documents.show', ['document' => $item, 'list' => $group->pluck("id")->toArray()]) }}"
+                                    class="text-danger">
                                     <td><a class="text-danger"
-                                           href="{{ route('documents.show', $item) }}">{{ $item->document_number }}</a>
+                                           href="{{ route('documents.show', ['document' => $item, 'list' => $group->pluck("id")->toArray()]) }}">{{ $item->document_number }}</a>
                                     </td>
                                     <td>{{ $item->document_date }}</td>
                                     <td>{{ number_format($item->sum  / $item->currency->value, 2) }}</td>
@@ -77,7 +78,7 @@
                                     @foreach($items as $item)
                                         <tr data-href="{{ route('documents.show', $item) }}" class="text-success">
                                             @if ($item instanceof \Vanguard\Document)
-                                                <td><a href="{{route('documents.show', $item)}}"
+                                                <td><a href="{{ route('documents.show', $item) }}"
                                                        class="text-success">{{ $item->document_number }}</a></td>
                                                 <td>{{ $item->document_date }}</td>
                                                 <td>{{ $item->income_type->name ?? __('Other Income') }}</td>

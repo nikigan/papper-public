@@ -185,6 +185,7 @@ class ClientController extends Controller {
             $sum_class    = $total_sum > 0 ? 'text-success' : 'text-danger';
             $current_user = auth()->user();
             $invoices     = $invoices->paginate();
+            $list         = $documents->pluck( "id" );
             $documents    = $documents->paginate();
 
             $last_card      = new ClientCard( 'Waiting documents', route( 'clients.waiting', [ 'client' => $user ] ), 'View', $user->documents->where( 'status', DocumentStatus::UNCONFIRMED )->count() );
@@ -197,9 +198,10 @@ class ClientController extends Controller {
             }
             $client = $user;
 
+
             return view( 'clients.show',
                 [ 'monthly_docs' => $result, 'sum' => $total_sum, 'vat' => $total_vat ]
-                + compact( 'user', 'current_user', 'sum_class', 'current_user_id', 'invoices', 'documents', 'invoices', 'last_card', 'customers_card', 'vendors_card', 'client' ) );
+                + compact( 'user', 'current_user', 'sum_class', 'current_user_id', 'invoices', 'documents', 'invoices', 'last_card', 'customers_card', 'vendors_card', 'client', 'list' ) );
         }
 
         return redirect()->back()->withErrors( __( 'You cannot look at client that is not yours' ) );
@@ -220,21 +222,24 @@ class ClientController extends Controller {
         if ( $month && $year ) {
             $documents = Document::query()->where( 'user_id', $client->id )
                                  ->whereMonth( 'document_date', $month )
-                                 ->whereYear( 'document_date', 20 . $year )
-                                 ->paginate( 10 );
+                                 ->whereYear( 'document_date', 20 . $year );
 
             $invoices = Invoice::query()->where( 'creator_id', $client->id )
                                ->whereMonth( 'invoice_date', $month )
                                ->whereYear( 'invoice_date', 20 . $year )
                                ->paginate( 10 );
         } else {
-            $documents = Document::query()->where( 'user_id', $client->id )->paginate( 10 );
+            $documents = Document::query()->where( 'user_id', $client->id );
             $invoices  = Invoice::query()->where( 'creator_id', $client->id )->paginate( 10 );
         }
 
-        return view( 'clients.documents.show', [ 'user'   => $client,
-                                                 'client' => $client
-                                               ] + compact( 'documents', 'year', 'month', 'invoices' ) );
+        $list      = $documents->pluck( "id" );
+        $documents = $documents->paginate( 10 );
+
+        return view( 'clients.documents.show', [
+                                                   'user'   => $client,
+                                                   'client' => $client
+                                               ] + compact( 'documents', 'year', 'month', 'invoices', 'list' ) );
     }
 
     public function editAccountant( $user_id, $accountant_id ) {
@@ -247,20 +252,26 @@ class ClientController extends Controller {
 
     public function last( $id ) {
         $user      = User::query()->findOrFail( $id );
-        $documents = Document::query()->where( 'user_id', $user->id )->orderByDesc( 'updated_at' )->limit( 20 )->get();
+        $documents = Document::query()->where( 'user_id', $user->id )->orderByDesc( 'updated_at' )->limit( 20 );
+
+        $documents = $documents->get();
+        $list      = $documents->pluck( "id" );
 
         $client = $user;
 
-        return view( 'clients.documents.last', [ 'waiting' => false ] + compact( 'user', 'documents', 'client' ) );
+        return view( 'clients.documents.last', [ 'waiting' => false ] + compact( 'user', 'documents', 'client', 'list' ) );
     }
 
     public function waiting( $id ) {
         $user      = User::query()->findOrFail( $id );
-        $documents = Document::query()->where( 'user_id', $user->id )->where( 'status', '=', DocumentStatus::UNCONFIRMED )->orderByDesc( 'document_date' )->paginate( 10 );
+        $documents = Document::query()->where( 'user_id', $user->id )->where( 'status', '=', DocumentStatus::UNCONFIRMED )->orderByDesc( 'document_date' );
+
+        $list      = $documents->pluck( "id" );
+        $documents = $documents->paginate( 10 );
 
         $client = $user;
 
-        return view( 'clients.documents.last', [ 'waiting' => true ] + compact( 'user', 'documents', 'client' ) );
+        return view( 'clients.documents.last', [ 'waiting' => true ] + compact( 'user', 'documents', 'client', 'list' ) );
     }
 
     /**
