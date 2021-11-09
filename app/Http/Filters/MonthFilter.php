@@ -12,7 +12,7 @@ class MonthFilter implements Filter {
 
     public function __invoke( Builder $query, $value, string $property ) {
         if ( $value['start_date'] && $value['end_date'] ) {
-            $end_date   = Carbon::createFromFormat( "m-Y", $value['end_date'] )->startOfMonth();
+            $end_date   = Carbon::createFromFormat( "m-Y", $value['end_date'] )->endOfMonth();
             $start_date = Carbon::createFromFormat( "m-Y", $value['start_date'] )->startOfMonth();
 
             if ( $end_date ) {
